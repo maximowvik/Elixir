@@ -33,7 +33,7 @@ jobs:
         pyinstaller main.spec
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: dist
         path: dist/  # Путь к папке, где PyInstaller сохраняет скомпилированные файлы
