@@ -26,13 +26,11 @@ jobs:
         py -m pip install --upgrade pip setuptools
         pip install pyinstaller
         # Установите другие зависимости, если они есть
-        pip install -r req.txt
-
-
+        pip install -r requirements.txt
 
     - name: Build with PyInstaller
       run: |
-        py -m pyinstaller main.spec
+        py -m PyInstaller main.spec
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
