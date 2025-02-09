@@ -51,5 +51,8 @@
     "area_button": "Скриншот области",
     "save_screenshot_dialog_title": "Сохранить скриншот",
     "area_selection_title": "Выбор области для скриншота",
-    "cancel_button": "Отмена"
+    "cancel_button": "Отмена",
+    "ip_error": "IP недоступен",
+    "test_failed": "Ошибка теста скорости",
+    "connection_error": "Ошибка соединения"
 }

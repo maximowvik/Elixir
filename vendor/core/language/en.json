@@ -51,5 +51,8 @@
     "area_button": "Area Screenshot",
     "save_screenshot_dialog_title": "Save Screenshot",
     "area_selection_title": "Select Area for Screenshot",
-    "cancel_button": "Cancel"
+    "cancel_button": "Cancel",
+    "ip_error": "IP not available",
+    "test_failed": "Speed test failed",
+    "connection_error": "Connection error"
 }

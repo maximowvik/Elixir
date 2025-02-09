@@ -1,16 +1,25 @@
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QToolBar, QLineEdit, QLabel, QMessageBox, QTabWidget, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy
+from PyQt6.QtWidgets import (
+    QApplication, QMainWindow, QVBoxLayout, QWidget, QToolBar, QLineEdit, QLabel,
+    QMessageBox, QTabWidget, QPushButton, QHBoxLayout, QSpacerItem, QSizePolicy,
+    QFileDialog, QComboBox
+)
 from PyQt6.QtGui import QIcon, QPixmap, QKeySequence, QAction, QShortcut, QScreen, QPainter, QPainterPath, QColor
 from PyQt6.QtCore import QUrl, Qt, QSize, QPoint, QRectF
 import os
 import sys
 import winreg
+import qrcode
+import json
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 class Browser(QMainWindow):
-    def __init__(self):
+    def __init__(self, app):
         super().__init__()
         self._old_pos = None
+        self.app = app  # Store the app instance
         self.initUI()
 
     def initUI(self):
@@ -24,14 +33,11 @@ class Browser(QMainWindow):
 
         self.center_window(self)
 
-        #Основной макет
         main_layout = QVBoxLayout()
 
-        #Макет для заголовка окна
         title_layout = QHBoxLayout()
         title_layout.setContentsMargins(10, 5, 10, 5)
 
-        #Изображение с надписью Elixir
         title_label = QLabel()
         title_pixmap = QPixmap("pic/logo.png")
         scaled_pixmap = title_pixmap.scaledToWidth(100, Qt.TransformationMode.SmoothTransformation)
@@ -41,7 +47,6 @@ class Browser(QMainWindow):
 
         title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
 
-        #Кнопка смены темы
         self.theme_button = QPushButton()
         self.theme_button.setStyleSheet("background-color: transparent; border: none;")
         self.pixmap_theme_light = QPixmap("pic/themes.png")
@@ -51,7 +56,6 @@ class Browser(QMainWindow):
         self.theme_button.clicked.connect(self.toggle_theme)
         title_layout.addWidget(self.theme_button)
 
-        #Кнопка свернуть
         minimize_button = QPushButton()
         minimize_button.setStyleSheet("background-color: transparent; border: none;")
         pixmap_minimize = QPixmap("pic/minus.png")
@@ -61,7 +65,6 @@ class Browser(QMainWindow):
         minimize_button.clicked.connect(self.showMinimized)
         title_layout.addWidget(minimize_button)
 
-        #Кнопка развернуть
         self.expand_button = QPushButton()
         self.expand_button.setStyleSheet("background-color: transparent; border: none;")
         pixmap_expand = QPixmap("pic/expand.png")
@@ -71,7 +74,6 @@ class Browser(QMainWindow):
         self.expand_button.clicked.connect(self.toggle_maximized)
         title_layout.addWidget(self.expand_button)
 
-        #Кнопка закрытия
         close_button = QPushButton()
         close_button.setStyleSheet("background-color: transparent; border: none;")
         pixmap_close = QPixmap("pic/close.png")
@@ -98,40 +100,40 @@ class Browser(QMainWindow):
         main_layout.addWidget(qtoolbar)
 
         qtoolbar.setStyleSheet("""
-            QToolButton{
+            QToolButton {
                 border: 2px;
                 padding: 1px 4px;
                 background: transparent;
                 border-radius: 4px;
             }
-            QToolButton:hover{
+            QToolButton:hover {
                 border: 1px;
                 background: #c3c3c3;
             }
-            QToolButton:selected{
+            QToolButton:selected {
                 background: #a8a8a8;
             }
-            QToolButton:pressed{
+            QToolButton:pressed {
                 background: #888888;
             }
         """)
 
-        back_btn = QAction(QIcon(os.path.join("images", "back.png")), "Назад", self)
+        back_btn = QAction(QIcon("images/back.png"), "Назад", self)
         back_btn.setStatusTip("Вернуться на предыдущую страницу")
         back_btn.triggered.connect(lambda: self.tab_widget.currentWidget().back())
         qtoolbar.addAction(back_btn)
 
-        next_btn = QAction(QIcon(os.path.join("images", "forward.png")), "Вперёд", self)
+        next_btn = QAction(QIcon("images/forward.png"), "Вперёд", self)
         next_btn.setStatusTip("Перейти на страницу вперёд")
         next_btn.triggered.connect(lambda: self.tab_widget.currentWidget().forward())
         qtoolbar.addAction(next_btn)
 
-        reload_btn = QAction(QIcon(os.path.join("images", "reload.png")), "Обновить страницу", self)
+        reload_btn = QAction(QIcon("images/reload.png"), "Обновить страницу", self)
         reload_btn.setStatusTip("Перезагрузить страницу")
         reload_btn.triggered.connect(lambda: self.tab_widget.currentWidget().reload())
         qtoolbar.addAction(reload_btn)
 
-        home_btn = QAction(QIcon(os.path.join("images", "home.png")), "Домой", self)
+        home_btn = QAction(QIcon("images/home.png"), "Домой", self)
         home_btn.setStatusTip("Домой")
         home_btn.triggered.connect(lambda: self.nav_home())
         qtoolbar.addAction(home_btn)
@@ -139,19 +141,19 @@ class Browser(QMainWindow):
         qtoolbar.addSeparator()
 
         self.https_icon = QLabel()
-        self.https_icon.setPixmap(QPixmap(os.path.join("images", "lock.png")))
+        self.https_icon.setPixmap(QPixmap("images/lock.png"))
         qtoolbar.addWidget(self.https_icon)
 
         self.url_line = QLineEdit()
         self.url_line.returnPressed.connect(self.nav_to_url)
         qtoolbar.addWidget(self.url_line)
 
-        new_tab_btn = QAction(QIcon(os.path.join("images", "add-icon.png")), "Новая вкладка", self)
+        new_tab_btn = QAction(QIcon("images/add-icon.png"), "Новая вкладка", self)
         new_tab_btn.setStatusTip("Открыть новую вкладку")
         new_tab_btn.triggered.connect(lambda: self.add_new_tab())
         qtoolbar.addAction(new_tab_btn)
 
-        info_btn = QAction(QIcon(os.path.join("images", "info.png")), "Информация", self)
+        info_btn = QAction(QIcon("images/info.png"), "Информация", self)
         info_btn.triggered.connect(self.info)
         qtoolbar.addAction(info_btn)
 
@@ -165,7 +167,7 @@ class Browser(QMainWindow):
         self.setCentralWidget(container)
 
         self.show()
-        self.setWindowIcon(QIcon(os.path.join("icon", "globe.ico")))
+        self.setWindowIcon(QIcon("icon/globe.ico"))
 
     def add_new_tab(self, qurl=QUrl("https://www.google.com"), label="blank"):
         browser = QWebEngineView()
@@ -220,9 +222,9 @@ class Browser(QMainWindow):
             return
 
         if url.scheme() == "https":
-            self.https_icon.setPixmap(QPixmap(os.path.join("images", "lock.png")))
+            self.https_icon.setPixmap(QPixmap("images/lock.png"))
         else:
-            self.https_icon.setPixmap(QPixmap(os.path.join("images", "unlock.png")))
+            self.https_icon.setPixmap(QPixmap("images/unlock.png"))
 
         self.url_line.setText(url.toString())
         self.url_line.setCursorPosition(0)
@@ -283,7 +285,7 @@ class Browser(QMainWindow):
 
     def apply_theme(self, theme):
         if theme == "light":
-            app.setStyleSheet(
+            self.app.setStyleSheet(
                 """
                 QWidget {
                     background-color: white;
@@ -328,7 +330,7 @@ class Browser(QMainWindow):
                 """
             )
         else:
-            app.setStyleSheet(
+            self.app.setStyleSheet(
                 """
                 QWidget {
                     background-color: black;
@@ -382,10 +384,3 @@ class Browser(QMainWindow):
             self.theme = "light"
             self.apply_theme("light")
             self.theme_button.setIcon(QIcon(self.pixmap_theme_light))
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    QApplication.setApplicationName("Elixir")
-    window = Browser()
-    window.showMaximized()
-    sys.exit(app.exec())
