@@ -1,6 +1,3 @@
-# -*- mode: python ; coding: utf-8 -*-
-
-
 a = Analysis(
     ['main.py'],
     pathex=[],
@@ -11,7 +8,7 @@ a = Analysis(
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
-    noarchive=False,
+    noarchive=True,
     optimize=0,
 )
 pyz = PYZ(a.pure)
@@ -31,9 +28,10 @@ exe = EXE(
     runtime_tmpdir=None,
     console=False,
     disable_windowed_traceback=False,
-    argv_emulation=False,
+    argv_emulation=True,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['icon\\logonew.ico'],
+    icon=['icon\logonew.ico'],
 )
+
