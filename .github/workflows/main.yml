@@ -23,17 +23,16 @@ jobs:
 
     - name: Install dependencies
       run: |
-        py -m venv .venv
-        .venv\Scripts\activate
-        py -m pip install --upgrade pip
+        py -m pip install --upgrade pip setuptools
         pip install pyinstaller
         # Установите другие зависимости, если они есть
         pip install -r req.txt
 
 
+
     - name: Build with PyInstaller
       run: |
-        pyinstaller main.spec
+        py -m pyinstaller main.spec
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
