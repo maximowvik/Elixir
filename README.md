@@ -26,4 +26,11 @@
 > 1.py -m venv .venv
 > 2..venv/Scripts/activate
 > 3.py -m pip install --upgrade pip setuptools
-> 4.py -m pip install -r req.txt
+> 4.py -m pip install -r requirement.txt
+> 5.Для запуска и проверки работоспособности кода: py main.py
+> 6.py -m pip install pyinstaller
+> 7.pyinstaller main.spec
+
+**Для проверки работоспособности скомпилированной программы под windows:**
+> 1.Переместите из папки dist в корень проекта
+> 2.Запустите main.exe
