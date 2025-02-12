@@ -23,7 +23,7 @@
 #Для сборки приложения из исходных файлов под windows:
 
 **Выполните следующие команды:**
-> 1.py -m venv .venv<be>
+> 1.py -m venv .venv<br>
 > 2..venv/Scripts/activate
 > 3.py -m pip install --upgrade pip setuptools
 > 4.py -m pip install -r requirement.txt
