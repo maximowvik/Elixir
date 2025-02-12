@@ -18,3 +18,10 @@
 |**[Виктор Жуков](https://vk.com/vikmax_2003_dev)**|**[Подсевалов Илья](https://vk.com/deathlylovesstars)**|
 |-|--------|
 |<img src="https://github.com/user-attachments/assets/bf3b0962-7075-4d49-b324-ce9f95e14383" style="width: 150px"/>|<img src="https://github.com/user-attachments/assets/c58d4828-65d2-4ee2-99e5-fa11100f1655" style="width: 150px"/>|
+
+
+#Для сборки приложения из исходных файлов под windows:
+Выполните следующие команды: 
+> 1.py -m venv .venv
+> 2..venv/Scripts/activate
+
