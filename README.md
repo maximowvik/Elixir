@@ -23,14 +23,14 @@
 #Для сборки приложения из исходных файлов под windows:
 
 **Выполните следующие команды:**
-> 1.py -m venv .venv <br>
-> 2..venv/Scripts/activate <br>
-> 3.py -m pip install --upgrade pip setuptools <br>
-> 4.py -m pip install -r requirement.txt <br>
-> 5.Для запуска и проверки работоспособности кода: py main.py <br>
-> 6.py -m pip install pyinstaller <br>
-> 7.pyinstaller main.spec <br>
+> 1) py -m venv .venv <br>
+> 2) .venv/Scripts/activate <br>
+> 3) py -m pip install --upgrade pip setuptools <br>
+> 4) py -m pip install -r requirements.txt <br>
+> 5) Для запуска и проверки работоспособности кода: py main.py <br>
+> 6) py -m pip install pyinstaller <br>
+> 7) pyinstaller main.spec <br>
 
 **Для проверки работоспособности скомпилированной программы под windows:**
-> 1.Переместите из папки dist в корень проекта <br>
-> 2.Запустите main.exe
+> 1) Переместите из папки dist в корень проекта <br>
+> 2) Запустите main.exe
