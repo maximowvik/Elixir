@@ -21,7 +21,9 @@
 
 
 #Для сборки приложения из исходных файлов под windows:
-Выполните следующие команды: 
+
+**Выполните следующие команды:**
 > 1.py -m venv .venv
 > 2..venv/Scripts/activate
-
+> 3.py -m pip install --upgrade pip setuptools
+> 4.py -m pip install -r req.txt
