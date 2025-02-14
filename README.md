@@ -18,3 +18,19 @@
 |**[Виктор Жуков](https://vk.com/vikmax_2003_dev)**|**[Подсевалов Илья](https://vk.com/deathlylovesstars)**|
 |-|--------|
 |<img src="https://github.com/user-attachments/assets/bf3b0962-7075-4d49-b324-ce9f95e14383" style="width: 150px"/>|<img src="https://github.com/user-attachments/assets/c58d4828-65d2-4ee2-99e5-fa11100f1655" style="width: 150px"/>|
+
+
+#Для сборки приложения из исходных файлов под windows:
+
+**Выполните следующие команды:**
+>1) py -m venv .venv <br>
+>2) .venv/Scripts/activate <br>
+>3) py -m pip install --upgrade pip setuptools <br>
+>4) py -m pip install -r requirements.txt <br>
+>5) Для запуска и проверки работоспособности кода: py main.py <br>
+>6) py -m pip install pyinstaller <br>
+>7) pyinstaller main.spec <br>
+
+**Для проверки работоспособности скомпилированной программы под windows:**
+>1) Переместите из папки dist в корень проекта <br>
+>2) Запустите main.exe
