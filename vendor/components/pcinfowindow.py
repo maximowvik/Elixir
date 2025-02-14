@@ -28,7 +28,7 @@ class PCInfoWindow(QWidget):
         self.initUI()
 
     def load_translations(self, language):
-        with open(f"{language}.json", "r", encoding="utf-8") as file:
+        with open(f"./vendor/core/language/{language}.json", "r", encoding="utf-8") as file:
             return json.load(file)
 
     def initUI(self):
@@ -192,7 +192,7 @@ class PCInfoWindow(QWidget):
             return f"{self.translations['total_memory']}: {total_memory // (1024 ** 3)} GB\n{self.translations['available_memory']}: {available_memory // (1024 ** 3)} GB"
         except Exception as e:
             print(f"Error reading RAM info: {e}")
-            return "Не удалось получить информацию о оперативной памяти"
+            return "Не удалось получить информацию об оперативной памяти"
 
     def get_storage_info(self):
         try:
