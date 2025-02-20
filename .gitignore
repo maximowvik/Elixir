@@ -8,3 +8,4 @@ __pycache__
 *.pyd
 *.pyw
 *.pyz
+test.py
