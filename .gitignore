@@ -2,3 +2,9 @@
 build
 dist
 main.exe
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
