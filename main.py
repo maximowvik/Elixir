@@ -117,7 +117,7 @@ class MainWindow(QWidget):
         icon_close = QIcon(pixmap_close)
         close_button.setIcon(icon_close)
         close_button.setIconSize(QSize(15, 15))
-        close_button.connect(self.close)
+        close_button.clicked.connect(self.close)
         title_layout.addWidget(close_button)
 
         main_layout.addLayout(title_layout)
