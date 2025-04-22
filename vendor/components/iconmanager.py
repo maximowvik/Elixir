@@ -4,13 +4,29 @@ class IconManager:
     @staticmethod
     def get_icon(window_name):
         icons = {
-            "main": "pic/logonew.png",
-            "qr_code": "icon/scan.ico",
-            "speed_test": "icon/speed.ico",
-            "paint": "icon/paint.ico",
-            "pc_info": "icon/info.ico",
-            "translator": "icon/journal.ico",
-            "screen_recorder": "icon/video.ico",
-            "screen_share": "icon/computer.ico",
+            "main": "vendor/icon/logonew.ico",
+            "qr_code": "vendor/icon/scan.ico",
+            "speed_test": "vendor/icon/speed.ico",
+            "paint": "vendor/icon/paint.ico",
+            "pc_info": "vendor/icon/info.ico",
+            "translator": "vendor/icon/journal.ico",
+            "screen_recorder": "vendor/icon/video.ico",
+            "screen_share": "vendor/icon/computer.ico",
         }
-        return QIcon(icons.get(window_name, "icon/icon.ico"))
+        return QIcon(icons.get(window_name, "vendor/icon/icon.ico"))
+    @staticmethod
+    def get_images(window_name) -> str:
+        images = {
+            "main": "vendor/images/logonew.png",
+            "qr_code": "vendor/images/scan.png",
+            "speed_test": "vendor/images/speed.png",
+            "paint": "vendor/images/paint.png",
+            "pc_info": "vendor/images/info.png",
+            "translator": "vendor/images/journal.png",
+            "screen_recorder": "vendor/images/video.png",
+            "screen_share": "vendor/images/computer.png",
+            "chat":"vendor/images/chat.png",
+            "screenshot":"vendor/images/folder.png",
+            "browser":"vendor/images/globe.png",
+        }
+        return images.get(window_name, "vendor/images/images.png")

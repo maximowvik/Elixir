@@ -16,8 +16,6 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
 from PyQt6.QtCore import Qt, QSize, QRectF, QPoint
 from PyQt6.QtGui import QScreen
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 from vendor.components.iconmanager import IconManager
 from vendor.components.qrcodewindow import QRCodeWindow
 from vendor.components.browser import Browser
@@ -170,32 +168,32 @@ class MainWindow(QWidget):
         grid_layout.addWidget(button6, 1, 2)
 
         #Кнопка 7
-        button7 = self.create_button("pic/globe.png")
+        button7 = self.create_button(IconManager.get_images('browser'))
         button7.clicked.connect(self.open_window7)
         grid_layout.addWidget(button7, 2, 0)
 
         #Кнопка 8
-        button8 = self.create_button("pic/folder.png")
+        button8 = self.create_button(IconManager.get_images('screenshot'))
         button8.clicked.connect(self.open_window8)
         grid_layout.addWidget(button8, 2, 1)
 
         #Кнопка 9
-        button9 = self.create_button("pic/chat.png")
+        button9 = self.create_button(IconManager.get_images('chat'))
         button9.clicked.connect(self.open_window9)
         grid_layout.addWidget(button9, 2, 2)
 
         #Кнопка 10
-        button10 = self.create_button("pic/video.png")
+        button10 = self.create_button(IconManager.get_images('screen_recorder'))
         button10.clicked.connect(self.open_window10)
         grid_layout.addWidget(button10, 3, 0)
 
         #Кнопка 11
-        button11 = self.create_button("pic/computer.png")
+        button11 = self.create_button(IconManager.get_images('screen_share'))
         button11.clicked.connect(self.open_window11)
         grid_layout.addWidget(button11, 3, 1)
 
         #Кнопка 12
-        button12 = self.create_button("pic/journal.png")
+        button12 = self.create_button(IconManager.get_images('translator'))
         button12.clicked.connect(self.open_window12)
         grid_layout.addWidget(button12, 3, 2)
 
@@ -404,7 +402,6 @@ class MainWindow(QWidget):
 
     def open_window8(self):
         self.screenshot_window = ScreenshotWindow(self.language)
-
         self.screenshot_window.show()
 
     def open_window9(self):
