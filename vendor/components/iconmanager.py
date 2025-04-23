@@ -18,6 +18,7 @@ class IconManager:
     def get_images(window_name) -> str:
         images = {
             "main": "vendor/images/logonew.png",
+            "main_logo": "vendor/images/logo.png",
             "qr_code": "vendor/images/scan.png",
             "speed_test": "vendor/images/speed.png",
             "paint": "vendor/images/paint.png",
@@ -28,5 +29,10 @@ class IconManager:
             "chat":"vendor/images/chat.png",
             "screenshot":"vendor/images/folder.png",
             "browser":"vendor/images/globe.png",
+            "audio":"vendor/images/audio.png",
+            "microphone":"vendor/images/mic.png",
+            "speed_test":"vendor/images/speed.png",
+            "change_theme":"vendor/images/themes.png",
+            "button_close":"vendor/images/close.png",
         }
         return images.get(window_name, "vendor/images/images.png")

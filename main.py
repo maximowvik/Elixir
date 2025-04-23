@@ -28,6 +28,12 @@ from vendor.components.tranlatorwindow import TranslatorWindow
 from vendor.components.pcinfowindow import PCInfoWindow
 from vendor.components.paintwindow import PaintWindow
 
+# Настройки DPI для высоких разрешений
+if hasattr(Qt, 'AA_EnableHighDpiScaling'):
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -92,8 +98,8 @@ class MainWindow(QWidget):
         #Кнопка смены темы
         self.theme_button = QPushButton()
         self.theme_button.setStyleSheet("background-color: transparent; border: none;")
-        self.pixmap_theme_light = QPixmap("pic/themes.png")
-        self.pixmap_theme_dark = QPixmap("pic/themes.png")
+        self.pixmap_theme_light = QPixmap(IconManager.get_images("change_theme"))
+        self.pixmap_theme_dark = QPixmap(IconManager.get_images("change_theme"))
         self.theme_button.setIcon(QIcon(self.pixmap_theme_light if self.theme == "light" else self.pixmap_theme_dark))
         self.theme_button.clicked.connect(self.toggle_theme)
         title_layout.addWidget(self.theme_button)
@@ -111,7 +117,7 @@ class MainWindow(QWidget):
         #Кнопка закрытия
         close_button = QPushButton()
         close_button.setStyleSheet("background-color: transparent; border: none;")
-        pixmap_close = QPixmap("pic/close.png")
+        pixmap_close = QPixmap(IconManager.get_images("button_close"))
         icon_close = QIcon(pixmap_close)
         close_button.setIcon(icon_close)
         close_button.setIconSize(QSize(15, 15))
@@ -122,7 +128,7 @@ class MainWindow(QWidget):
 
         #Логотип сверху
         top_image_label = QLabel()
-        top_image_pixmap = QPixmap("pic/logo.png")
+        top_image_pixmap = QPixmap(IconManager.get_images("main_logo"))
 
         scaled_pixmap = top_image_pixmap.scaledToWidth(
             self.width() // 2, Qt.TransformationMode.SmoothTransformation
@@ -138,32 +144,32 @@ class MainWindow(QWidget):
         grid_layout.setVerticalSpacing(30)
 
         #Кнопка 1
-        button1 = self.create_button("pic/scan.png")
+        button1 = self.create_button(IconManager.get_images("qr_code"))
         button1.clicked.connect(self.open_window1)
         grid_layout.addWidget(button1, 0, 0)
 
         #Кнопка 2
-        button2 = self.create_button("pic/speed.png")
+        button2 = self.create_button(IconManager.get_images("speed_test"))
         button2.clicked.connect(self.open_window2)
         grid_layout.addWidget(button2, 0, 1)
 
         #Кнопка 3
-        button3 = self.create_button("pic/mic.png")
+        button3 = self.create_button(IconManager.get_images("microphone"))
         button3.clicked.connect(self.open_window3)
         grid_layout.addWidget(button3, 0, 2)
 
         #Кнопка 4
-        button4 = self.create_button("pic/audio.png")
+        button4 = self.create_button(IconManager.get_images("audio"))
         button4.clicked.connect(self.open_window4)
         grid_layout.addWidget(button4, 1, 0)
 
         #Кнопка 5
-        button5 = self.create_button("pic/paint.png")
+        button5 = self.create_button(IconManager.get_images("paint"))
         button5.clicked.connect(self.open_window5)
         grid_layout.addWidget(button5, 1, 1)
 
         #Кнопка 6
-        button6 = self.create_button("pic/info.png")
+        button6 = self.create_button(IconManager.get_images("pc_info"))
         button6.clicked.connect(self.open_window6)
         grid_layout.addWidget(button6, 1, 2)
 
@@ -260,21 +266,6 @@ class MainWindow(QWidget):
                     padding: 10px;
                     border-radius: 5px;
                 }
-                QProgressBar {
-                    border: 2px solid grey;
-                    border-radius: 5px;
-                    text-align: center;
-                    background-color: #f0f0f0;
-                    font-family: 'Segoe UI';
-                    font-size: 12pt;
-                }
-                QProgressBar::chunk {
-                    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
-                                                       stop:0 rgba(66, 76, 230, 255),  /* Синий */
-                                                       stop:0.5 rgba(174, 0, 238, 255), /* Фиолетовый */
-                                                       stop:1 rgba(255, 72, 145, 255)); /* Розовый */
-                    border-radius: 5px;
-                }
                 """
             )
         else:
@@ -311,21 +302,6 @@ class MainWindow(QWidget):
                     font-family: 'Segoe UI';
                     font-size: 12pt;
                     padding: 10px;
-                    border-radius: 5px;
-                }
-                QProgressBar {
-                    border: 2px solid grey;
-                    border-radius: 5px;
-                    text-align: center;
-                    background-color: #f0f0f0;
-                    font-family: 'Segoe UI';
-                    font-size: 12pt;
-                }
-                QProgressBar::chunk {
-                    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
-                                                       stop:0 rgba(66, 76, 230, 255),  /* Синий */
-                                                       stop:0.5 rgba(174, 0, 238, 255), /* Фиолетовый */
-                                                       stop:1 rgba(255, 72, 145, 255)); /* Розовый */
                     border-radius: 5px;
                 }
                 """
@@ -470,6 +446,13 @@ class MainWindow(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    
+    # Создаем файл qt.conf для правильной работы DPI
+    import os
+    if not os.path.exists("qt.conf"):
+        with open("qt.conf", "w") as f:
+            f.write("[Platforms]\nWindowsArguments = dpiawareness=0,1,2\n")
+    
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
