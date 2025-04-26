@@ -56,5 +56,7 @@
     "cancel_button": "Cancel",
     "ip_error": "IP not available",
     "test_failed": "Speed test failed",
-    "connection_error": "Connection error"
+    "connection_error": "Connection error",
+    "ping": "Ping",
+    "error": "Error"
 }

@@ -4,146 +4,154 @@ import psutil
 import GPUtil
 import cpuinfo
 import json
+
 from PyQt6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QPushButton,
-    QLabel,
-    QVBoxLayout,
-    QHBoxLayout,
-    QSpacerItem,
-    QSizePolicy
+    QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout,
+    QSpacerItem, QSizePolicy
 )
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
 from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, QTimer
 from PyQt6.QtGui import QScreen
+
 from .iconmanager import IconManager
 
 class PCInfoWindow(QWidget):
-    def __init__(self, language):
+    def __init__(self, language, theme_manager):
         super().__init__()
         self._old_pos = None
         self.language = language
+        self.theme_manager = theme_manager
         self.translations = self.load_translations(self.language)
-        self.initUI()
+
+        self.init_ui()
+        self.center_window()
+
+        # Подписка на сигнал изменения темы
+        self.theme_manager.theme_changed.connect(self.apply_theme)
+        self.apply_theme()
 
     def load_translations(self, language):
         with open(f"./vendor/core/language/{language}.json", "r", encoding="utf-8") as file:
             return json.load(file)
 
-    def initUI(self):
+    def init_ui(self):
         self.setWindowTitle(self.translations["pc_info_window_title"])
         self.setWindowIcon(IconManager.get_icon("pc_info"))
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        main_layout = QVBoxLayout()
+        self.main_layout = QVBoxLayout()
 
-        title_layout = QHBoxLayout()
+        self.setup_title_bar()
+        self.setup_info_section()
+        self.setup_copy_button()
+        self.setup_notification_label()
 
-        title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        self.setLayout(self.main_layout)
 
-        #Кнопка свернуть
-        minimize_button = QPushButton()
-        minimize_button.setStyleSheet("background-color: transparent; border: none;")
-        pixmap_minimize = QPixmap("pic/minus.png")
-        icon_minimize = QIcon(pixmap_minimize)
-        minimize_button.setIcon(icon_minimize)
-        minimize_button.setIconSize(QSize(30, 30))
-        minimize_button.clicked.connect(self.showMinimized)
-        title_layout.addWidget(minimize_button)
+    def setup_title_bar(self):
+        title = QHBoxLayout()
+        title.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized),
+                           (IconManager.get_images("button_close"), self.close)]:
+            btn = self.create_title_button(icon, slot)
+            title.addWidget(btn)
+        self.main_layout.addLayout(title)
 
-        #Кнопка закрытия
-        close_button = QPushButton()
-        close_button.setStyleSheet("background-color: transparent; border: none;")
-        pixmap_close = QPixmap("pic/close.png")
-        icon_close = QIcon(pixmap_close)
-        close_button.setIcon(icon_close)
-        close_button.setIconSize(QSize(30, 30))
-        close_button.clicked.connect(self.close)
-        title_layout.addWidget(close_button)
-
-        main_layout.addLayout(title_layout)
-
-        #Получение информации о ПК
+    def setup_info_section(self):
         pc_info = self.get_pc_info()
-
-        #Отображение информации о ПК
         self.info_label = QLabel(pc_info, self)
         self.info_label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.info_label.setWordWrap(True)
-        self.info_label.setStyleSheet("font-family: 'Segoe UI'; font-size: 12pt;")
-        main_layout.addWidget(self.info_label)
+        self.main_layout.addWidget(self.info_label)
 
-        #Кнопка копирования
+    def setup_copy_button(self):
         self.copy_button = QPushButton(self.translations["copy_button"], self)
-        self.copy_button.setStyleSheet("""
-            background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                                        stop: 0 #6a00ee, stop: 0.5 #b000ff, stop: 1 #ff4891);
-            border: none;
-            color: white;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-            padding: 10px;
-            border-radius: 5px;
-        """)
         self.copy_button.clicked.connect(self.copy_to_clipboard)
-        main_layout.addWidget(self.copy_button)
+        self.main_layout.addWidget(self.copy_button)
 
-        #Уведомление о копировании
+    def setup_notification_label(self):
         self.notification_label = QLabel(self.translations["notification_label"], self)
         self.notification_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.notification_label.setStyleSheet("font-family: 'Segoe UI'; font-size: 12pt; color: green;")
         self.notification_label.hide()
-        main_layout.addWidget(self.notification_label)
+        self.main_layout.addWidget(self.notification_label)
 
-        self.setLayout(main_layout)
-        self.center_window(self)
+    def apply_theme(self):
+        palette = self.theme_manager.theme_palette[self.theme_manager.current_theme()]
+
+        self.setStyleSheet(f"""
+            QWidget {{
+                background-color: {palette['bg']};
+                color: {palette['fg']};
+                font-family: 'Segoe UI';
+                font-size: 12pt;
+            }}
+            QPushButton {{
+                background-color: {palette['bg']};
+                color: {palette['fg']};
+                border: 1px solid {palette['border']};
+                border-radius: 5px;
+                padding: 10px;
+            }}
+            QPushButton:hover {{
+                background-color: {palette['hover']};
+            }}
+            QPushButton:pressed {{
+                background-color: {palette['pressed']};
+            }}
+        """)
+
+    def create_title_button(self, icon_name, slot):
+        btn = QPushButton()
+        btn.setIcon(QIcon(QPixmap(f"{icon_name}")))
+        btn.setIconSize(QSize(35, 35))
+        btn.setFixedSize(40, 40)
+        btn.setStyleSheet("""
+            QPushButton {
+                background: transparent;
+                border: none;
+                border-radius: 10px;
+            }
+            QPushButton:hover {
+                background: rgba(0, 0, 0, 30);
+            }
+            QPushButton:pressed {
+                background: rgba(0, 0, 0, 50);
+            }
+        """)
+        btn.clicked.connect(slot)
+        return btn
 
     def get_pc_info(self):
-        pc_name = socket.gethostname()
-        windows_version = self.get_windows_version()
-        windows_key = self.get_windows_key()
-        cpu_info = self.get_cpu_info()
-        gpu_info = self.get_gpu_info()
-        ram_info = self.get_ram_info()
-        storage_info = self.get_storage_info()
-        ip_address = self.get_ip_address()
-
-        return (
-            f"{self.translations['pc_name']}: {pc_name}\n"
-            f"{self.translations['windows_version']}: {windows_version}\n"
-            f"{self.translations['windows_key']}: {windows_key}\n"
-            f"{self.translations['cpu_info']}: {cpu_info}\n"
-            f"{self.translations['gpu_info']}: {gpu_info}\n"
-            f"{ram_info}\n"
-            f"{self.translations['storage_info']}: {storage_info}\n"
-            f"{self.translations['ip_address']}: {ip_address}\n"
-        )
+        info_lines = [
+            f"{self.translations['pc_name']}: {socket.gethostname()}",
+            f"{self.translations['windows_version']}: {self.get_windows_version()}",
+            f"{self.translations['windows_key']}: {self.get_windows_key()}",
+            f"{self.translations['cpu_info']}: {self.get_cpu_info()}",
+            f"{self.translations['gpu_info']}: {self.get_gpu_info()}",
+            self.get_ram_info(),
+            f"{self.translations['storage_info']}: {self.get_storage_info()}",
+            f"{self.translations['ip_address']}: {self.get_ip_address()}"
+        ]
+        return "\n".join(info_lines)
 
     def get_windows_version(self):
         try:
-            registry = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
-            key = winreg.OpenKey(registry, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion")
-            product_name, _ = winreg.QueryValueEx(key, "ProductName")
-            current_build, _ = winreg.QueryValueEx(key, "CurrentBuild")
-            ubbr, _ = winreg.QueryValueEx(key, "UBR")
-            release_id, _ = winreg.QueryValueEx(key, "ReleaseId")
-            winreg.CloseKey(key)
-            winreg.CloseKey(registry)
-            return f"{product_name} (Build {current_build}.{ubbr}) {release_id}"
+            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion") as key:
+                product_name = winreg.QueryValueEx(key, "ProductName")[0]
+                current_build = winreg.QueryValueEx(key, "CurrentBuild")[0]
+                ubr = winreg.QueryValueEx(key, "UBR")[0]
+                release_id = winreg.QueryValueEx(key, "ReleaseId")[0]
+                return f"{product_name} (Build {current_build}.{ubr}) {release_id}"
         except Exception as e:
             print(f"Error reading Windows version: {e}")
             return "Не удалось получить версию Windows"
 
     def get_windows_key(self):
         try:
-            registry = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
-            key = winreg.OpenKey(registry, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion")
-            digital_product_id, _ = winreg.QueryValueEx(key, "DigitalProductId")
-            winreg.CloseKey(key)
-            winreg.CloseKey(registry)
-            return self.decode_product_key(digital_product_id)
+            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion") as key:
+                digital_product_id = winreg.QueryValueEx(key, "DigitalProductId")[0]
+            return self.decode_product_key(bytearray(digital_product_id))
         except Exception as e:
             print(f"Error reading Windows key: {e}")
             return "Не удалось получить ключ Windows"
@@ -153,23 +161,19 @@ class PCInfoWindow(QWidget):
         digits = "BCDFGHJKMPQRTVWXY2346789"
         decoded_chars = []
 
-        
-        digital_product_id_list = list(digital_product_id)
-
         for i in range(24):
             current = 0
             for j in range(14, -1, -1):
-                current = (current * 256) ^ digital_product_id_list[j + key_offset]
-                digital_product_id_list[j + key_offset] = current // 24
-                current = current % 24
+                current = (current * 256) ^ digital_product_id[j + key_offset]
+                digital_product_id[j + key_offset] = current // 24
+                current %= 24
             decoded_chars.append(digits[current])
 
         return "".join(decoded_chars[::-1])
 
     def get_cpu_info(self):
         try:
-            cpu_info = cpuinfo.get_cpu_info()
-            return f"{cpu_info['brand_raw']}"
+            return cpuinfo.get_cpu_info()['brand_raw']
         except Exception as e:
             print(f"Error reading CPU info: {e}")
             return "Не удалось получить информацию о процессоре"
@@ -177,30 +181,27 @@ class PCInfoWindow(QWidget):
     def get_gpu_info(self):
         try:
             gpus = GPUtil.getGPUs()
-            if gpus:
-                return gpus[0].name
-            else:
-                return "Не удалось получить информацию о видеокарте"
+            return gpus[0].name if gpus else "Не удалось получить информацию о видеокарте"
         except Exception as e:
             print(f"Error reading GPU info: {e}")
             return "Не удалось получить информацию о видеокарте"
 
     def get_ram_info(self):
         try:
-            total_memory = psutil.virtual_memory().total
-            available_memory = psutil.virtual_memory().available
-            return f"{self.translations['total_memory']}: {total_memory // (1024 ** 3)} GB\n{self.translations['available_memory']}: {available_memory // (1024 ** 3)} GB"
+            mem = psutil.virtual_memory()
+            total = mem.total // (1024 ** 3)
+            avail = mem.available // (1024 ** 3)
+            return f"{self.translations['total_memory']}: {total} GB\n{self.translations['available_memory']}: {avail} GB"
         except Exception as e:
             print(f"Error reading RAM info: {e}")
             return "Не удалось получить информацию об оперативной памяти"
 
     def get_storage_info(self):
         try:
-            partitions = psutil.disk_partitions()
             storage_info = []
-            for partition in partitions:
-                usage = psutil.disk_usage(partition.mountpoint)
-                storage_info.append(f"{partition.device} {usage.total // (1024 ** 3)} GB")
+            for part in psutil.disk_partitions():
+                usage = psutil.disk_usage(part.mountpoint)
+                storage_info.append(f"{part.device} {usage.total // (1024 ** 3)} GB")
             return ", ".join(storage_info)
         except Exception as e:
             print(f"Error reading storage info: {e}")
@@ -208,8 +209,11 @@ class PCInfoWindow(QWidget):
 
     def get_ip_address(self):
         try:
-            hostname = socket.gethostname()
-            return socket.gethostbyname(hostname)
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            ip = s.getsockname()[0]
+            s.close()
+            return ip
         except Exception as e:
             print(f"Error reading IP address: {e}")
             return "Не удалось получить IP-адрес"
@@ -220,12 +224,11 @@ class PCInfoWindow(QWidget):
         self.notification_label.show()
         QTimer.singleShot(2000, self.notification_label.hide)
 
-    def center_window(self, window):
+    def center_window(self):
         screen = QScreen.availableGeometry(QApplication.primaryScreen())
-        qr = window.frameGeometry()
-        cp = screen.center()
-        qr.moveCenter(cp)
-        window.move(qr.topLeft())
+        qr = self.frameGeometry()
+        qr.moveCenter(screen.center())
+        self.move(qr.topLeft())
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -233,7 +236,8 @@ class PCInfoWindow(QWidget):
         rect = QRectF(self.rect())
         path = QPainterPath()
         path.addRoundedRect(rect, 10, 10)
-        painter.fillPath(path, QColor(self.palette().color(self.backgroundRole())))
+        palette = self.theme_manager.theme_palette[self.theme_manager.current_theme()]
+        painter.fillPath(path, QColor(palette['bg']))
         painter.setClipPath(path)
         super().paintEvent(event)
 

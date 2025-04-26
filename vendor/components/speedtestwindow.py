@@ -1,182 +1,208 @@
 import socket
 import json
-from PyQt6.QtWidgets import (
-    QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout,
-    QSpacerItem, QSizePolicy, QProgressBar, QMessageBox
-)
-from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath, QScreen
-from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, QThread, pyqtSignal
+import threading
 import speedtest
+
+from PyQt6.QtWidgets import (
+    QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout,
+    QSpacerItem, QSizePolicy, QProgressBar, QApplication
+)
+from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
+from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, pyqtSignal, QObject
+
 from .iconmanager import IconManager
 
 
-class SpeedTestWorker(QThread):
+class SpeedTestWorker(QObject):
     result = pyqtSignal(float, float)
-    progress = pyqtSignal(int)
+    progress = pyqtSignal(int, str)
+    error = pyqtSignal(str)
 
     def run(self):
-        st = speedtest.Speedtest()
         try:
-            st.get_servers()
-            self.progress.emit(33)
-            st.download()
-            self.progress.emit(66)
-            st.upload()
-            self.progress.emit(100)
-            results = st.results.dict()
-            download_speed = results["download"] / 1_000_000
-            upload_speed = results["upload"] / 1_000_000
-            self.result.emit(download_speed, upload_speed)
-        except speedtest.SpeedtestHTTPError as e:
-            print(f"HTTP Error: {e}")
-        except speedtest.SpeedtestCLIError as e:
-            print(f"CLI Error: {e}")
+            st = speedtest.Speedtest()
+            self.progress.emit(20, "Поиск сервера...")
+            st.get_best_server()
+
+            self.progress.emit(50, "Скорость загрузки...")
+            download = st.download() / 1_000_000
+
+            self.progress.emit(75, "Скорость отдачи...")
+            upload = st.upload() / 1_000_000
+
+            self.progress.emit(100, "Готово")
+            self.result.emit(download, upload)
+
         except Exception as e:
-            print(f"Unexpected Error: {e}")
+            self.error.emit(str(e))
+
 
 class SpeedTestWindow(QWidget):
-    def __init__(self, language):
+    def __init__(self, language, theme_manager):
         super().__init__()
-        self._old_pos = None
         self.language = language
-        self.translations = self.load_translations(self.language)
-        self.initUI()
+        self.theme_manager = theme_manager
+        self.translations = self.load_translations(language)
+        self._last_results = (0, 0)
+        self._old_pos = None
 
-    def load_translations(self, language):
-        with open(f"{language}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
+        self.theme_manager.theme_changed.connect(self.update_theme)
 
-    def initUI(self):
-        self.setWindowTitle(self.translations["speed_test_window_title"])
-        self.setWindowIcon(IconManager.get_icon("speed_test"))
+        self.setup_ui()
+        self.update_theme(self.theme_manager.current_theme())
+
+    def load_translations(self, lang):
+        with open(f"vendor/core/language/{lang}.json", encoding="utf-8") as f:
+            return json.load(f)
+
+    def setup_ui(self):
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setWindowTitle(self.translations["speed_test_window_title"])
+        self.setWindowIcon(IconManager.get_icon("speed_test"))
 
-        main_layout = QVBoxLayout()
+        layout = QVBoxLayout()
 
-        title_layout = QHBoxLayout()
+        # Верхняя панель
+        title = QHBoxLayout()
+        title.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized), (IconManager.get_images("button_close"), self.close)]:
+            btn = self.create_title_button(icon, slot)
+            title.addWidget(btn)
+        layout.addLayout(title)
 
-        title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        # Центральные элементы
+        self.speedometer = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
+        self.speedometer.setStyleSheet("font-size: 18px; font-family: 'Segoe UI'; text-align: left;")
+        layout.addWidget(self.speedometer)
 
-        #Кнопка свернуть
-        minimize_button = QPushButton()
-        minimize_button.setStyleSheet("background-color: transparent; border: none;")
-        pixmap_minimize = QPixmap("pic/minus.png")
-        icon_minimize = QIcon(pixmap_minimize)
-        minimize_button.setIcon(icon_minimize)
-        minimize_button.setIconSize(QSize(30, 30))
-        minimize_button.clicked.connect(self.showMinimized)
-        title_layout.addWidget(minimize_button)
+        self.ip_label = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
+        self.ip_label.setStyleSheet("font-size: 16px; font-family: 'Segoe UI'; text-align:left;")
+        layout.addWidget(self.ip_label)
 
-        #Кнопка закрытия
-        close_button = QPushButton()
-        close_button.setStyleSheet("background-color: transparent; border: none;")
-        pixmap_close = QPixmap("pic/close.png")
-        icon_close = QIcon(pixmap_close)
-        close_button.setIcon(icon_close)
-        close_button.setIconSize(QSize(30, 30))
-        close_button.clicked.connect(self.close)
-        title_layout.addWidget(close_button)
-
-        main_layout.addLayout(title_layout)
-
-        #Макет для спидометра
-        speedometer_layout = QVBoxLayout()
-
-        #Спидометр
-        self.speedometer = QLabel(self)
-        self.speedometer.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.speedometer.setStyleSheet("font-size: 24px; font-family: 'Segoe UI';")
-        speedometer_layout.addWidget(self.speedometer)
-
-        #IP-адрес
-        self.ip_label = QLabel(self)
-        self.ip_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.ip_label.setStyleSheet("font-size: 16px; font-family: 'Segoe UI';")
-        speedometer_layout.addWidget(self.ip_label)
-
-        #Прогресс-бар
-        self.progress_bar = QProgressBar(self)
+        self.progress_bar = QProgressBar()
         self.progress_bar.setRange(0, 100)
-        self.progress_bar.setValue(0)
+        layout.addWidget(self.progress_bar)
 
-        #Стиль для прогресс-бара
-        self.progress_bar.setStyleSheet("""
-            QProgressBar {
-                border: 2px solid grey;
-                border-radius: 7px;
-                text-align: center;
-                background-color: #f0f0f0;
-                font-family: 'Segoe UI';
-                font-size: 12pt;
-            }
-            QProgressBar::chunk {
-                background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
-                                                   stop:0 rgba(66, 76, 230, 255),  /* Синий */
-                                                   stop:0.5 rgba(174, 0, 238, 255), /* Фиолетовый */
-                                                   stop:1 rgba(255, 72, 145, 255)); /* Розовый */
-                border-radius: 5px;
-            }
-        """)
+        self.setLayout(layout)
 
-        speedometer_layout.addWidget(self.progress_bar)
-
-        main_layout.addLayout(speedometer_layout)
-
-        self.setLayout(main_layout)
-        self.center_window(self)
-
-        #Запуск измерения скорости
-        self.worker = SpeedTestWorker()
-        self.worker.result.connect(self.display_results)
-        self.worker.progress.connect(self.update_progress)
-        self.worker.start()
-
-        #Получение IP-адреса
+        # Получение IP
         self.ip_address = self.get_ip_address()
         self.ip_label.setText(f"{self.translations['ip_address']}: {self.ip_address}")
 
+        # Запуск теста
+        self.worker = SpeedTestWorker()
+        self.worker.result.connect(self.display_results)
+        self.worker.progress.connect(self.update_progress)
+        self.worker.error.connect(self.display_error)
+
+        self.worker_thread = threading.Thread(target=self.worker.run, daemon=True)
+        self.worker_thread.start()
+
+        self.center_window()
+
+    def create_title_button(self, icon_name, slot):
+        btn = QPushButton()
+        btn.setIcon(QIcon(QPixmap(f"{icon_name}")))
+        btn.setIconSize(QSize(35, 35))
+        btn.setFixedSize(40, 40)
+        btn.setStyleSheet("""
+            QPushButton {
+                background: transparent;
+                border: none;
+                border-radius: 10px;
+            }
+            QPushButton:hover {
+                background: rgba(0, 0, 0, 30);
+            }
+            QPushButton:pressed {
+                background: rgba(0, 0, 0, 50);
+            }
+        """)
+        btn.clicked.connect(slot)
+        return btn
+
+    def update_progress(self, value, text):
+        self.progress_bar.setValue(value)
+        self.speedometer.setText(text)
+
+    def display_results(self, d, u):
+        self._last_results = (d, u)
+        self.speedometer.setText(
+            f"{self.translations['download_speed']}: {d:.2f} Mbps\n"
+            f"{self.translations['upload_speed']}: {u:.2f} Mbps"
+        )
+
+    def display_error(self, message):
+        self.speedometer.setText(f"{self.translations['error']}: {message}")
+        self.progress_bar.setValue(0)
+
     def get_ip_address(self):
         try:
-            hostname = socket.gethostname()
-            return socket.gethostbyname(hostname)
-        except Exception as e:
-            print(f"Error reading IP address: {e}")
-            return "Не удалось получить IP-адрес"
+            return socket.gethostbyname(socket.gethostname())
+        except:
+            return "N/A"
 
-    def display_results(self, download_speed, upload_speed):
-        self.speedometer.setText(f"{self.translations['download_speed']}: {download_speed:.2f} Mbps\n{self.translations['upload_speed']}: {upload_speed:.2f} Mbps")
+    def center_window(self):
+        screen = QApplication.primaryScreen().availableGeometry()
+        frame = self.frameGeometry()
+        frame.moveCenter(screen.center())
+        self.move(frame.topLeft())
 
-    def update_progress(self, value):
-        self.progress_bar.setValue(value)
+    def update_language(self, lang):
+        self.translations = self.load_translations(lang)
+        self.setWindowTitle(self.translations["speed_test_window_title"])
+        self.ip_label.setText(f"{self.translations['ip_address']}: {self.ip_address}")
+        self.display_results(*self._last_results)
 
-    def center_window(self, window):
-        screen = QScreen.availableGeometry(QApplication.primaryScreen())
-        qr = window.frameGeometry()
-        cp = screen.center()
-        qr.moveCenter(cp)
-        window.move(qr.topLeft())
+    def update_theme(self, theme):
+        theme_vals = self.theme_manager.theme_palette[theme]
+        bg = theme_vals["bg"]
+        fg = theme_vals["fg"]
+        bar = theme_vals["border"]
 
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        rect = QRectF(self.rect())
+        self.setStyleSheet(f"""
+            QWidget {{ background-color: {bg}; color: {fg}; }}
+            QProgressBar {{
+                border: 2px solid {bar}; border-radius: 7px;
+                background-color: {bg};
+                height: 30px;
+                border-radius: 10px;
+                text-align: center;
+                font-family: 'Segoe UI';
+                font-size: 10pt;
+                color: {fg};
+            }}
+            QProgressBar::chunk {{
+                border-radius: 9px;
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #6a5acd,
+                    stop:0.5 #9b59b6,
+                    stop:1 #e74c3c
+                );
+            }}
+        """)
+
+    def paintEvent(self, e):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
         path = QPainterPath()
-        path.addRoundedRect(rect, 10, 10)
-        painter.fillPath(path, QColor(self.palette().color(self.backgroundRole())))
-        painter.setClipPath(path)
-        super().paintEvent(event)
+        path.addRoundedRect(QRectF(self.rect()), 10, 10)
+        p.fillPath(path, QColor(self.palette().color(self.backgroundRole())))
+        p.setClipPath(path)
+        super().paintEvent(e)
 
-    def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
-            self._old_pos = event.globalPosition().toPoint()
+    def mousePressEvent(self, e):
+        if e.button() == Qt.MouseButton.LeftButton:
+            self._old_pos = e.globalPosition().toPoint()
 
-    def mouseMoveEvent(self, event):
-        if self._old_pos is not None:
-            delta = QPoint(event.globalPosition().toPoint() - self._old_pos)
-            self.move(self.x() + delta.x(), self.y() + delta.y())
-            self._old_pos = event.globalPosition().toPoint()
+    def mouseMoveEvent(self, e):
+        if self._old_pos:
+            delta = e.globalPosition().toPoint() - self._old_pos
+            self.move(self.pos() + delta)
+            self._old_pos = e.globalPosition().toPoint()
 
-    def mouseReleaseEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
+    def mouseReleaseEvent(self, e):
+        if e.button() == Qt.MouseButton.LeftButton:
             self._old_pos = None

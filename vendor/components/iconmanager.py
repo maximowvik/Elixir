@@ -34,5 +34,6 @@ class IconManager:
             "speed_test":"vendor/images/speed.png",
             "change_theme":"vendor/images/themes.png",
             "button_close":"vendor/images/close.png",
+            "roll_up_button":"vendor/images/minus.png",
         }
         return images.get(window_name, "vendor/images/images.png")

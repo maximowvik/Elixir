@@ -1,12 +1,10 @@
-import os
 import sys
-import winreg
 import json
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QGridLayout, 
-                            QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy, QComboBox)
+                             QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy, QComboBox)
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
-from PyQt6.QtCore import Qt, QSize, QRectF, QPoint
-from PyQt6.QtGui import QScreen, QBitmap, QRegion
+from PyQt6.QtCore import Qt, QSize, QRectF
+from PyQt6.QtGui import QScreen, QRegion
 from vendor.components.iconmanager import IconManager
 from vendor.components.qrcodewindow import QRCodeWindow
 from vendor.components.browser import Browser
@@ -17,19 +15,27 @@ from vendor.components.screesharewindow import ScreenShareWindow
 from vendor.components.tranlatorwindow import TranslatorWindow
 from vendor.components.pcinfowindow import PCInfoWindow
 from vendor.components.paintwindow import PaintWindow
+from thememanager import ThemeManager
 
 if hasattr(Qt, 'AA_EnableHighDpiScaling'):
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
 if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
+theme_manager = ThemeManager()
+
 class MainWindow(QWidget):
-    def __init__(self):
+    def __init__(self, language, theme_manager):
         super().__init__()
         self._old_pos = None
-        self.language = "ru"
+        self.language = language
+        self.theme_manager = theme_manager
         self._title_bar_buttons = []
         self.translations = self.load_translations(self.language)
+        
+        self.theme_manager.theme_changed.connect(self.update_theme)
+        self.update_theme(self.theme_manager.current_theme())
+
         self.init_ui()
         self.setFixedSize(QSize(370, 700))
 
@@ -41,20 +47,16 @@ class MainWindow(QWidget):
         self.setWindowTitle(self.translations["window_title"])
         self.setWindowIcon(IconManager.get_icon("main"))
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        
-        self.theme = self.get_system_theme()
-        self.apply_theme(self.theme)
-        
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(20, 20, 20, 20)
         main_layout.addLayout(self.create_title_bar())
-        
+
         logo = QLabel()
         logo_pixmap = QPixmap(IconManager.get_images("main_logo"))
         logo.setPixmap(logo_pixmap.scaledToWidth(300, Qt.TransformationMode.SmoothTransformation))
         logo.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(logo)
-        
+
         main_layout.addLayout(self.create_button_grid())
         self.setLayout(main_layout)
 
@@ -70,18 +72,12 @@ class MainWindow(QWidget):
 
         title_bar.addItem(QSpacerItem(10, 10, QSizePolicy.Policy.Expanding))
 
-        change_theme = self.create_title_button(IconManager.get_images("change_theme"), self.toggle_theme)
-        minimize_btn = self.create_title_button("pic/minus.png", self.showMinimized)
-        close_btn = self.create_title_button(IconManager.get_images("button_close"), self.close)
-
-        self._title_bar_buttons.extend([change_theme, minimize_btn, close_btn])
-
-        title_bar.addWidget(change_theme)
-        title_bar.addWidget(minimize_btn)
-        title_bar.addWidget(close_btn)
+        for icon, handler in [("change_theme", self.toggle_theme), ("pic/minus.png", self.showMinimized), ("button_close", self.close)]:
+            btn = self.create_title_button(IconManager.get_images(icon) if 'pic' not in icon else icon, handler)
+            self._title_bar_buttons.append(btn)
+            title_bar.addWidget(btn)
 
         return title_bar
-
 
     def create_title_button(self, icon_path, handler):
         btn = QPushButton()
@@ -109,7 +105,7 @@ class MainWindow(QWidget):
         grid = QGridLayout()
         grid.setVerticalSpacing(20)
         grid.setHorizontalSpacing(20)
-        
+
         buttons = [
             ("QR Code", "qr_code", self.open_qr_window),
             ("Speed Test", "speed_test", self.open_speedtest),
@@ -124,119 +120,53 @@ class MainWindow(QWidget):
             ("Screen Share", "screen_share", self.open_screenshare),
             ("Translator", "translator", self.open_translator)
         ]
-        
-        for i, (text, icon_name, handler) in enumerate(buttons):
-            btn = self.create_button(text, icon_name)
+
+        for i, (text, icon, handler) in enumerate(buttons):
+            btn = self.create_button(text, icon)
             btn.clicked.connect(handler)
             grid.addWidget(btn, i//3, i%3)
-            
+
         return grid
 
     def create_button(self, text, icon_name):
+        theme = self.theme_manager.theme_palette[self.theme]
         btn = QPushButton()
         btn.setIcon(QIcon(IconManager.get_images(icon_name)))
         btn.setIconSize(QSize(64, 64))
         btn.setFixedSize(QSize(100, 100))
-        btn.setStyleSheet("""
-            QPushButton {
-                background: %button_bg%;
+        btn.setStyleSheet(f"""
+            QPushButton {{
+                background: {theme['bg']};
                 border-radius: 10px;
                 padding: 15px;
-                color: %text_color%;
+                color: {theme['fg']};
                 font-size: 14px;
-                border: 0px solid %border_color%;
+                border: 0px solid {theme['border']};
                 text-align: center;
-            }
-            QPushButton:hover {
-                background: %button_hover%;
-            }
-            QPushButton:pressed {
-                background: %button_pressed%;
-            }
-        """.replace("%button_bg%", "#ffffff" if self.theme == "light" else "#222222") #f0f0f0, 333
-          .replace("%text_color%", "#333" if self.theme == "light" else "#fff")
-          .replace("%border_color%", "#ccc" if self.theme == "light" else "#555")
-          .replace("%button_hover%", "#e0e0e0" if self.theme == "light" else "#444")
-          .replace("%button_pressed%", "#d0d0d0" if self.theme == "light" else "#555"))
+            }}
+            QPushButton:hover {{ background: {theme['hover']}; }}
+            QPushButton:pressed {{ background: {theme['pressed']}; }}
+        """)
         return btn
-    
-    def button_style(self):
-        return """
-            QPushButton {
-                background: %(bg)s;
-                border-radius: 10px;
-                padding: 15px;
-                color: %(fg)s;
-                font-size: 14px;
-                border: 0px solid %(border)s;
-                text-align: center;
-            }
-            QPushButton:hover {
-                background: %(hover)s;
-            }
-            QPushButton:pressed {
-                background: %(pressed)s;
-            }
-        """ % {
-            "bg": "#ffffff" if self.theme == "light" else "#222222",
-            "fg": "#333" if self.theme == "light" else "#fff",
-            "border": "#ccc" if self.theme == "light" else "#555",
-            "hover": "#e0e0e0" if self.theme == "light" else "#444",
-            "pressed": "#d0d0d0" if self.theme == "light" else "#555",
-        }
 
-
-    def get_system_theme(self):
-        try:
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, 
-                               r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize") as key:
-                return "light" if winreg.QueryValueEx(key, "AppsUseLightTheme")[0] == 1 else "dark"
-        except:
-            return "light"
-
-    def apply_theme(self, theme):
+    def update_theme(self, theme: str):
         self.theme = theme
-        bg_color = "#ffffff" if theme == "light" else "#222222"
-        text_color = "#333333" if theme == "light" else "#ffffff"
-
+        theme_vals = self.theme_manager.theme_palette[self.theme]
         self.setStyleSheet(f"""
-            QWidget {{
-                background-color: {bg_color};
-                color: {text_color};
-                font-family: 'Segoe UI';
-                font-size: 12pt;
-            }}
-
-            QComboBox {{
-                background: {"#f0f0f0" if theme == "light" else "#333"};
-                border: 1px solid {"#ccc" if theme == "light" else "#555"};
-                color: {"#333" if theme == "light" else "#fff"};
-                padding: 5px 10px;
-                border-radius: 8px;
-                min-width: 120px;
-            }}
-            QComboBox:hover {{
-                background: {"#e0e0e0" if theme == "light" else "#444"};
-            }}
-            QComboBox::drop-down {{
-                border: none;
-                width: 20px;
-            }}
-            QComboBox QAbstractItemView {{
-                background: {"#ffffff" if theme == "light" else "#222"};
-                color: {"#000000" if theme == "light" else "#ffffff"};
-                selection-background-color: #ff4891;
-            }}
+            QWidget {{ background-color: {theme_vals['bg']}; color: {theme_vals['fg']}; font-family: 'Segoe UI'; font-size: 12pt; }}
+            QComboBox {{ background: {theme_vals['hover']}; border: 1px solid {theme_vals['border']}; color: {theme_vals['fg']}; padding: 5px 10px; border-radius: 8px; min-width: 120px; }}
+            QComboBox:hover {{ background: {theme_vals['bg']}; }}
+            QComboBox::drop-down {{ border: none; width: 20px; }}
+            QComboBox QAbstractItemView {{ background: {theme_vals['bg']}; color: {theme_vals['fg']}; selection-background-color: #ff4891; }}
         """)
 
-        # Обновляем стиль всех остальных кнопок, кроме кнопок заголовка
         for btn in self.findChildren(QPushButton):
             if btn not in self._title_bar_buttons:
-                btn.setStyleSheet(self.button_style())
+                btn.setStyleSheet(self.create_button("", "").styleSheet())
 
     def toggle_theme(self):
-        self.theme = "dark" if self.theme == "light" else "light"
-        self.apply_theme(self.theme)
+        new_theme = "dark" if self.theme_manager.current_theme() == "light" else "light"
+        self.theme_manager.set_theme(new_theme)
 
     def change_language(self, index):
         self.language = "ru" if index == 0 else "en"
@@ -268,77 +198,28 @@ class MainWindow(QWidget):
             self._old_pos = None
 
     def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         path = QPainterPath()
         path.addRoundedRect(QRectF(self.rect()), 10, 10)
-        painter.fillPath(path, QColor("#ffffff" if self.theme == "light" else "#222222"))
-        painter.setClipPath(path)
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.fillPath(path, QColor(self.theme_manager.theme_palette[self.theme]['bg']))
+        self.setMask(QRegion(path.toFillPolygon().toPolygon()))
         super().paintEvent(event)
 
-    def resizeEvent(self, event):
-        radius = 10
-        pixmap = QBitmap(self.size())
-        pixmap.clear()
-
-        painter = QPainter(pixmap)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.setBrush(Qt.GlobalColor.color1)
-        painter.setPen(Qt.PenStyle.NoPen)
-        path = QPainterPath()
-        path.addRoundedRect(QRectF(0, 0, self.width(), self.height()), radius, radius)
-        painter.drawPath(path)
-        painter.end()
-
-        self.setMask(QRegion(pixmap))
-        super().resizeEvent(event)
-
     # Window handlers
-    def open_qr_window(self): 
-        self.qr_window = QRCodeWindow(self.language)
-        self.qr_window.show()
+    def open_qr_window(self): self._open = QRCodeWindow(self.language, self.theme_manager); self._open.show()
+    def open_speedtest(self): self._open = SpeedTestWindow(self.language, self.theme_manager); self._open.show()
+    def open_paint(self): self._open = PaintWindow(self.language, self.theme_manager); self._open.show()
+    def open_pc_info(self): self._open = PCInfoWindow(self.language, self.theme_manager); self._open.show()
+    def open_browser(self): self._open = Browser(app); self._open.show()
+    def open_screenshot(self): self._open = ScreenshotWindow(self.language); self._open.show()
+    def open_recorder(self): self._open = ScreenRecorderWindow(self.language); self._open.show()
+    def open_screenshare(self): self._open = ScreenShareWindow(self.language); self._open.show()
+    def open_translator(self): self._open = TranslatorWindow(self.language); self._open.show()
+    def open_mic_window(self): self.create_simple_window("window_3_title", "window_3_label")
+    def open_audio_window(self): self.create_simple_window("window_4_title", "window_4_label")
+    def open_chat_window(self): self.create_simple_window("window_9_title", "window_9_label")
 
-    def open_speedtest(self): 
-        self.speed_window = SpeedTestWindow(self.language)
-        self.speed_window.show()
-
-    def open_paint(self): 
-        self.paint_window = PaintWindow(self.language)
-        self.paint_window.show()
-
-    def open_pc_info(self): 
-        self.pc_info_window = PCInfoWindow(self.language)
-        self.pc_info_window.show()
-
-    def open_browser(self): 
-        self.browser = Browser(app)
-        self.browser.show()
-
-    def open_screenshot(self): 
-        self.screenshot_window = ScreenshotWindow(self.language)
-        self.screenshot_window.show()
-
-    def open_recorder(self): 
-        self.recorder_window = ScreenRecorderWindow(self.language)
-        self.recorder_window.show()
-
-    def open_screenshare(self): 
-        self.screenshare_window = ScreenShareWindow(self.language)
-        self.screenshare_window.show()
-
-    def open_translator(self): 
-        self.translator_window = TranslatorWindow(self.language)
-        self.translator_window.show()
-    
-    def open_mic_window(self): 
-        self.create_simple_window("window_3_title", "window_3_label")
-    
-    def open_audio_window(self): 
-        self.create_simple_window("window_4_title", "window_4_label")
-    
-    def open_chat_window(self): 
-        self.create_simple_window("window_9_title", "window_9_label")
-    
     def create_simple_window(self, title_key, label_key):
         window = QWidget()
         window.setWindowTitle(self.translations[title_key])
@@ -348,6 +229,6 @@ class MainWindow(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = MainWindow("ru", theme_manager)
     window.show()
     sys.exit(app.exec())
