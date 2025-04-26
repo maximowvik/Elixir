@@ -19,13 +19,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.11'  # Укажите нужную версию Python
+        python-version: '3.11.12'  # Укажите нужную версию Python
 
     - name: Install dependencies
       run: |
-        py -m pip install --upgrade pip setuptools
-        pip install pyinstaller
-        # Установите другие зависимости, если они есть
+        py -m pip install --upgrade pip setuptools pyinstaller
         pip install -r requirements.txt
 
     - name: Build with PyInstaller
