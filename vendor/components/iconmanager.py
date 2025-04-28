@@ -8,6 +8,7 @@ class IconManager:
             "qr_code": "vendor/icon/scan.ico",
             "speed_test": "vendor/icon/speed.ico",
             "paint": "vendor/icon/paint.ico",
+            "chat": "vendor/icon/chat.ico",
             "pc_info": "vendor/icon/info.ico",
             "translator": "vendor/icon/journal.ico",
             "screen_recorder": "vendor/icon/video.ico",

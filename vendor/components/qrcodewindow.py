@@ -12,7 +12,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from .iconmanager import IconManager
 
-
 class QRCodeWindow(QWidget):
     def __init__(self, language, theme_manager):
         super().__init__()
@@ -39,13 +38,25 @@ class QRCodeWindow(QWidget):
         self.main_layout.setContentsMargins(20, 20, 20, 20)
         self.main_layout.setSpacing(15)
 
-        title = QHBoxLayout()
-        title.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
-        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized), (IconManager.get_images("button_close"), self.close)]:
-            btn = self.create_title_button(icon, slot)
-            title.addWidget(btn)
-        self.main_layout.addLayout(title)
+        self.init_title_bar()
+        self.init_content()
 
+        self.update_styles()
+        self.center_window()
+
+    def init_title_bar(self):
+        self.title_layout = QHBoxLayout()
+        self.title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+
+        self.minimize_btn = self.create_title_button(IconManager.get_images("roll_up_button"), self.showMinimized)
+        self.close_btn = self.create_title_button(IconManager.get_images("button_close"), self.close)
+
+        for btn in [self.minimize_btn, self.close_btn]:
+            self.title_layout.addWidget(btn)
+
+        self.main_layout.addLayout(self.title_layout)
+
+    def init_content(self):
         self.url_input = QLineEdit(self)
         self.url_input.setPlaceholderText(self.translations["url_input_placeholder"])
         self.main_layout.addWidget(self.url_input)
@@ -58,29 +69,32 @@ class QRCodeWindow(QWidget):
         self.save_button.clicked.connect(self.save_qr_code)
         self.main_layout.addWidget(self.save_button)
 
-        self.update_styles()
-        self.center_window()
-
-    def create_title_button(self, icon_name, slot):
+    def create_title_button(self, icon_path, slot):
         btn = QPushButton()
-        btn.setIcon(QIcon(QPixmap(f"{icon_name}")))
+        btn.setIcon(QIcon(QPixmap(f"{icon_path}")))
         btn.setIconSize(QSize(35, 35))
         btn.setFixedSize(40, 40)
-        btn.setStyleSheet("""
-            QPushButton {
+        btn.setStyleSheet(self.get_title_button_stylesheet())
+        btn.clicked.connect(slot)
+        return btn
+
+    def get_title_button_stylesheet(self):
+        palette = self.theme_manager.theme_palette[self.theme]
+        hover = palette["hover"]
+        pressed = palette["pressed"]
+        return f"""
+            QPushButton {{
                 background: transparent;
                 border: none;
                 border-radius: 10px;
-            }
-            QPushButton:hover {
-                background: rgba(0, 0, 0, 30);
-            }
-            QPushButton:pressed {
-                background: rgba(0, 0, 0, 50);
-            }
-        """)
-        btn.clicked.connect(slot)
-        return btn
+            }}
+            QPushButton:hover {{
+                background: {hover};
+            }}
+            QPushButton:pressed {{
+                background: {pressed};
+            }}
+        """
 
     def update_styles(self):
         palette = self.theme_manager.theme_palette[self.theme]
@@ -89,7 +103,6 @@ class QRCodeWindow(QWidget):
         border = palette["border"]
         hover = palette["hover"]
         pressed = palette["pressed"]
-
         font = "Segoe UI"
 
         self.setStyleSheet(f"background-color: transparent;")
@@ -133,6 +146,10 @@ class QRCodeWindow(QWidget):
                 background-color: {pressed};
             }}
         """)
+
+        # Обновляем стили заголовочных кнопок тоже
+        for btn in [self.minimize_btn, self.close_btn]:
+            btn.setStyleSheet(self.get_title_button_stylesheet())
 
     def on_theme_changed(self, new_theme):
         self.theme = new_theme

@@ -7,8 +7,8 @@ class ThemeManager(QObject):
     def __init__(self):
         super().__init__()
         self.theme_palette = {
-            "light": {"bg": "#ffffff", "fg": "#333", "border": "#ccc", "hover": "#e0e0e0", "pressed": "#d0d0d0"},
-            "dark": {"bg": "#222222", "fg": "#fff", "border": "#555", "hover": "#444", "pressed": "#555"}
+            "light": {"bg": "#ffffff", "fg": "#333", "border": "#ccc", "hover": "#e0e0e0", "pressed": "#d0d0d0", "bg_error":"#8B0000", "bg_warning":"#FFD700"},
+            "dark": {"bg": "#222222", "fg": "#fff", "border": "#555", "hover": "#444", "pressed": "#555", "bg_error":"#FA8072", "bg_warning":"#F0E68C"}
         }
         self._theme = self.get_system_theme()
         

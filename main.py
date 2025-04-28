@@ -15,6 +15,8 @@ from vendor.components.screesharewindow import ScreenShareWindow
 from vendor.components.tranlatorwindow import TranslatorWindow
 from vendor.components.pcinfowindow import PCInfoWindow
 from vendor.components.paintwindow import PaintWindow
+from vendor.components.ai_chat import AIChatWindow
+from vendor.components.manager_download import Download_Manager
 from thememanager import ThemeManager
 
 if hasattr(Qt, 'AA_EnableHighDpiScaling'):
@@ -30,6 +32,7 @@ class MainWindow(QWidget):
         self._old_pos = None
         self.language = language
         self.theme_manager = theme_manager
+        self.download_manager = Download_Manager()
         self._title_bar_buttons = []
         self.translations = self.load_translations(self.language)
         
@@ -218,7 +221,7 @@ class MainWindow(QWidget):
     def open_translator(self): self._open = TranslatorWindow(self.language); self._open.show()
     def open_mic_window(self): self.create_simple_window("window_3_title", "window_3_label")
     def open_audio_window(self): self.create_simple_window("window_4_title", "window_4_label")
-    def open_chat_window(self): self.create_simple_window("window_9_title", "window_9_label")
+    def open_chat_window(self): self._open = AIChatWindow(language=self.language, theme_manager=self.theme_manager, download_manager=self.download_manager); self._open.show()
 
     def create_simple_window(self, title_key, label_key):
         window = QWidget()
