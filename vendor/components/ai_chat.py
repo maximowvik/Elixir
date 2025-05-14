@@ -226,21 +226,23 @@ class AIChatWindow(QWidget):
         self.chat_layout.insertWidget(self.chat_layout.count() - 1, message)
         self.scroll_area.verticalScrollBar().setValue(self.scroll_area.verticalScrollBar().maximum())
 
-    def clear_chat(self):
+    def clear_chat(self,  args=None):
         self.messages.clear()
         self.chat_widget.deleteLater()
         self.chat_widget = QWidget()
         self.chat_layout = QVBoxLayout(self.chat_widget)
+        self.chat_widget.setObjectName("ChatWindow")
         self.chat_layout.addStretch(1)
         self.scroll_area.setWidget(self.chat_widget)
         self.add_message("Чат очищен.", "bot")
 
-    def show_help(self):
+    def show_help(self,  args=None):
         help_message = (
             "Команды:\n"
             "/clear - Очистить чат\n"
             "/help - Показать эту помощь\n\n"
-            "Версия чата: alpha-0.0.1\nРазработчики: Подсевалов Илья и Максимов Виктор"
+            "/download --url=\"<download link>\" --type=\"<download folder or default to the root of the application>\" - позваляет загружать любые файлы (модели ии)\n"
+            "\nВерсия чата: alpha-0.0.1\nРазработчики: Подсевалов Илья и Максимов Виктор"
         )
         self.add_message(help_message, "bot")
         
