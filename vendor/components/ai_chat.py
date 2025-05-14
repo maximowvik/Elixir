@@ -1,6 +1,4 @@
 import os
-import re
-import requests
 import json
 import threading
 import time
@@ -9,9 +7,9 @@ from PyQt6.QtWidgets import (
     QSpacerItem, QSizePolicy, QLineEdit, QScrollArea, QLabel, QComboBox
 )
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath, QFont, QScreen
-from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, QTimer, pyqtSignal
+from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, QTimer, pyqtSignal, QThread
 from .iconmanager import IconManager
-from .ai_model_manager import AI_Bot
+from .ai_model_manager import ModelWorker
 from .command_manager import CommandManager
 from .message_widget import MessageWidget
 
@@ -20,24 +18,23 @@ from .message_widget import MessageWidget
 class AIChatWindow(QWidget):
     add_message_signal = pyqtSignal(str, str, str)
 
-    def __init__(self, language, theme_manager, download_manager):
+    def __init__(self, language, theme_manager, download_manager, current_directory):
         super().__init__()
         self.setObjectName("ChatWindow")
-
+        self.worker_thread = None
         self.language = language
         self.theme_manager = theme_manager
         self.theme = self.theme_manager.current_theme()
         self.translations = self.load_translations(self.language)
         self.chat_model = ""
         self.message_send_user = ""
+        self.current_directory = current_directory
         
         self.theme_manager.theme_changed.connect(self.on_theme_changed)
         self.add_message_signal.connect(self.add_message)
 
         self._old_pos = None
         self.messages = []
-
-        self.bot = AI_Bot()
 
         self.initUI()
 
@@ -80,6 +77,7 @@ class AIChatWindow(QWidget):
         self.input_layout = QHBoxLayout()
         self.message_input = QLineEdit(self)
         self.message_input.setPlaceholderText(self.translations.get("input_placeholder", "Type a message..."))
+        self.message_input.returnPressed.connect(self.send_message)
         self.send_button = QPushButton(self.translations.get("send_button", "Send"), self)
         self.send_button.clicked.connect(self.send_message)
 
@@ -116,7 +114,6 @@ class AIChatWindow(QWidget):
         # Если есть модели, устанавливаем первую сразу
         if list_model:
             first_model = list_model[0]
-            self.bot.set_model(first_model)
 
         # Подключаем обработчик смены модели
         self.model_combo.currentTextChanged.connect(self.change_model)
@@ -132,7 +129,8 @@ class AIChatWindow(QWidget):
         return self.title_layout
 
     def change_model(self, model_name):
-        self.bot.set_model(model_name)
+        self.add_message(f"Смена модели на {model_name}...", "bot", "info")
+
         
         
     def update_model_list(self):
@@ -199,15 +197,28 @@ class AIChatWindow(QWidget):
                 self.add_message(str(e), "bot", "error")
         else:
             self.add_message(text, "user")
-            threading.Thread(target=self.get_ai_response, args=(text,), daemon=True).start()
+            self.get_ai_response(text)
 
     def get_ai_response(self, user_message):
-        self.add_message_signal.emit("Помощник печатает...", "bot", "")
-        time.sleep(1.5)
-        self.bot.set_language(self.language)
-        self.bot.set_message(user_message)
-        result = self.bot.ai_response()
-        self.add_message_signal.emit(result[0], "bot", result[1])
+        model_path = os.path.join(self.current_directory, "vendor", "models", "gpt2.Q5_K_M.gguf")
+        
+        # Создаём worker и загружаем модель в главном потоке
+        self.worker = ModelWorker(prompt=user_message, model_path=model_path)
+        self.worker.load_model()  # Важно: вызываем до запуска потока!
+
+        # Настраиваем поток
+        self.worker_thread = QThread()
+        self.worker.moveToThread(self.worker_thread)
+        self.worker_thread.started.connect(self.worker.run)
+        self.worker.responseReady.connect(self.on_response)
+        self.worker.finished.connect(self.worker_thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.worker_thread.finished.connect(self.worker_thread.deleteLater)
+
+        self.worker_thread.start()
+        
+    def on_response(self, result):
+         self.add_message_signal.emit(result[0], "bot", result[1])
 
     def add_message(self, text, sender="user", type_message = ""):
         message = MessageWidget(type_message, text, sender, self.theme_manager.theme_palette[self.theme])

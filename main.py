@@ -1,4 +1,5 @@
 import sys
+import os
 import json
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QGridLayout, 
                              QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy, QComboBox)
@@ -27,7 +28,7 @@ if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
 theme_manager = ThemeManager()
 
 class MainWindow(QWidget):
-    def __init__(self, language, theme_manager):
+    def __init__(self, language, theme_manager, current_directory):
         super().__init__()
         self._old_pos = None
         self.language = language
@@ -35,6 +36,7 @@ class MainWindow(QWidget):
         self.download_manager = Download_Manager()
         self._title_bar_buttons = []
         self.translations = self.load_translations(self.language)
+        self.current_directory = current_directory
         
         self.theme_manager.theme_changed.connect(self.update_theme)
         self.update_theme(self.theme_manager.current_theme())
@@ -221,7 +223,7 @@ class MainWindow(QWidget):
     def open_translator(self): self._open = TranslatorWindow(self.language); self._open.show()
     def open_mic_window(self): self.create_simple_window("window_3_title", "window_3_label")
     def open_audio_window(self): self.create_simple_window("window_4_title", "window_4_label")
-    def open_chat_window(self): self._open = AIChatWindow(language=self.language, theme_manager=self.theme_manager, download_manager=self.download_manager); self._open.show()
+    def open_chat_window(self): self._open = AIChatWindow(language=self.language, theme_manager=self.theme_manager, download_manager=self.download_manager, current_directory=self.current_directory); self._open.show()
 
     def create_simple_window(self, title_key, label_key):
         window = QWidget()
@@ -231,7 +233,8 @@ class MainWindow(QWidget):
         window.show()
 
 if __name__ == "__main__":
+    root_path = os.path.abspath(os.curdir)
     app = QApplication(sys.argv)
-    window = MainWindow("ru", theme_manager)
+    window = MainWindow("ru", theme_manager, root_path)
     window.show()
     sys.exit(app.exec())
