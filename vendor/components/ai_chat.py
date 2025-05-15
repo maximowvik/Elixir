@@ -241,8 +241,8 @@ class AIChatWindow(QWidget):
             "Команды:\n"
             "/clear - Очистить чат\n"
             "/help - Показать эту помощь\n\n"
-            "/download --url=\"<download link>\" --type=\"<download folder or default to the root of the application>\" - позваляет загружать любые файлы (модели ии)\n"
-            "\nВерсия чата: alpha-0.0.1\nРазработчики: Подсевалов Илья и Максимов Виктор"
+            "/download --url=\"<download link>\" --type=\"<download folder or default to the root of the application>\" - позваляет загружать любые файлы (модели ии)"
+            "\n\nВерсия чата: alpha-0.0.1\nРазработчики: Подсевалов Илья и Максимов Виктор"
         )
         self.add_message(help_message, "bot")
         

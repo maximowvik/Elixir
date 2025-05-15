@@ -27,6 +27,11 @@ class MessageWidget(QWidget):
             layout.addStretch()
             layout.addWidget(self.text_label)
             layout.addWidget(self.icon_label)
+        elif self.sender == "system":
+            layout.addStretch()
+            layout.addWidget(self.text_label)
+            self.text_label.setFixedWidth(400)
+            layout.addStretch()
         else:
             self.icon_label.setPixmap(QPixmap("./vendor/images/computer.png").scaled(32, 32, Qt.AspectRatioMode.KeepAspectRatio))
             layout.addWidget(self.icon_label)
