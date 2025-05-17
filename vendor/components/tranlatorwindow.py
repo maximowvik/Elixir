@@ -19,12 +19,20 @@ import asyncio
 from .iconmanager import IconManager
 
 class TranslatorWindow(QWidget):
-    def __init__(self, language):
+    def __init__(self, language, theme_manager):
         super().__init__()
         self._old_pos = None
         self.language = language
+        self.theme_manager = theme_manager
         self.translations = self.load_translations(self.language)
+        
+        # Подписка на сигнал изменения темы
+        self.theme_manager.theme_changed.connect(self.update_theme)
+        
         self.initUI()
+        
+        # Обновляем тему после создания всех элементов
+        self.update_theme(self.theme_manager.current_theme())
 
     def load_translations(self, language):
         with open(f"{language}.json", "r", encoding="utf-8") as file:
@@ -42,105 +50,61 @@ class TranslatorWindow(QWidget):
 
         title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
 
-        #Кнопка свернуть
-        minimize_button = QPushButton()
-        minimize_button.setStyleSheet("background-color: transparent; border: none;")
-        pixmap_minimize = QPixmap("pic/minus.png")
-        icon_minimize = QIcon(pixmap_minimize)
-        minimize_button.setIcon(icon_minimize)
-        minimize_button.setIconSize(QSize(30, 30))
-        minimize_button.clicked.connect(self.showMinimized)
-        title_layout.addWidget(minimize_button)
-
-        #Кнопка закрытия
-        close_button = QPushButton()
-        close_button.setStyleSheet("background-color: transparent; border: none;")
-        pixmap_close = QPixmap("pic/close.png")
-        icon_close = QIcon(pixmap_close)
-        close_button.setIcon(icon_close)
-        close_button.setIconSize(QSize(30, 30))
-        close_button.clicked.connect(self.close)
-        title_layout.addWidget(close_button)
+        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized),
+                           (IconManager.get_images("button_close"), self.close)]:
+            btn = self.create_title_button(icon, slot)
+            title_layout.addWidget(btn)
 
         main_layout.addLayout(title_layout)
 
         #Поле для ввода текста
         self.input_text = QTextEdit(self)
         self.input_text.setPlaceholderText(self.translations["input_text_placeholder"])
-        self.input_text.setStyleSheet("""
-            background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                                        stop: 0 #6a00ee, stop: 0.5 #b000ff, stop: 1 #ff4891);
-            border: none;
-            color: white;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-            padding: 10px;
-            border-radius: 5px;
-        """)
         main_layout.addWidget(self.input_text)
 
         #Выбор языка для перевода
         self.target_language_combo = QComboBox(self)
         self.target_language_combo.addItems(LANGUAGES.values())
-        self.target_language_combo.setStyleSheet("""
-            background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                                        stop: 0 #6a00ee, stop: 0.5 #b000ff, stop: 1 #ff4891);
-            border: none;
-            color: white;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-            padding: 10px;
-            border-radius: 5px;
-        """)
         main_layout.addWidget(self.target_language_combo)
 
         #Кнопка перевода
-        translate_button = QPushButton(self.translations["translate_button"], self)
-        translate_button.setStyleSheet("""
-            background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                                        stop: 0 #6a00ee, stop: 0.5 #b000ff, stop: 1 #ff4891);
-            border: none;
-            color: white;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-            padding: 10px;
-            border-radius: 5px;
-        """)
-        translate_button.clicked.connect(self.translate_text)
-        main_layout.addWidget(translate_button)
+        self.translate_button = QPushButton(self.translations["translate_button"], self)
+        self.translate_button.clicked.connect(self.translate_text)
+        main_layout.addWidget(self.translate_button)
 
         #Поле для отображения переведенного текста
         self.output_text = QTextEdit(self)
-        self.output_text.setStyleSheet("""
-            background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                                        stop: 0 #6a00ee, stop: 0.5 #b000ff, stop: 1 #ff4891);
-            border: none;
-            color: white;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-            padding: 10px;
-            border-radius: 5px;
-        """)
         self.output_text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
         main_layout.addWidget(self.output_text)
 
         #Поле для отображения языка введенного текста
         self.detected_language_label = QLabel(self)
-        self.detected_language_label.setStyleSheet("""
-            background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
-                                        stop: 0 #6a00ee, stop: 0.5 #b000ff, stop: 1 #ff4891);
-            border: none;
-            color: white;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-            padding: 10px;
-            border-radius: 5px;
-        """)
         self.detected_language_label.setWordWrap(True)
         main_layout.addWidget(self.detected_language_label)
 
         self.setLayout(main_layout)
         self.center_window(self)
+        
+    def create_title_button(self, icon_path, slot):
+        btn = QPushButton()
+        btn.setIcon(QIcon(QPixmap(icon_path)))
+        btn.setIconSize(QSize(30, 30))
+        btn.setFixedSize(40, 40)
+        btn.setStyleSheet("""
+            QPushButton {
+                background: transparent;
+                border: none;
+                border-radius: 8px;
+            }
+            QPushButton:hover {
+                background: rgba(0, 0, 0, 30);
+            }
+            QPushButton:pressed {
+                background: rgba(0, 0, 0, 50);
+            }
+        """)
+        btn.clicked.connect(slot)
+        return btn
 
     def translate_text(self):
         input_text = self.input_text.toPlainText()
@@ -174,9 +138,18 @@ class TranslatorWindow(QWidget):
         painter.setClipPath(path)
         super().paintEvent(event)
 
+    def _is_in_title_bar(self, pos):
+        # Получаем геометрию заголовка
+        title_height = 40  # Высота заголовка
+        return pos.y() <= title_height
+
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            self._old_pos = event.globalPosition().toPoint()
+            # Проверяем, находится ли курсор в области заголовка
+            if self._is_in_title_bar(event.position().toPoint()):
+                self._old_pos = event.globalPosition().toPoint()
+            else:
+                self._old_pos = None
 
     def mouseMoveEvent(self, event):
         if self._old_pos is not None:
@@ -187,3 +160,118 @@ class TranslatorWindow(QWidget):
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self._old_pos = None
+
+    def update_theme(self, theme):
+        theme_vals = self.theme_manager.theme_palette[theme]
+        self.setStyleSheet(f"""
+            QWidget {{
+                background-color: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                font-family: 'Segoe UI';
+                font-size: 12pt;
+            }}
+            QPushButton {{
+                background: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                border-radius: 10px;
+                padding: 10px;
+            }}
+            QPushButton:hover {{
+                background: {theme_vals['hover']};
+            }}
+            QPushButton:pressed {{
+                background: {theme_vals['pressed']};
+            }}
+            QPushButton:disabled {{
+                background: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                opacity: 0.5;
+            }}
+            QTextEdit, QComboBox {{
+                background: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                border-radius: 10px;
+                padding: 10px;
+            }}
+            QComboBox:hover {{
+                background: {theme_vals['hover']};
+            }}
+            QComboBox::drop-down {{
+                border: none;
+                width: 20px;
+            }}
+            QComboBox::down-arrow {{
+                image: url(pic/down-arrow.png);
+                width: 12px;
+                height: 12px;
+            }}
+            QComboBox QAbstractItemView {{
+                background: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                border-radius: 10px;
+                selection-background-color: {theme_vals['hover']};
+                selection-color: {theme_vals['fg']};
+            }}
+            QLabel {{
+                background: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                border-radius: 10px;
+                padding: 10px;
+            }}
+        """)
+        
+        # Обновляем стили отдельных элементов
+        self.input_text.setStyleSheet(f"""
+            background: {theme_vals['bg']};
+            color: {theme_vals['fg']};
+            border: 1px solid {theme_vals['border']};
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'Segoe UI';
+            font-size: 12pt;
+        """)
+        
+        self.target_language_combo.setStyleSheet(f"""
+            background: {theme_vals['bg']};
+            color: {theme_vals['fg']};
+            border: 1px solid {theme_vals['border']};
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'Segoe UI';
+            font-size: 12pt;
+        """)
+        
+        self.output_text.setStyleSheet(f"""
+            background: {theme_vals['bg']};
+            color: {theme_vals['fg']};
+            border: 1px solid {theme_vals['border']};
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'Segoe UI';
+            font-size: 12pt;
+        """)
+        
+        self.detected_language_label.setStyleSheet(f"""
+            background: {theme_vals['bg']};
+            color: {theme_vals['fg']};
+            border: 1px solid {theme_vals['border']};
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'Segoe UI';
+            font-size: 12pt;
+        """)
+        
+        self.translate_button.setStyleSheet(f"""
+            background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['bg']};
+            color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['fg']};
+            border: 1px solid {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['border']};
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'Segoe UI';
+            font-size: 12pt;
+        """)

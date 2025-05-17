@@ -241,9 +241,18 @@ class PCInfoWindow(QWidget):
         painter.setClipPath(path)
         super().paintEvent(event)
 
+    def _is_in_title_bar(self, pos):
+        # Получаем геометрию заголовка
+        title_height = 40  # Высота заголовка
+        return pos.y() <= title_height
+
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            self._old_pos = event.globalPosition().toPoint()
+            # Проверяем, находится ли курсор в области заголовка
+            if self._is_in_title_bar(event.position().toPoint()):
+                self._old_pos = event.globalPosition().toPoint()
+            else:
+                self._old_pos = None
 
     def mouseMoveEvent(self, event):
         if self._old_pos is not None:

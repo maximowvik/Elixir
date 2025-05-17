@@ -36,5 +36,6 @@ class IconManager:
             "change_theme":"vendor/images/themes.png",
             "button_close":"vendor/images/close.png",
             "roll_up_button":"vendor/images/minus.png",
+            "expanded": "vendor/images/expand.png",
         }
         return images.get(window_name, "vendor/images/images.png")

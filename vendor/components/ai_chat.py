@@ -8,11 +8,27 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath, QFont, QScreen
 from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, QTimer, pyqtSignal, QThread
+from PyQt6.QtSvg import QSvgRenderer
 from .iconmanager import IconManager
-from .ai_model_manager import ModelWorker
+from .ai_model_manager import ModelManager
 from .command_manager import CommandManager
 from .message_widget import MessageWidget
 
+class ModelWorker(QThread):
+    responseReady = pyqtSignal(str, str)
+    error = pyqtSignal(str)
+
+    def __init__(self, model_manager, prompt):
+        super().__init__()
+        self.model_manager = model_manager
+        self.prompt = prompt
+
+    def run(self):
+        try:
+            response = self.model_manager.generate_response(self.prompt)
+            self.responseReady.emit(response, "response")
+        except Exception as e:
+            self.error.emit(str(e))
 
 # Основное окно чата
 class AIChatWindow(QWidget):
@@ -29,6 +45,7 @@ class AIChatWindow(QWidget):
         self.chat_model = ""
         self.message_send_user = ""
         self.current_directory = current_directory
+        self.model_manager = None
         
         self.theme_manager.theme_changed.connect(self.on_theme_changed)
         self.add_message_signal.connect(self.add_message)
@@ -130,9 +147,17 @@ class AIChatWindow(QWidget):
 
     def change_model(self, model_name):
         self.add_message(f"Смена модели на {model_name}...", "bot", "info")
+        model_path = os.path.join(self.current_directory, "vendor", "models", f"{model_name}.gguf")
+        
+        # Создаем новый экземпляр ModelManager
+        self.model_manager = ModelManager(model_path)
+        success, message = self.model_manager.load_model()
+        
+        if success:
+            self.add_message(f"Модель {model_name} успешно загружена", "bot", "info")
+        else:
+            self.add_message(f"Ошибка загрузки модели: {message}", "bot", "error")
 
-        
-        
     def update_model_list(self):
         path_model = "vendor/models"
         list_model = []
@@ -200,25 +225,18 @@ class AIChatWindow(QWidget):
             self.get_ai_response(text)
 
     def get_ai_response(self, user_message):
-        model_path = os.path.join(self.current_directory, "vendor", "models", "gpt2.Q5_K_M.gguf")
-        
-        # Создаём worker и загружаем модель в главном потоке
-        self.worker = ModelWorker(prompt=user_message, model_path=model_path)
-        self.worker.load_model()  # Важно: вызываем до запуска потока!
+        if not self.model_manager:
+            self.add_message("Модель не загружена. Пожалуйста, выберите модель из списка.", "bot", "error")
+            return
 
-        # Настраиваем поток
-        self.worker_thread = QThread()
-        self.worker.moveToThread(self.worker_thread)
-        self.worker_thread.started.connect(self.worker.run)
+        # Создаем и запускаем worker в отдельном потоке
+        self.worker = ModelWorker(self.model_manager, user_message)
         self.worker.responseReady.connect(self.on_response)
-        self.worker.finished.connect(self.worker_thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.worker_thread.finished.connect(self.worker_thread.deleteLater)
+        self.worker.error.connect(lambda msg: self.add_message(msg, "bot", "error"))
+        self.worker.start()
 
-        self.worker_thread.start()
-        
-    def on_response(self, result):
-         self.add_message_signal.emit(result[0], "bot", result[1])
+    def on_response(self, response, response_type):
+        self.add_message_signal.emit(response, "bot", response_type)
 
     def add_message(self, text, sender="user", type_message = ""):
         message = MessageWidget(type_message, text, sender, self.theme_manager.theme_palette[self.theme])
@@ -262,31 +280,54 @@ class AIChatWindow(QWidget):
         except Exception as e:
             self.add_message(f"Ошибка: {str(e)}", "bot", "error")
 
+    def _get_send_icon(self, color: str, size: int = 20) -> QIcon:
+        svg = f'''<svg width="{size}" height="{size}" viewBox="0 0 390.041 390.041" xmlns="http://www.w3.org/2000/svg">
+            <path d="m81.578.07c-38.9-1.865-75.532 33.964-67.083 76.208l19.458 97.5c.5-.018 1-.018 1.5 0h109.917c11.736-1.054 22.104 7.606 23.158 19.342s-7.606 22.104-19.342 23.158c-1.269.114-2.546.114-3.816 0h-109.917c-.501-.025-1.002-.068-1.5-.128l-19.458 97.625c-10.398 51.993 47.524 94.25 93.875 68.5l236.208-131.333c42.926-23.846 42.926-87.987 0-111.833l-236.209-131.331c-8.69-4.828-17.814-7.278-26.791-7.708z" fill="{color}"/>
+        </svg>'''
+        image = QPixmap(size, size)
+        image.fill(Qt.GlobalColor.transparent)
+        painter = QPainter(image)
+        renderer = QSvgRenderer(bytearray(svg, encoding='utf-8'))
+        renderer.render(painter)
+        painter.end()
+        return QIcon(image)
+
     def update_styles(self):
         palette = self.theme_manager.theme_palette[self.theme]
-        fg, bg, border, hover, pressed, error, warning = palette["fg"], palette["bg"], palette["border"], palette["hover"], palette["pressed"], palette["bg_error"], palette["bg_warning"]
+        bg = palette["bg"]
+        fg = palette["fg"]
+        border = palette["border"]
+        hover = palette["hover"]
+        pressed = palette["pressed"]
 
         self.setStyleSheet(f"""
-            QWidget {{ background-color: {bg}; color: {fg}; font-family: 'Segoe UI'; font-size: 12pt;}}
-            QComboBox {{ background: {hover}; border: 1px solid {border}; color: {fg}; padding: 5px 10px; border-radius: 8px; }}
-            QComboBox:hover {{ background: {bg}; }}
-            QComboBox::drop-down {{ border: none; width: 20px; }}
-            QComboBox QAbstractItemView {{ background: {bg}; color: {fg}; selection-background-color: #ff4891; }}
-            #ChatWindow {{
+            QWidget#ChatWindow {{
+                background-color: {bg};
                 border: 1px solid {border};
                 border-radius: 10px;
             }}
-            
-            #ChatWindowMessageError{{
-                background-color: {error};
-                color:{fg}
+            QComboBox {{ 
+                background: {hover}; 
+                border: 1px solid {border}; 
+                color: {fg}; 
+                padding: 5px 10px; 
+                border-radius: 8px; 
+                min-width: 120px; 
             }}
-            
-            #ChatWindowMessageWarning{{
-                background-color: {warning};
-                color:{fg}
+            QComboBox:hover {{ 
+                background: {bg}; 
+            }}
+            QComboBox::drop-down {{ 
+                border: none; 
+                width: 20px; 
+            }}
+            QComboBox QAbstractItemView {{ 
+                background: {bg}; 
+                color: {fg}; 
+                selection-background-color: #ff4891; 
             }}
         """)
+
         self.message_input.setStyleSheet(f"""
             background-color: {bg};
             color: {fg};
@@ -295,18 +336,30 @@ class AIChatWindow(QWidget):
             padding: 8px;
             font-size: 12pt;
         """)
+
+        self.send_button.setIcon(self._get_send_icon(fg))
+        self.send_button.setIconSize(QSize(20, 20))
         self.send_button.setStyleSheet(f"""
             QPushButton {{
                 background-color: {bg};
                 color: {fg};
                 border: 1px solid {border};
                 border-radius: 6px;
-                padding: 8px;
+                padding: 8px 16px;
                 font-size: 12pt;
+                font-family: 'Segoe UI';
+                text-align: left;
             }}
-            QPushButton:hover {{ background-color: {hover}; }}
-            QPushButton:pressed {{ background-color: {pressed}; }}
+            QPushButton:hover {{
+                background-color: {hover};
+            }}
+            QPushButton:pressed {{
+                background-color: {pressed};
+            }}
         """)
+
+        self.send_button.setFixedHeight(40)
+        self.send_button.setMinimumWidth(120)
 
     def on_theme_changed(self, new_theme):
         self.theme = new_theme
@@ -334,9 +387,18 @@ class AIChatWindow(QWidget):
         painter.setClipPath(path)
         super().paintEvent(event)
 
+    def _is_in_title_bar(self, pos):
+        # Получаем геометрию заголовка
+        title_height = 40  # Высота заголовка
+        return pos.y() <= title_height
+
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            self._old_pos = event.globalPosition().toPoint()
+            # Проверяем, находится ли курсор в области заголовка
+            if self._is_in_title_bar(event.position().toPoint()):
+                self._old_pos = event.globalPosition().toPoint()
+            else:
+                self._old_pos = None
 
     def mouseMoveEvent(self, event):
         if self._old_pos:

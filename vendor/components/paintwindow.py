@@ -140,36 +140,49 @@ class PaintWindow(QMainWindow):
 
         for btn in (save_button, clear_button):
             btn.setFixedSize(100, 30)
-            btn.setStyleSheet("""
-                QPushButton {
-                    background-color: #4CAF50;
-                    color: white;
-                    border-radius: 6px;
-                    padding: 6px 12px;
-                    font-weight: bold;
-                }
-                QPushButton:hover {
-                    background-color: #45a049;
-                }
-                QPushButton:pressed {
-                    background-color: #3e8e41;
-                }
+            btn.setStyleSheet(f"""
+                background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['bg']};
+                color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['fg']};
+                border: 1px solid {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['border']};
+                border-radius: 10px;
+                padding: 6px 12px;
+                font-family: 'Segoe UI';
+                font-size: 12pt;
             """)
             title.addWidget(btn)
 
         title.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
 
         # Кнопки управления окном
-        for icon, slot in [
-            (IconManager.get_images("roll_up_button"), self.showMinimized),
-            (IconManager.get_images("button_close"), self.close)
-        ]:
+        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized),
+                           (IconManager.get_images("button_close"), self.close)]:
             btn = self.create_title_button(icon, slot)
             title.addWidget(btn)
 
         self.main_layout.addLayout(title)
         self.main_layout.addWidget(self.paint_widget)
         self._create_toolbar(self.main_layout)
+        
+    def create_title_button(self, icon_path, slot):
+        btn = QPushButton()
+        btn.setIcon(QIcon(QPixmap(icon_path)))
+        btn.setIconSize(QSize(30, 30))
+        btn.setFixedSize(40, 40)
+        btn.setStyleSheet("""
+            QPushButton {
+                background: transparent;
+                border: none;
+                border-radius: 8px;
+            }
+            QPushButton:hover {
+                background: rgba(0, 0, 0, 30);
+            }
+            QPushButton:pressed {
+                background: rgba(0, 0, 0, 50);
+            }
+        """)
+        btn.clicked.connect(slot)
+        return btn
 
     def _create_toolbar(self, layout):
         toolbar = QHBoxLayout()
@@ -179,18 +192,19 @@ class PaintWindow(QMainWindow):
         self.width_slider.setRange(1, 50)
         self.width_slider.setValue(3)
         self.width_slider.setFixedHeight(30)
-        self.width_slider.setStyleSheet("""
-            QSlider::groove:horizontal {
+        self.width_slider.setStyleSheet(f"""
+            QSlider::groove:horizontal {{
                 height: 14px;
-                background: #bbb;
+                background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['bg']};
+                border: 1px solid {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['border']};
                 border-radius: 7px;
-            }
-            QSlider::handle:horizontal {
-                background: #666;
+            }}
+            QSlider::handle:horizontal {{
+                background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['fg']};
                 width: 20px;
                 margin: -6px 0;
                 border-radius: 10px;
-            }
+            }}
         """)
         self.width_slider.valueChanged.connect(self.set_pen_width)
 
@@ -206,33 +220,33 @@ class PaintWindow(QMainWindow):
 
         button_style = f"""
             QPushButton {{
-                background-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["bg"]};
-                color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["fg"]};
-                border-radius: 6px;
+                background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['bg']};
+                color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['fg']};
+                border: 1px solid {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['border']};
+                border-radius: 10px;
                 padding: 8px;
-                font-size: 13pt;
                 font-family: 'Segoe UI';
-                border: 1px solid {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["border"]};
+                font-size: 12pt;
             }}
-            QPushButton:hover {{ background-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["hover"]}; }}
-            QPushButton:pressed {{ background-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["pressed"]}; }}
+            QPushButton:hover {{ background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['hover']}; }}
+            QPushButton:pressed {{ background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['pressed']}; }}
         """
 
         combo_style = f"""
             QComboBox {{
-                background-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["bg"]};
-                color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["fg"]};
-                border-radius: 6px;
+                background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['bg']};
+                color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['fg']};
+                border: 1px solid {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['border']};
+                border-radius: 10px;
                 padding: 6px;
-                font-size: 13pt;
                 font-family: 'Segoe UI';
-                border: 1px solid {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["border"]};
+                font-size: 12pt;
             }}
             QComboBox QAbstractItemView {{
-                background-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["bg"]};
-                color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["fg"]};
-                selection-background-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["hover"]};
-                selection-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]["fg"]};
+                background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['bg']};
+                color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['fg']};
+                selection-background-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['hover']};
+                selection-color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['fg']};
             }}
         """
 
@@ -283,9 +297,18 @@ class PaintWindow(QMainWindow):
         painter.setClipPath(path)
         super().paintEvent(event)
 
+    def _is_in_title_bar(self, pos):
+        # Получаем геометрию заголовка
+        title_height = 40  # Высота заголовка
+        return pos.y() <= title_height
+
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            self._old_pos = event.globalPosition().toPoint()
+            # Проверяем, находится ли курсор в области заголовка
+            if self._is_in_title_bar(event.position().toPoint()):
+                self._old_pos = event.globalPosition().toPoint()
+            else:
+                self._old_pos = None
 
     def mouseMoveEvent(self, event):
         if self._old_pos:
@@ -294,4 +317,5 @@ class PaintWindow(QMainWindow):
             self._old_pos = event.globalPosition().toPoint()
 
     def mouseReleaseEvent(self, event):
-        self._old_pos = None
+        if event.button() == Qt.MouseButton.LeftButton:
+            self._old_pos = None

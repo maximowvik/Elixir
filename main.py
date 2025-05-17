@@ -188,9 +188,18 @@ class MainWindow(QWidget):
         self.center_window()
         super().showEvent(event)
 
+    def _is_in_title_bar(self, pos):
+        # Получаем геометрию заголовка
+        title_height = 40  # Высота заголовка
+        return pos.y() <= title_height
+
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            self._old_pos = event.globalPosition().toPoint()
+            # Проверяем, находится ли курсор в области заголовка
+            if self._is_in_title_bar(event.position().toPoint()):
+                self._old_pos = event.globalPosition().toPoint()
+            else:
+                self._old_pos = None
 
     def mouseMoveEvent(self, event):
         if self._old_pos:
@@ -216,11 +225,11 @@ class MainWindow(QWidget):
     def open_speedtest(self): self._open = SpeedTestWindow(self.language, self.theme_manager); self._open.show()
     def open_paint(self): self._open = PaintWindow(self.language, self.theme_manager); self._open.show()
     def open_pc_info(self): self._open = PCInfoWindow(self.language, self.theme_manager); self._open.show()
-    def open_browser(self): self._open = Browser(app); self._open.show()
-    def open_screenshot(self): self._open = ScreenshotWindow(self.language); self._open.show()
-    def open_recorder(self): self._open = ScreenRecorderWindow(self.language); self._open.show()
-    def open_screenshare(self): self._open = ScreenShareWindow(self.language); self._open.show()
-    def open_translator(self): self._open = TranslatorWindow(self.language); self._open.show()
+    def open_browser(self): self._open = Browser(app, self.theme_manager); self._open.show()
+    def open_screenshot(self): self._open = ScreenshotWindow(self.language, self.theme_manager); self._open.show()
+    def open_recorder(self): self._open = ScreenRecorderWindow(self.language, self.theme_manager); self._open.show()
+    def open_screenshare(self): self._open = ScreenShareWindow(self.language, self.theme_manager); self._open.show()
+    def open_translator(self): self._open = TranslatorWindow(self.language, self.theme_manager); self._open.show()
     def open_mic_window(self): self.create_simple_window("window_3_title", "window_3_label")
     def open_audio_window(self): self.create_simple_window("window_4_title", "window_4_label")
     def open_chat_window(self): self._open = AIChatWindow(language=self.language, theme_manager=self.theme_manager, download_manager=self.download_manager, current_directory=self.current_directory); self._open.show()
