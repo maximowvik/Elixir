@@ -1,4 +1,5 @@
 .venv
+.env
 build
 dist
 main.exe
