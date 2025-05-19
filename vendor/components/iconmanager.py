@@ -37,5 +37,13 @@ class IconManager:
             "button_close":"vendor/images/close.png",
             "roll_up_button":"vendor/images/minus.png",
             "expanded": "vendor/images/expand.png",
+            "back":"vendor/images/back.png",
+            "forward":"vendor/images/forward.png",
+            "reload":"vendor/images/reload.png",
+            "home":"vendor/images/home.png",
+            "plus":"vendor/images/plus.png",
+            "send_link":"vendor/images/send2.png",
+            "lock":"vendor/images/lock.png",
+            "unlock":"vendor/images/unlock.png",
         }
         return images.get(window_name, "vendor/images/images.png")

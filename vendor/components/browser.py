@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile, QWebEngineDownloadRequest
-from PyQt6.QtGui import QIcon, QPixmap, QKeySequence, QPainter, QPainterPath, QColor, QAction, QShortcut
+from PyQt6.QtGui import QIcon, QPixmap, QKeySequence, QPainter, QPainterPath, QColor, QAction, QShortcut, QTransform
 from PyQt6.QtCore import QUrl, Qt, QSize, QPoint, QRectF, QSettings
 
 from .iconmanager import IconManager  # Ваш менеджер ресурсов
@@ -79,7 +79,7 @@ class Browser(QMainWindow):
     # 2) Параметры главного окна
     def init_window_params(self):
         self.setWindowTitle("Elixir Browser")
-        self.setWindowIcon(QIcon(IconManager.get_images("logo_new")))
+        self.setWindowIcon(QIcon(IconManager.get_images("main")))
         self.setMinimumSize(800, 600)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
@@ -108,7 +108,7 @@ class Browser(QMainWindow):
 
         # логотип
         logo = QLabel()
-        pix = QPixmap(IconManager.get_images("logo_new"))
+        pix = QPixmap(IconManager.get_images("main_logo"))
         logo.setPixmap(pix.scaledToWidth(100, Qt.TransformationMode.SmoothTransformation))
         h.addWidget(logo)
         h.addItem(QSpacerItem(40,20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
@@ -166,7 +166,7 @@ class Browser(QMainWindow):
             ("reload", "Refresh", lambda: self.navigate("reload"), "F5"),
             ("home", "Home", self.nav_home, "Ctrl+H"),
         ]:
-            act = QAction(QIcon(f"images/{icon}.png"), tip, self)
+            act = QAction(QIcon(IconManager.get_images(icon)), tip, self)
             act.triggered.connect(cb)
             act.setShortcut(QKeySequence(sc))
             tb.addAction(act)
@@ -174,7 +174,7 @@ class Browser(QMainWindow):
 
         # индикатор
         self.sec_icon = QLabel()
-        self.sec_icon.setPixmap(QPixmap("images/unlock.png"))
+        self.sec_icon.setPixmap(QPixmap(IconManager.get_images("unlock")))
         self.sec_icon.setToolTip("Not secure")
         tb.addWidget(self.sec_icon)
 
@@ -186,16 +186,23 @@ class Browser(QMainWindow):
         tb.addWidget(self.url_line)
 
         # новые вкладки + загрузки
-        nt = QAction(QIcon("images/plus.png"), "New Tab", self)
+        nt = QAction(QIcon(IconManager.get_images("plus")), "New Tab", self)
         nt.triggered.connect(lambda: self.add_new_tab())
         nt.setShortcut(QKeySequence("Ctrl+T"))
         tb.addAction(nt)
 
-        dl = QAction(QIcon("images/downloads.png"), "Downloads", self)
+        dl = QAction(self.rotate_icon(QIcon(IconManager.get_images("send_link")), 90), "Downloads", self)
         dl.triggered.connect(self.show_downloads)
         tb.addAction(dl)
 
         layout.addWidget(tb)
+
+    def rotate_icon(self, icon: QIcon, degrees: float) -> QIcon:
+        pixmap = icon.pixmap(icon.availableSizes()[0])  # Получаем QPixmap из QIcon
+        transform = QTransform().rotate(degrees)        # Создаем трансформацию поворота
+        rotated_pixmap = pixmap.transformed(transform, Qt.TransformationMode.SmoothTransformation)
+        return QIcon(rotated_pixmap)                    # Создаем новый QIcon из повернутого QPixmap
+
 
     def setup_shortcuts(self):
         mapping = {
@@ -269,17 +276,17 @@ class Browser(QMainWindow):
         self.url_line.setText(qurl.toString())
         self.url_line.setCursorPosition(0)
         if qurl.scheme() == "https":
-            self.sec_icon.setPixmap(QPixmap("images/lock.png"))
+            self.sec_icon.setPixmap(QPixmap(IconManager.get_images("lock")))
             self.sec_icon.setToolTip("HTTPS")
         else:
-            self.sec_icon.setPixmap(QPixmap("images/unlock.png"))
+            self.sec_icon.setPixmap(QPixmap(IconManager.get_images("unlock")))
             self.sec_icon.setToolTip("HTTP")
 
     def nav_to_url(self):
         text = self.url_line.text().strip()
         if not text: return
         if " " in text or "." not in text:
-            url = QUrl(f"https://www.google.com/search?q={urllib.parse.quote(text)}")
+            url = QUrl(f"https://yandex.ru/search/?text={urllib.parse.quote(text)}")
         elif os.path.exists(text):
             url = QUrl.fromLocalFile(text)
         else:
@@ -328,8 +335,8 @@ class Browser(QMainWindow):
     # 8) SSL & Downloads
     def handle_ssl_error(self, err):
         res = QMessageBox.question(self, "SSL Error",
-                                   f"Certificate not trusted:\n{err.errorDescription()}\nContinue?",
-                                   QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+                               f"Certificate not trusted:\n{err.description()}\nContinue?",
+                               QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if res == QMessageBox.StandardButton.Yes:
             err.ignore()
         else:
