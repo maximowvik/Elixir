@@ -58,7 +58,7 @@ class MainWindow(QWidget):
 
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(20, 20, 20, 20)
-        if(self.theme_manager.get_current_platform() == "windows"): main_layout.addLayout(self.create_title_bar())
+        main_layout.addLayout(self.create_title_bar())
 
         logo = QLabel()
         logo_pixmap = QPixmap(IconManager.get_images("main_logo"))
@@ -70,8 +70,9 @@ class MainWindow(QWidget):
         self.setLayout(main_layout)
 
     def create_title_bar(self):
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        if (self.theme_manager.get_current_platform() == "windows"):
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+            self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         title_bar = QHBoxLayout()
 
         self.language_combo = QComboBox()
@@ -82,9 +83,13 @@ class MainWindow(QWidget):
         title_bar.addWidget(self.language_combo)
 
         title_bar.addItem(QSpacerItem(10, 10, QSizePolicy.Policy.Expanding))
-
-        for icon, handler in [("change_theme", self.toggle_theme), ("pic/minus.png", self.showMinimized), ("button_close", self.close)]:
-            btn = self.create_title_button(IconManager.get_images(icon) if 'pic' not in icon else icon, handler)
+        if (self.theme_manager.get_current_platform() == "windows"):
+            for icon, handler in [("change_theme", self.toggle_theme), ("pic/minus.png", self.showMinimized), ("button_close", self.close)]:
+                btn = self.create_title_button(IconManager.get_images(icon) if 'pic' not in icon else icon, handler)
+                self._title_bar_buttons.append(btn)
+                title_bar.addWidget(btn)
+        else:
+            btn = self.create_title_button(IconManager.get_images("change_theme") if 'pic' not in "change_theme" else "change_theme", self.toggle_theme)
             self._title_bar_buttons.append(btn)
             title_bar.addWidget(btn)
 

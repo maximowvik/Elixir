@@ -12,7 +12,6 @@ from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, pyqtSignal, QObject
 
 from .iconmanager import IconManager
 
-
 class SpeedTestWorker(QObject):
     result = pyqtSignal(float, float)
     progress = pyqtSignal(int, str)
@@ -36,7 +35,6 @@ class SpeedTestWorker(QObject):
         except Exception as e:
             self.error.emit(str(e))
 
-
 class SpeedTestWindow(QWidget):
     def __init__(self, language, theme_manager):
         super().__init__()
@@ -57,7 +55,7 @@ class SpeedTestWindow(QWidget):
 
     def setup_ui(self):
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground)
         self.setWindowTitle(self.translations["speed_test_window_title"])
         self.setWindowIcon(IconManager.get_icon("speed_test"))
 
@@ -184,14 +182,14 @@ class SpeedTestWindow(QWidget):
             }}
         """)
 
-    def paintEvent(self, e):
+    def paintEvent(self, event):
         p = QPainter(self)
         p.setRenderHint(QPainter.RenderHint.Antialiasing)
         path = QPainterPath()
         path.addRoundedRect(QRectF(self.rect()), 10, 10)
         p.fillPath(path, QColor(self.palette().color(self.backgroundRole())))
         p.setClipPath(path)
-        super().paintEvent(e)
+        super().paintEvent(event)
 
     def _is_in_title_bar(self, pos):
         # Получаем геометрию заголовка
@@ -215,3 +213,5 @@ class SpeedTestWindow(QWidget):
     def mouseReleaseEvent(self, e):
         if e.button() == Qt.MouseButton.LeftButton:
             self._old_pos = None
+
+__all__ = ["SpeedTestWindow"]
