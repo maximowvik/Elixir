@@ -45,5 +45,10 @@ class IconManager:
             "send_link":"vendor/images/send2.png",
             "lock":"vendor/images/lock.png",
             "unlock":"vendor/images/unlock.png",
+            "send":"vendor/images/send.png",
+            "user":"vendor/images/SVG/user.svg",
+            "computer":"vendor/images/SVG/computer.svg",
+            "bot":"vendor/images/SVG/bot.svg",
+            "model":"vendor/images/SVG/model.svg",
         }
         return images.get(window_name, "vendor/images/images.png")

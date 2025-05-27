@@ -58,5 +58,9 @@
     "test_failed": "Ошибка теста скорости",
     "connection_error": "Ошибка соединения",
     "ping": "Пинг",
-    "error": "Ошибка"
+    "error": "Ошибка",
+    "qr_color_button": "цвет qr-кода",
+    "bg_color_button": "цвет фона qr-кода",
+    "choose_qr_color": "выберите цвет qr-кода",
+    "choose_bg_color": "выберите цвет фона qr-кода"
 }

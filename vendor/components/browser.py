@@ -1,8 +1,4 @@
-
-import os
-import sys
 import urllib.parse
-
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QTabWidget, QTabBar, QWidget, QVBoxLayout, QHBoxLayout,
     QToolBar, QLineEdit, QLabel, QMessageBox, QMenu, QFileDialog,
@@ -12,7 +8,7 @@ from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile, QWebEngineDownloadRequest
 from PyQt6.QtGui import QIcon, QPixmap, QKeySequence, QPainter, QPainterPath, QColor, QAction, QShortcut, QTransform
 from PyQt6.QtCore import QUrl, Qt, QSize, QPoint, QRectF, QSettings
-
+import traceback, sys, logging, os
 from .iconmanager import IconManager  # Ваш менеджер ресурсов
 
 
@@ -79,7 +75,7 @@ class Browser(QMainWindow):
     # 2) Параметры главного окна
     def init_window_params(self):
         self.setWindowTitle("Elixir Browser")
-        self.setWindowIcon(QIcon(IconManager.get_images("main")))
+        self.setWindowIcon(QIcon(IconManager.get_images("browser")))
         self.setMinimumSize(800, 600)
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
@@ -334,13 +330,8 @@ class Browser(QMainWindow):
 
     # 8) SSL & Downloads
     def handle_ssl_error(self, err):
-        res = QMessageBox.question(self, "SSL Error",
-                               f"Certificate not trusted:\n{err.description()}\nContinue?",
-                               QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        if res == QMessageBox.StandardButton.Yes:
-            err.ignore()
-        else:
-            err.reject()
+        QMessageBox.warning(self, "Security Warning", "Website security certificate is not trusted")
+        err.ignore() 
 
     def handle_download_request(self, dl: QWebEngineDownloadRequest):
         path, _ = QFileDialog.getSaveFileName(self, "Save As",

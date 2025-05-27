@@ -1,5 +1,6 @@
-import winreg
+import darkdetect
 from PyQt6.QtCore import QObject, pyqtSignal, QTimer
+import platform
 
 class ThemeManager(QObject):
     theme_changed = pyqtSignal(str)  # Сигнал с новой темой: 'light' или 'dark'
@@ -43,8 +44,7 @@ class ThemeManager(QObject):
     
     def get_system_theme(self):
         try:
-            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize") as key:
-                return "light" if winreg.QueryValueEx(key, "AppsUseLightTheme")[0] == 1 else "dark"
+            return str(darkdetect.theme()).lower()
         except:
             return "light"
 
@@ -52,3 +52,6 @@ class ThemeManager(QObject):
         new_theme = self.get_system_theme()
         if new_theme != self._theme:
             self.set_theme(new_theme)
+
+    def get_current_platform(self):
+        return str(platform.system()).lower()

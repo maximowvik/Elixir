@@ -1,10 +1,9 @@
-import winreg
 import socket
 import psutil
 import GPUtil
 import cpuinfo
 import json
-
+import platform
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout,
     QSpacerItem, QSizePolicy
@@ -125,8 +124,7 @@ class PCInfoWindow(QWidget):
     def get_pc_info(self):
         info_lines = [
             f"{self.translations['pc_name']}: {socket.gethostname()}",
-            f"{self.translations['windows_version']}: {self.get_windows_version()}",
-            f"{self.translations['windows_key']}: {self.get_windows_key()}",
+            f"{self.translations['windows_version']}: {self.get_os_data()}",
             f"{self.translations['cpu_info']}: {self.get_cpu_info()}",
             f"{self.translations['gpu_info']}: {self.get_gpu_info()}",
             self.get_ram_info(),
@@ -135,26 +133,14 @@ class PCInfoWindow(QWidget):
         ]
         return "\n".join(info_lines)
 
-    def get_windows_version(self):
+    def get_os_data(self):
         try:
-            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion") as key:
-                product_name = winreg.QueryValueEx(key, "ProductName")[0]
-                current_build = winreg.QueryValueEx(key, "CurrentBuild")[0]
-                ubr = winreg.QueryValueEx(key, "UBR")[0]
-                release_id = winreg.QueryValueEx(key, "ReleaseId")[0]
-                return f"{product_name} (Build {current_build}.{ubr}) {release_id}"
+            return f"{platform.system()} (Build {platform.version()}) {platform.release()}"
         except Exception as e:
-            print(f"Error reading Windows version: {e}")
-            return "Не удалось получить версию Windows"
+            print(f"Error reading os data: {e}")
+            return "Не удалось получить данные об операционной системе"
 
-    def get_windows_key(self):
-        try:
-            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Microsoft\Windows NT\CurrentVersion") as key:
-                digital_product_id = winreg.QueryValueEx(key, "DigitalProductId")[0]
-            return self.decode_product_key(bytearray(digital_product_id))
-        except Exception as e:
-            print(f"Error reading Windows key: {e}")
-            return "Не удалось получить ключ Windows"
+
 
     def decode_product_key(self, digital_product_id):
         key_offset = 52

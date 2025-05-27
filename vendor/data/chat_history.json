@@ -1,0 +1,1220 @@
+{
+  "messages": [
+    {
+      "id": "7d62de46-1939-4e2a-bd45-97ff8fd620e1",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T15:51:14.398093"
+    },
+    {
+      "id": "1d1225e7-c2ab-4a98-beb6-d81784c3c065",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T15:59:45.101187"
+    },
+    {
+      "id": "ada694ab-9648-46cd-9325-d32ffe30e144",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T15:59:45.253895"
+    },
+    {
+      "id": "8f1b325a-bf70-4b9c-abe4-ea7f832d9367",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:52:59.767251"
+    },
+    {
+      "id": "1fa0d28c-8d1a-46ee-bc3e-df6fbeb26842",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:54:34.567358"
+    },
+    {
+      "id": "7815577a-fac4-445d-841d-f4d6de328394",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:54:34.569359"
+    },
+    {
+      "id": "35919ae7-9ba1-4c83-a8ad-7a39fc93cdca",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:54:34.571875"
+    },
+    {
+      "id": "b5ab9a8c-8500-49c2-ad84-4b52d53bb6bb",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:54:34.572875"
+    },
+    {
+      "id": "fc6ce993-05d8-49e0-9384-c7edbbfd3c7c",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:54:34.779804"
+    },
+    {
+      "id": "9b7c93ec-4c0d-47da-a82e-f5b2664b47dd",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T18:54:43.137763"
+    },
+    {
+      "id": "d1ec686e-4b94-4b45-b04e-e813a766a7bc",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:54:44.708947"
+    },
+    {
+      "id": "6f2aab2d-66ca-428f-bfdf-0991064de1e6",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:55:08.171923"
+    },
+    {
+      "id": "dcb21b22-5c0d-4e6a-b767-30aace08c28f",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T18:55:37.400331"
+    },
+    {
+      "id": "2eb9d0d6-b0ac-45af-a7f4-40eadfd3f087",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T18:56:12.162450"
+    },
+    {
+      "id": "a1f60bec-b589-461e-ae97-a0c738dad52f",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.304195"
+    },
+    {
+      "id": "0ea5f8a7-6fd1-4260-b48c-c245efcdb839",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.307197"
+    },
+    {
+      "id": "92360d98-8530-4219-9ba9-39b5f825f0d1",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.308717"
+    },
+    {
+      "id": "3d306ae9-be8f-4c7e-86a6-2f2d2f0f1b4d",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.310727"
+    },
+    {
+      "id": "dee4bb10-e867-44de-a95f-5988d2a77022",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.311727"
+    },
+    {
+      "id": "36fcb7a5-f5c5-4019-979b-4be186b02e36",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.313728"
+    },
+    {
+      "id": "6626187e-115e-4695-96ed-81a3af748083",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.315727"
+    },
+    {
+      "id": "4fa0b417-3f6a-42ae-94b2-ee5e3e607a14",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.317233"
+    },
+    {
+      "id": "d882bb8d-9f04-4998-885c-3dd1ccc551ca",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.318741"
+    },
+    {
+      "id": "9736f06a-3626-4cbb-a3e3-0b5bf90cb4e6",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.320751"
+    },
+    {
+      "id": "7e11a7f1-5cf6-4d03-9237-6dcd68bdb966",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.323750"
+    },
+    {
+      "id": "2ad63906-4a18-4b05-ad59-890234df21af",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.325750"
+    },
+    {
+      "id": "464803ec-ce5a-48c8-bb2f-7a92e5213cfc",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.327750"
+    },
+    {
+      "id": "e5ca8e1c-b3dd-4621-aaee-0bef9c9a78e8",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:05.329749"
+    },
+    {
+      "id": "abcc6ab2-6b0b-4bec-81b4-f81ffcf0e75c",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.14 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:06.346440"
+    },
+    {
+      "id": "3d407b82-621c-45d7-9b86-f2ac833cdfe3",
+      "text": "/download --url=\"https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe\" --type=\"downloads\"",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:22:51.677401"
+    },
+    {
+      "id": "e9a9c727-ace1-4069-96eb-d1e9406b3329",
+      "text": "Начата загрузка из https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe в папку 'downloads'",
+      "sender": "bot",
+      "type": "info",
+      "timestamp": "2025-05-23T19:22:51.679925"
+    },
+    {
+      "id": "cmd_download",
+      "command": "/download",
+      "args": {
+        "url": "https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe",
+        "type": "downloads"
+      },
+      "timestamp": "2025-05-23T19:22:51.680948"
+    },
+    {
+      "id": "ac0c5d11-17a6-425c-9baa-aa5c934477d8",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.67 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:17.190740"
+    },
+    {
+      "id": "84514930-9945-49c1-98be-9c9fcb3fa973",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.296522"
+    },
+    {
+      "id": "43e91624-8ade-4376-b4f0-360a4198e023",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.299546"
+    },
+    {
+      "id": "945ee75d-3c08-4744-8d94-fb4c91938ea1",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.301549"
+    },
+    {
+      "id": "457e8013-c34f-4b05-882d-14da16e721d5",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.304546"
+    },
+    {
+      "id": "0ef14d12-6b80-4e91-9a9d-c022fca9d9d2",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.306547"
+    },
+    {
+      "id": "9ade43a8-2be5-4706-a6aa-924d06a51406",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.308051"
+    },
+    {
+      "id": "f3f725e1-b8dc-404e-b931-b9ce2b5a98aa",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.310558"
+    },
+    {
+      "id": "307f96dd-b7a6-45a5-9fd5-5ffe1e0aa614",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.312562"
+    },
+    {
+      "id": "843f5d99-0418-4f80-ba22-ac43b57578eb",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.314562"
+    },
+    {
+      "id": "c007175f-b20b-4e75-8beb-f7fcadf7a3cf",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.316563"
+    },
+    {
+      "id": "303e4ce6-6684-42a4-a45d-6bcd5f9ab70a",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.319673"
+    },
+    {
+      "id": "61c520ea-cccc-433e-b754-5f5d4066d072",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.321671"
+    },
+    {
+      "id": "bc5b9e7a-0d4c-4276-9195-1244cfd35b65",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.323672"
+    },
+    {
+      "id": "6cd1dd10-edf2-4876-bc45-e0dda9e1ec54",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.326671"
+    },
+    {
+      "id": "5458b844-e88d-47b6-8906-ded6f7887032",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.328180"
+    },
+    {
+      "id": "ca957d3d-dbc9-4a76-a408-e9504c6938d2",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.330685"
+    },
+    {
+      "id": "aecf9986-3be2-45ec-816d-738eeaac325f",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.332689"
+    },
+    {
+      "id": "5c7d2072-64c3-4ee3-952d-34b8e5441b8b",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.335691"
+    },
+    {
+      "id": "50046602-3838-43b6-87d8-8fbd66f24984",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.338195"
+    },
+    {
+      "id": "0b2602e2-08eb-4271-b845-e48c1a7a62b7",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.340702"
+    },
+    {
+      "id": "3db38a5c-4902-4fdd-9c9d-85f6c719809b",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.343211"
+    },
+    {
+      "id": "4df30b1a-d6ea-4048-b34e-1335741e13cf",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.345211"
+    },
+    {
+      "id": "0f17384a-93a8-45ab-9914-a215d197efb9",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.347715"
+    },
+    {
+      "id": "fd2eef71-32a8-427d-8179-ffc8573ec8ea",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.349719"
+    },
+    {
+      "id": "754bc27f-96aa-4f44-a162-2d5457c7378f",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.352730"
+    },
+    {
+      "id": "6753886d-b6bf-4b3f-9fd0-900590d4c703",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.355731"
+    },
+    {
+      "id": "01e17460-0659-45b6-9802-a21d81a7960d",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.357730"
+    },
+    {
+      "id": "eb7aa1eb-31c7-42d7-a370-a12221a36c8d",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.360887"
+    },
+    {
+      "id": "3abdd9b4-9aa5-4eea-8575-00c3d2b0d6c2",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.14 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.362886"
+    },
+    {
+      "id": "5eaea7b0-48ca-47eb-9905-264d85e4e674",
+      "text": "/download --url=\"https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe\" --type=\"downloads\"",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.365886"
+    },
+    {
+      "id": "75487a1c-f9d2-42dd-9982-34f6d4776a13",
+      "text": "Начата загрузка из https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe в папку 'downloads'",
+      "sender": "bot",
+      "type": "info",
+      "timestamp": "2025-05-23T19:38:27.368401"
+    },
+    {
+      "id": "0922cc6f-a1cd-4771-b635-1cbebb059c74",
+      "text": "Команда: /download",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.371915"
+    },
+    {
+      "id": "d3b00961-1a12-4534-94b5-e2f7324f2fb0",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.67 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:27.373913"
+    },
+    {
+      "id": "5cbffecf-264f-4773-9dee-4003e5556386",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:38:28.501543"
+    },
+    {
+      "id": "ee07402d-8a09-48de-9ada-002630a83be6",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.244148"
+    },
+    {
+      "id": "467197f5-851c-44e4-8c14-29c3d4f1a5d9",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.246153"
+    },
+    {
+      "id": "42626b4b-f59d-4e9f-ab84-54b02209dc14",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.249157"
+    },
+    {
+      "id": "a6393409-6b56-4bc3-b61c-96effce703ac",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.252154"
+    },
+    {
+      "id": "684b2133-9beb-49d2-a248-dc5c47fce191",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.254659"
+    },
+    {
+      "id": "16a7f556-4a72-4654-ac0d-286ecb813800",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.258183"
+    },
+    {
+      "id": "76c2addd-a52d-4ea3-b885-55242c8380b4",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.261180"
+    },
+    {
+      "id": "c49894e0-da82-46c6-a8f4-a25e2dff3fc5",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.264183"
+    },
+    {
+      "id": "e8ca2aba-b05e-411b-8779-c964c88cb22f",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.266374"
+    },
+    {
+      "id": "7f3f563e-3319-426a-a90d-8693759f5ea4",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.269373"
+    },
+    {
+      "id": "e3f86b52-15bb-4b9c-b346-5c83bd6d0492",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.271373"
+    },
+    {
+      "id": "560471ab-5706-45a7-a7d0-2a196cc4a5fa",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.274880"
+    },
+    {
+      "id": "554c5cc6-ec36-4cec-876f-96aac819e717",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.277386"
+    },
+    {
+      "id": "a9772562-aa1d-42a6-972f-195ab50b1a28",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.280390"
+    },
+    {
+      "id": "95124ce2-951b-4523-a0d4-1c6efbf9bc5e",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.282390"
+    },
+    {
+      "id": "a8aa2a7f-88dc-4d10-b663-e8e0e11bc1db",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.285898"
+    },
+    {
+      "id": "23f99074-a35c-46a0-bbc0-43901e4e96f4",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.288408"
+    },
+    {
+      "id": "3947b106-ff53-4541-898b-48ac02b5568f",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.291408"
+    },
+    {
+      "id": "0e9bb4f2-5b29-4613-9c6e-92dc03e48893",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.294913"
+    },
+    {
+      "id": "97644b43-be30-4655-9e32-a9bb0d9ac12b",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.297418"
+    },
+    {
+      "id": "eb95d2d9-67fd-4e46-9c4d-593763634f7b",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.300422"
+    },
+    {
+      "id": "2248bf12-a3c5-4614-a92b-6e211f6453fe",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.302422"
+    },
+    {
+      "id": "28456ff4-cd0e-4325-b555-d34d58828a46",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.305928"
+    },
+    {
+      "id": "f74c129c-92d1-4328-90e4-7e4785b22c34",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.309440"
+    },
+    {
+      "id": "c7047c7f-aee1-4392-8c3a-746b138def86",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.312441"
+    },
+    {
+      "id": "c0fd870b-3c69-4c84-ab4c-d67dae823975",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.315947"
+    },
+    {
+      "id": "8cd4d450-3258-4de8-b27d-f55cda70c469",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.318456"
+    },
+    {
+      "id": "617f9248-8a0c-4acd-99bf-7f67e7963a3e",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.321456"
+    },
+    {
+      "id": "7ecd0397-7715-4144-a0a0-b6d112092a97",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.14 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.325767"
+    },
+    {
+      "id": "e44ad89c-5feb-4e50-8b63-12e902c771f0",
+      "text": "/download --url=\"https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe\" --type=\"downloads\"",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.329279"
+    },
+    {
+      "id": "200569c9-0292-42e2-924d-b7ae03ecca3d",
+      "text": "Начата загрузка из https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe в папку 'downloads'",
+      "sender": "bot",
+      "type": "info",
+      "timestamp": "2025-05-23T19:43:20.332278"
+    },
+    {
+      "id": "eed62b1f-f841-4cea-93d6-583fb435584f",
+      "text": "Команда: /download",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.335486"
+    },
+    {
+      "id": "6ccff407-e569-4ea6-b0b9-c8a7f427ca0c",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.67 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.339486"
+    },
+    {
+      "id": "6e7b0d91-6711-48e8-88e4-ca1e43c6d340",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.342993"
+    },
+    {
+      "id": "0c960180-8026-46c6-9c3a-6f1147ad48d7",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.345503"
+    },
+    {
+      "id": "5f2adc61-faea-45c6-94b7-4e470e026cf1",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.348502"
+    },
+    {
+      "id": "cfbd4ac6-1211-40d1-8ac2-7ba775d3408c",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.351502"
+    },
+    {
+      "id": "2f418d41-f44b-4633-ac2d-529735f07227",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.354502"
+    },
+    {
+      "id": "2271542b-bf95-4894-84aa-a2b47e1aaed1",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.358430"
+    },
+    {
+      "id": "77d9f83a-e63a-421b-b84b-304f7d724061",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.361429"
+    },
+    {
+      "id": "8e730288-b6a8-4c9a-bfe7-df273cab7fb8",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.364429"
+    },
+    {
+      "id": "3f5674ed-df98-4aa5-9534-27c7488bafe7",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.368445"
+    },
+    {
+      "id": "bbe41e03-cb3b-4dfd-bab5-1938b1a73789",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.371445"
+    },
+    {
+      "id": "d082cc0c-08d0-4a77-b411-a0b85c3b7d62",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.374952"
+    },
+    {
+      "id": "25cd0b2e-c702-4d36-b901-09c32d596142",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.377457"
+    },
+    {
+      "id": "9f8521de-b54e-48fe-888f-8425c307af84",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.381461"
+    },
+    {
+      "id": "deea22e0-c34a-405c-aaa8-354b9b60761f",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.384461"
+    },
+    {
+      "id": "129717a9-d7a8-43bc-8818-00cb47ece7ea",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.387472"
+    },
+    {
+      "id": "ccd815e5-70be-456d-9159-95d9a7feba85",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.391478"
+    },
+    {
+      "id": "42936189-a2f0-4246-98f4-d5c199ef4202",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.394982"
+    },
+    {
+      "id": "161473b7-03ba-41b7-bae5-d6e13e985f42",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.397487"
+    },
+    {
+      "id": "a806e98c-91d7-48ce-8c85-026bdde17b6c",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.400491"
+    },
+    {
+      "id": "e69e45ec-0ae4-4ee3-a276-858b967af908",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.404491"
+    },
+    {
+      "id": "b3ed9501-23cd-4241-a505-53c7fe9d2da5",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.408421"
+    },
+    {
+      "id": "b4f7b134-c8ef-454b-b9fb-42fbd9ebeae1",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.411421"
+    },
+    {
+      "id": "c1c80420-6513-4086-b200-7c8490e15d67",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.414926"
+    },
+    {
+      "id": "5e5135b2-4f91-496a-8c1b-da2e9b75c092",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.418436"
+    },
+    {
+      "id": "d2d9d154-1127-4a2a-9d5b-d0556303b084",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.421436"
+    },
+    {
+      "id": "60e06ec8-44b1-4864-8c0f-bdd212282f5c",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.425945"
+    },
+    {
+      "id": "e10f71e2-3b69-40d8-bc7a-e5081d282a59",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.428453"
+    },
+    {
+      "id": "7e4a12e5-8920-438c-bf31-860de176ab93",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.432452"
+    },
+    {
+      "id": "b60ef339-d772-4688-a8de-d152b64afe15",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.14 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.435959"
+    },
+    {
+      "id": "a8ff0f9b-37ed-4483-86e7-0b91cdd02e88",
+      "text": "/download --url=\"https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe\" --type=\"downloads\"",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.439469"
+    },
+    {
+      "id": "5b713cd4-642c-4a8b-8fa6-f232c1ebb9a8",
+      "text": "Начата загрузка из https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe в папку 'downloads'",
+      "sender": "bot",
+      "type": "info",
+      "timestamp": "2025-05-23T19:43:20.442977"
+    },
+    {
+      "id": "d773b3d0-7bb2-404a-ab61-24a6d62c582c",
+      "text": "Команда: /download",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.446485"
+    },
+    {
+      "id": "401ba384-37a1-42ad-b8c1-e2db91d80783",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.67 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.450485"
+    },
+    {
+      "id": "d6880f6b-9676-4332-abfa-b4d54060f28b",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:20.453485"
+    },
+    {
+      "id": "d13d2dfc-1ed7-4129-8ae2-cfaafcd6b485",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:21.332418"
+    },
+    {
+      "id": "4753788a-dec5-47e4-8ac5-fa00ce6b0d8f",
+      "text": "Скажи: сколько будет 8 * sqrt(cos(145))",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:58.003135"
+    },
+    {
+      "id": "91ebc06f-7f0c-484c-a4d6-2685ecea96b4",
+      "text": "Модель: agpt2.Q8_0\n-ус поринат фя (1) #[PATCH]Fixes a bug that caused some systems to crash on shutdown if the user has more than one active server with an empty list of servers in their inventory... [F3K, C# 2016][M.A.T.]\n-ус поринат хой (1) #[PATCH]Fixes a bug that caused some systems to crash on shutdown if the user has more than one active server with an empty list of servers in their inventory... [F3K, C# 2016][M.A.-",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:43:59.335938"
+    },
+    {
+      "id": "dd61345d-2595-4ef4-a389-9937513ed576",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.51 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:44:24.919958"
+    },
+    {
+      "id": "d361ad39-1b5b-4a6e-8d55-57fe86a66c58",
+      "text": "Скажи: сколько будет 8 * sqrt(cos(145))",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-23T19:44:33.421743"
+    },
+    {
+      "id": "a80ed8d0-1cad-4781-a1e2-f8ee5a36505b",
+      "text": "<think>\nAlright, so I need to figure out what 8 times the square root of cosine of 145 degrees is. Hmm, okay, first off, let's break this down step by step because trigonometry can be tricky sometimes.",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-23T19:45:01.909502"
+    },
+    {
+      "id": "4fdfde70-359a-4aa2-9e9c-9846a8e8e24b",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.111205"
+    },
+    {
+      "id": "06f05634-7a91-4129-a313-f9c177670736",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.113811"
+    },
+    {
+      "id": "390da433-336f-407a-be32-12027a1f35c3",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.116311"
+    },
+    {
+      "id": "faa9ee87-afad-47bc-a674-73499634ca67",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.118716"
+    },
+    {
+      "id": "c3dcaae1-5ca1-41ac-9e2a-17158f00c4b1",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.121051"
+    },
+    {
+      "id": "0467c3c4-069e-47bd-9d17-c166940b0bdf",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.123693"
+    },
+    {
+      "id": "7f15332e-17da-4f4c-8064-3b55efd6b9c9",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.130434"
+    },
+    {
+      "id": "64b92b05-20e4-44dd-a7f9-e147b0d8da19",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.133130"
+    },
+    {
+      "id": "73449d25-1641-4538-b590-d62229b55836",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.136071"
+    },
+    {
+      "id": "f6dd7f51-1791-4ed3-b4bb-8f25a2b1c48b",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.138425"
+    },
+    {
+      "id": "1aa30edd-a115-4f29-8e25-140463728b7c",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.140760"
+    },
+    {
+      "id": "a264da40-da9f-4b55-8efd-1a01247bec20",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.143272"
+    },
+    {
+      "id": "d43782a6-1f98-4cd4-be54-e221692d03f8",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.145891"
+    },
+    {
+      "id": "68215bf6-ca22-4d53-beda-3dd27bafed7e",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.148410"
+    },
+    {
+      "id": "ec10415a-2398-4052-bad4-1164f764e6d0",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.151063"
+    },
+    {
+      "id": "e0126778-7803-48a0-9899-aa34b64140e6",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.153490"
+    },
+    {
+      "id": "1adde3e8-2ee9-4fad-b7b0-5eef0f14da9a",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.155886"
+    },
+    {
+      "id": "93dfdf3b-e856-4966-9a7a-a3b9f7b42a60",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.158356"
+    },
+    {
+      "id": "0258c4f3-93f6-4f46-b45a-97466f09257c",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.160909"
+    },
+    {
+      "id": "e35f187a-44cc-4320-bb83-b65e677e5e63",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.11 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.163698"
+    },
+    {
+      "id": "fffa6f89-32c7-43c0-be85-8c134fbb6ac5",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.13 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.166459"
+    },
+    {
+      "id": "8b8e08fd-f77f-4311-bc7d-b19cde400ff6",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 4.98 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.169093"
+    },
+    {
+      "id": "4fac0433-0bb2-4ff2-9243-7a33f5485f1d",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.171811"
+    },
+    {
+      "id": "08505150-2d8b-4f2b-a498-13b85d8bad6b",
+      "text": "Привет",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.174461"
+    },
+    {
+      "id": "28a977d2-ab7b-49de-aa5a-014f4ad21e14",
+      "text": "Модель: agpt2.Q8_1\n\n-успешно загружена за 0.17 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\n\nДоступные команды:\n\n/clear - Очистить чат\n\n/help - Показать список команд\n\n/download --url=\"<download link>\" --type",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.177160"
+    },
+    {
+      "id": "e74fceb2-e542-4fa0-8dae-bc5df994a862",
+      "text": "Модель: DeepSeek-R1-Distill-Qwen-7B-Q4_K_M\n-успешно загружена за 3.29 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.179748"
+    },
+    {
+      "id": "3ccc70b2-35f4-4e9e-a1ad-920072a53a42",
+      "text": "Привет, расскажи, чем ты мне можешь помочь?",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.182442"
+    },
+    {
+      "id": "d866fc6b-a73a-4ee4-b646-4ddace8bcbcb",
+      "text": "<think>\nAlright, the user greeted me with \"Привет, расскажи, чем ты мне moi moi помочь?\" which means \"Hello, tell me what I can do for you?\" So, I need to respond in a friendly and helpful manner.\n\nLooking at the history, the user has been interacting with a model that has specific commands like /clear, /help, /download, etc. So, I should stick to those commands but also make it welcoming.\n\nI should start with a greeting in Russian, like \"Привет! 😊\" to respond politely. Then, list the available commands in a clear and organized way so the user knows what they can do next.\n\nIncluding an emoji like a smiley face can make the response feel more approachable. I should also encourage the user to ask anything specific to show that I'm ready to assist.\n\nDouble-checking the",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.185175"
+    },
+    {
+      "id": "18a8d581-a473-42ff-bd20-cf9f40671df0",
+      "text": "Модель: agpt2.Q8_0\n-успешно загружена за 0.14 секунд\n\nЯ могу помочь вам с различными задачами. Вот что я умею:\nДоступные команды:\n/clear - Очистить чат\n/help - Показать список команд\n/download --url=\"<download link>\" --type=\"<download folder>\" - Загрузить файл\n/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\" - Отправить сообщение\n",
+      "sender": "bot",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.187724"
+    },
+    {
+      "id": "7ab6a9d9-98ce-442d-89f4-378ec481f55a",
+      "text": "/download --url=\"https://mcrating.org/away?&to=https://migosmc.net/MigosLauncher.exe\" --type=\"downloads\"",
+      "sender": "user",
+      "type": "",
+      "timestamp": "2025-05-26T15:21:08.190247"
+    }
+  ],
+  "commands": {
+    "/clear": {
+      "id": "cmd_clear",
+      "description": "Очистить чат",
+      "usage": "/clear"
+    },
+    "/help": {
+      "id": "cmd_help",
+      "description": "Показать список команд",
+      "usage": "/help"
+    },
+    "/download": {
+      "id": "cmd_download",
+      "description": "Загрузить файл",
+      "usage": "/download --url=\"<download link>\" --type=\"<download folder>\""
+    },
+    "/send_message": {
+      "id": "cmd_send",
+      "description": "Отправить сообщение",
+      "usage": "/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\""
+    }
+  },
+  "created_at": "2025-05-23T15:20:30.638077",
+  "last_updated": "2025-05-26T15:21:08.190254"
+}

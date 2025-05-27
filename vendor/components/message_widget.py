@@ -1,16 +1,51 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QHBoxLayout, QPushButton, QApplication
-from PyQt6.QtGui import QPixmap, QCursor, QIcon, QPainter
+from PyQt6.QtWidgets import QWidget, QLabel, QHBoxLayout, QPushButton, QApplication, QTextEdit, QMenu
+from PyQt6.QtGui import QPixmap, QCursor, QIcon, QPainter, QAction
 from PyQt6.QtCore import Qt, QTimer, QSize
 from PyQt6.QtSvgWidgets import QSvgWidget
 import base64
 from io import BytesIO
+from .iconmanager import IconManager
 
 class HoverLabel(QLabel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setMouseTracking(True)
+        self.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         self._hover_callback = None
         self._leave_callback = None
+        self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.show_context_menu)
+
+    def show_context_menu(self, pos):
+        menu = QMenu(self)
+        menu.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        menu.setStyleSheet("""
+            QMenu {
+                background-color: #2D2D2D;
+                border: none;
+                border-radius: 8px;
+                padding: 5px;
+            }
+            QMenu::item {
+                padding: 8px 16px;
+                border-radius: 6px;
+                margin: 2px;
+                color: #FFFFFF;
+            }
+            QMenu::item:selected {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        """)
+        
+        copy_action = QAction("Копировать выделенное", self)
+        copy_action.triggered.connect(self.copy_selected)
+        menu.addAction(copy_action)
+        menu.exec(self.mapToGlobal(pos))
+
+    def copy_selected(self):
+        selected_text = self.selectedText()
+        if selected_text:
+            QApplication.clipboard().setText(selected_text)
 
     def enterEvent(self, event):
         if self._hover_callback:
@@ -64,11 +99,11 @@ class MessageWidget(QWidget):
         self._hover_timer.setInterval(100)
         self._hover_timer.timeout.connect(self._hide_copy_button)
 
-        self.icon_label = QLabel()
+        self.icon_label = QSvgWidget()
         self.text_label = HoverLabel(self.text)
-        self.copy_button = HoverButton("Копировать")
+        self.copy_button = HoverButton("Copy")
         self.copy_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
-        self.copy_button.setFixedSize(120, 40)
+        self.copy_button.setFixedSize(90, 40)
         self.copy_button.clicked.connect(self.copy_text)
         self.copy_button.hide()
 
@@ -114,7 +149,8 @@ class MessageWidget(QWidget):
         self.text_label.setWordWrap(True)
 
         if self.sender == "user":
-            self.icon_label.setPixmap(QPixmap("./vendor/images/info.png").scaled(32, 32, Qt.AspectRatioMode.KeepAspectRatio))
+            self.icon_label.load(IconManager.get_images("user"))
+            self.icon_label.setFixedSize(32, 32)
             layout.addStretch()
             layout.addWidget(self.copy_button)
             layout.addWidget(self.text_label)
@@ -126,7 +162,8 @@ class MessageWidget(QWidget):
             self.text_label.setFixedWidth(400)
             layout.addStretch()
         else:
-            self.icon_label.setPixmap(QPixmap("./vendor/images/computer.png").scaled(32, 32, Qt.AspectRatioMode.KeepAspectRatio))
+            self.icon_label.load(IconManager.get_images("bot"))
+            self.icon_label.setFixedSize(32, 32)
             layout.addWidget(self.icon_label)
             layout.addWidget(self.text_label)
             layout.addWidget(self.copy_button)
@@ -143,36 +180,22 @@ class MessageWidget(QWidget):
         self.update_styles()
 
     def update_styles(self):
-        user_bg = self.theme_palette["hover"]
-        bot_bg = self.theme_palette["pressed"]
+        border = self.theme_palette["border"]
+        main_bg = self.theme_palette["hover"]
         fg = self.theme_palette["fg"]
         error_bg = self.theme_palette["bg_error"]
         warning_bg = self.theme_palette["bg_warning"]
         hover_color = self.theme_palette["hover"]
         pressed_color = self.theme_palette["pressed"]
-
-        if self.type_message == "error":
-            bg_color = error_bg
-        elif self.type_message == "warning":
-            bg_color = warning_bg
-        else:
-            bg_color = user_bg if self.sender == "user" else bot_bg
-
-        self.text_label.setStyleSheet(f"""
-            background-color: {bg_color};
-            color: {fg};
-            border-radius: 12px;
-            padding: 10px;
-            font-size: 12pt;
-        """)
+        
         # Устанавливаем иконку с нужным цветом
         self.copy_button.setIcon(self._get_fluent_copy_icon(fg))
         self.copy_button.setStyleSheet(f"""
             QPushButton {{
                 padding: 8px;
                 font-size: 12pt;
-                border: none;
-                background-color: {user_bg};
+                border: 1px solid {border};
+                background-color: {main_bg};
                 color: {fg};
                 border-radius: 12px;
             }}
@@ -183,3 +206,25 @@ class MessageWidget(QWidget):
                 background-color: {pressed_color};
             }}
         """)
+
+        if self.type_message == "error":
+            bg_color = error_bg
+            fg = self.theme_palette["fg_message"]
+        elif self.type_message == "warning":
+            bg_color = warning_bg
+            fg = self.theme_palette["fg_message"]
+        elif self.type_message == "info":
+            bg_color = self.theme_palette["bg_info"]
+            fg = self.theme_palette["fg_message"]
+        else:
+            bg_color = main_bg
+            fg = self.theme_palette["fg"]
+
+        self.text_label.setStyleSheet(f"""
+            background-color: {bg_color};
+            color: {fg};
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 12pt;
+        """)
+        

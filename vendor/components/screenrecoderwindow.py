@@ -14,10 +14,12 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
 from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, QTimer
 from PyQt6.QtGui import QScreen
-import pyautogui
 import cv2
 import numpy as np
 from vendor.components.iconmanager import IconManager
+import mss  # <-- Новый импорт для кроссплатформенного скриншота
+import mss.tools
+
 
 class ScreenRecorderWindow(QWidget):
     def __init__(self, language, theme_manager):
@@ -26,13 +28,8 @@ class ScreenRecorderWindow(QWidget):
         self.language = language
         self.theme_manager = theme_manager
         self.translations = self.load_translations(self.language)
-        
-        # Подписка на сигнал изменения темы
         self.theme_manager.theme_changed.connect(self.update_theme)
-        
         self.initUI()
-        
-        # Обновляем тему после создания всех элементов
         self.update_theme(self.theme_manager.current_theme())
 
     def load_translations(self, language):
@@ -48,7 +45,6 @@ class ScreenRecorderWindow(QWidget):
         main_layout = QVBoxLayout()
 
         title_layout = QHBoxLayout()
-
         title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
 
         for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized),
@@ -58,18 +54,15 @@ class ScreenRecorderWindow(QWidget):
 
         main_layout.addLayout(title_layout)
 
-        #Кнопка начала записи
         self.start_button = QPushButton(self.translations["start_button"], self)
         self.start_button.clicked.connect(self.start_recording)
         main_layout.addWidget(self.start_button)
 
-        #Кнопка остановки записи
         self.stop_button = QPushButton(self.translations["stop_button"], self)
         self.stop_button.setEnabled(False)
         self.stop_button.clicked.connect(self.stop_recording)
         main_layout.addWidget(self.stop_button)
 
-        #Метка для отображения времени записи
         self.time_label = QLabel("00:00:00", self)
         self.time_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(self.time_label)
@@ -77,11 +70,10 @@ class ScreenRecorderWindow(QWidget):
         self.setLayout(main_layout)
         self.center_window(self)
 
-        #Инициализация переменных для записи
         self.recording = False
         self.frames = []
         self.elapsed_time = 0
-        
+
     def create_title_button(self, icon_path, slot):
         btn = QPushButton()
         btn.setIcon(QIcon(QPixmap(icon_path)))
@@ -108,12 +100,10 @@ class ScreenRecorderWindow(QWidget):
         self.start_button.setEnabled(False)
         self.stop_button.setEnabled(True)
 
-        #Запуск таймера для записи кадров
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.record_frame)
-        self.timer.start(33)  # 30 FPS
+        self.timer.start(33)  # ~30 FPS
 
-        #Запуск таймера для обновления времени записи
         self.time_timer = QTimer(self)
         self.time_timer.timeout.connect(self.update_time)
         self.time_timer.start(1000)  # 1 секунда
@@ -123,31 +113,48 @@ class ScreenRecorderWindow(QWidget):
         self.start_button.setEnabled(True)
         self.stop_button.setEnabled(False)
 
-        #Остановка таймера
         self.timer.stop()
         self.time_timer.stop()
 
-        #Сохранение видео
-        file_path, _ = QFileDialog.getSaveFileName(self, self.translations["save_video_dialog_title"], "", "MP4 Files (*.mp4)")
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            self.translations["save_video_dialog_title"],
+            "",
+            "MP4 Files (*.mp4)"
+        )
         if file_path:
             self.save_video(file_path)
 
     def record_frame(self):
-        if self.recording:
-            screen = pyautogui.screenshot()
-            frame = np.array(screen)
-            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-            self.frames.append(frame)
+        if not self.recording:
+            return
+
+        try:
+            with mss.mss() as sct:
+                monitor = sct.monitors[1]  # Основной экран
+                screenshot = sct.grab(monitor)
+                frame = np.array(screenshot)
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)  # Конвертируем в BGR (OpenCV)
+                self.frames.append(frame)
+        except Exception as e:
+            print(f"Ошибка захвата экрана: {e}")
+            self.stop_recording()
 
     def save_video(self, file_path):
-        if self.frames:
+        if not self.frames:
+            return
+
+        try:
             height, width, _ = self.frames[0].shape
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             out = cv2.VideoWriter(file_path, fourcc, 30.0, (width, height))
+
             for frame in self.frames:
                 out.write(frame)
             out.release()
             self.frames = []
+        except Exception as e:
+            print(f"Ошибка сохранения видео: {e}")
 
     def update_time(self):
         self.elapsed_time += 1
@@ -174,17 +181,12 @@ class ScreenRecorderWindow(QWidget):
         super().paintEvent(event)
 
     def _is_in_title_bar(self, pos):
-        # Получаем геометрию заголовка
-        title_height = 40  # Высота заголовка
+        title_height = 40
         return pos.y() <= title_height
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
-            # Проверяем, находится ли курсор в области заголовка
-            if self._is_in_title_bar(event.position().toPoint()):
-                self._old_pos = event.globalPosition().toPoint()
-            else:
-                self._old_pos = None
+        if event.button() == Qt.MouseButton.LeftButton and self._is_in_title_bar(event.position().toPoint()):
+            self._old_pos = event.globalPosition().toPoint()
 
     def mouseMoveEvent(self, event):
         if self._old_pos is not None:
@@ -260,8 +262,7 @@ class ScreenRecorderWindow(QWidget):
                 selection-color: {theme_vals['fg']};
             }}
         """)
-        
-        # Обновляем стили отдельных элементов
+
         self.start_button.setStyleSheet(f"""
             background: {theme_vals['bg']};
             color: {theme_vals['fg']};
@@ -271,7 +272,7 @@ class ScreenRecorderWindow(QWidget):
             font-family: 'Segoe UI';
             font-size: 12pt;
         """)
-        
+
         self.stop_button.setStyleSheet(f"""
             background: {theme_vals['bg']};
             color: {theme_vals['fg']};
@@ -281,7 +282,7 @@ class ScreenRecorderWindow(QWidget):
             font-family: 'Segoe UI';
             font-size: 12pt;
         """)
-        
+
         self.time_label.setStyleSheet(f"""
             font-size: 16px;
             font-family: 'Segoe UI';

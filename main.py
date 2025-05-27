@@ -1,11 +1,8 @@
-import sys
-import os
-import json
-from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QGridLayout, 
+from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QGridLayout,
                              QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy, QComboBox)
-from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
-from PyQt6.QtCore import Qt, QSize, QRectF
-from PyQt6.QtGui import QScreen, QRegion
+from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath, QScreen
+from PyQt6.QtCore import Qt, QSize, QRectF, QPoint
+from PyQt6.QtGui import QRegion
 from vendor.components.iconmanager import IconManager
 from vendor.components.qrcodewindow import QRCodeWindow
 from vendor.components.browser import Browser
@@ -19,6 +16,10 @@ from vendor.components.paintwindow import PaintWindow
 from vendor.components.ai_chat import AIChatWindow
 from vendor.components.manager_download import Download_Manager
 from thememanager import ThemeManager
+from llama_cpp import Llama
+import sys
+import os
+import json
 
 if hasattr(Qt, 'AA_EnableHighDpiScaling'):
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
@@ -37,7 +38,9 @@ class MainWindow(QWidget):
         self._title_bar_buttons = []
         self.translations = self.load_translations(self.language)
         self.current_directory = current_directory
-        
+        self._open_windows = {}  # Словарь для хранения открытых окон
+        self._window_states = {}  # Словарь для хранения состояний окон
+
         self.theme_manager.theme_changed.connect(self.update_theme)
         self.update_theme(self.theme_manager.current_theme())
 
@@ -51,10 +54,11 @@ class MainWindow(QWidget):
     def init_ui(self):
         self.setWindowTitle(self.translations["window_title"])
         self.setWindowIcon(IconManager.get_icon("main"))
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+
+
         main_layout = QVBoxLayout()
         main_layout.setContentsMargins(20, 20, 20, 20)
-        main_layout.addLayout(self.create_title_bar())
+        if(self.theme_manager.get_current_platform() == "windows"): main_layout.addLayout(self.create_title_bar())
 
         logo = QLabel()
         logo_pixmap = QPixmap(IconManager.get_images("main_logo"))
@@ -66,6 +70,8 @@ class MainWindow(QWidget):
         self.setLayout(main_layout)
 
     def create_title_bar(self):
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         title_bar = QHBoxLayout()
 
         self.language_combo = QComboBox()
@@ -197,49 +203,127 @@ class MainWindow(QWidget):
         if event.button() == Qt.MouseButton.LeftButton:
             # Проверяем, находится ли курсор в области заголовка
             if self._is_in_title_bar(event.position().toPoint()):
-                self._old_pos = event.globalPosition().toPoint()
-            else:
-                self._old_pos = None
+                self._old_pos = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
 
     def mouseMoveEvent(self, event):
-        if self._old_pos:
-            delta = event.globalPosition().toPoint() - self._old_pos
-            self.move(self.pos() + delta)
-            self._old_pos = event.globalPosition().toPoint()
+        if self._old_pos is not None and event.buttons() == Qt.MouseButton.LeftButton:
+            delta = event.globalPosition() - self._old_pos
+            self.move(int(self.x() + delta.x()), int(self.y() + delta.y()))
+            self._old_pos = event.globalPosition()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
             self._old_pos = None
 
     def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
         path = QPainterPath()
         path.addRoundedRect(QRectF(self.rect()), 10, 10)
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.fillPath(path, QColor(self.theme_manager.theme_palette[self.theme]['bg']))
-        self.setMask(QRegion(path.toFillPolygon().toPolygon()))
+        p.fillPath(path, QColor(self.palette().color(self.backgroundRole())))
+        p.setClipPath(path)
         super().paintEvent(event)
 
-    # Window handlers
-    def open_qr_window(self): self._open = QRCodeWindow(self.language, self.theme_manager); self._open.show()
-    def open_speedtest(self): self._open = SpeedTestWindow(self.language, self.theme_manager); self._open.show()
-    def open_paint(self): self._open = PaintWindow(self.language, self.theme_manager); self._open.show()
-    def open_pc_info(self): self._open = PCInfoWindow(self.language, self.theme_manager); self._open.show()
-    def open_browser(self): self._open = Browser(app, self.theme_manager); self._open.show()
-    def open_screenshot(self): self._open = ScreenshotWindow(self.language, self.theme_manager); self._open.show()
-    def open_recorder(self): self._open = ScreenRecorderWindow(self.language, self.theme_manager); self._open.show()
-    def open_screenshare(self): self._open = ScreenShareWindow(self.language, self.theme_manager); self._open.show()
-    def open_translator(self): self._open = TranslatorWindow(self.language, self.theme_manager); self._open.show()
+    def _cleanup_window(self, window_id):
+        """Очистка ресурсов окна при его закрытии"""
+        if window_id in self._open_windows:
+            window = self._open_windows[window_id]
+            if hasattr(window, 'cleanup'):
+                window.cleanup()
+            del self._open_windows[window_id]
+            if window_id in self._window_states:
+                del self._window_states[window_id]
+
+    def _window_closed(self, window_id):
+        """Обработчик закрытия окна"""
+        self._cleanup_window(window_id)
+
+    def _create_window(self, window_id, window_class, *args, **kwargs):
+        """Создание нового окна с обработкой закрытия"""
+        if window_id not in self._open_windows:
+            window = window_class(*args, **kwargs)
+            window.closeEvent = lambda event: self._handle_window_close(event, window_id)
+            self._open_windows[window_id] = window
+            self._window_states[window_id] = True
+            window.show()
+            return window
+        return self._open_windows[window_id]
+
+    def _handle_window_close(self, event, window_id):
+        """Обработчик события закрытия окна"""
+        self._window_states[window_id] = False
+        self._cleanup_window(window_id)
+        event.accept()
+
+    def closeEvent(self, event):
+        # Останавливаем все открытые окна
+        for window_id in list(self._open_windows.keys()):
+            self._cleanup_window(window_id)
+
+        # Останавливаем таймер темы
+        self.theme_manager.timer.stop()
+
+        # Останавливаем менеджер загрузок
+        if hasattr(self.download_manager, 'stop_all'):
+            self.download_manager.stop_all()
+
+        # Принимаем событие закрытия
+        event.accept()
+
+        # Завершаем приложение
+        QApplication.quit()
+
+    # Модифицируем методы открытия окон
+    def open_qr_window(self):
+        self._create_window('qr', QRCodeWindow, self.language, self.theme_manager)
+
+    def open_speedtest(self):
+        self._create_window('speedtest', SpeedTestWindow, self.language, self.theme_manager)
+
+    def open_paint(self):
+        self._create_window('paint', PaintWindow, self.language, self.theme_manager)
+
+    def open_pc_info(self):
+        self._create_window('pcinfo', PCInfoWindow, self.language, self.theme_manager)
+
+    def open_browser(self):
+        self._create_window('browser', Browser, app, self.theme_manager)
+
+    def open_screenshot(self):
+        self._create_window('screenshot', ScreenshotWindow, self.language, self.theme_manager)
+
+    def open_recorder(self):
+        self._create_window('recorder', ScreenRecorderWindow, self.language, self.theme_manager)
+
+    def open_screenshare(self):
+        self._create_window('screenshare', ScreenShareWindow, self.language, self.theme_manager)
+
+    def open_translator(self):
+        self._create_window('translator', TranslatorWindow, self.language, self.theme_manager)
+
+    def open_chat_window(self):
+        self._create_window('chat', AIChatWindow,
+            language=self.language,
+            theme_manager=self.theme_manager,
+            download_manager=self.download_manager,
+            current_directory=self.current_directory,
+            llama_cpp_lib=Llama
+        )
+
     def open_mic_window(self): self.create_simple_window("window_3_title", "window_3_label")
     def open_audio_window(self): self.create_simple_window("window_4_title", "window_4_label")
-    def open_chat_window(self): self._open = AIChatWindow(language=self.language, theme_manager=self.theme_manager, download_manager=self.download_manager, current_directory=self.current_directory); self._open.show()
 
     def create_simple_window(self, title_key, label_key):
-        window = QWidget()
-        window.setWindowTitle(self.translations[title_key])
-        QLabel(self.translations[label_key], window).setAlignment(Qt.AlignmentFlag.AlignCenter)
-        window.setGeometry(200, 200, 300, 150)
-        window.show()
+        window_id = f"simple_{title_key}"
+        if window_id not in self._open_windows:
+            window = QWidget()
+            window.setWindowTitle(self.translations[title_key])
+            QLabel(self.translations[label_key], window).setAlignment(Qt.AlignmentFlag.AlignCenter)
+            window.setGeometry(200, 200, 300, 150)
+            window.closeEvent = lambda event: self._handle_window_close(event, window_id)
+            self._open_windows[window_id] = window
+            self._window_states[window_id] = True
+            window.show()
 
 if __name__ == "__main__":
     root_path = os.path.abspath(os.curdir)

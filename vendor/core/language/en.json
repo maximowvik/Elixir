@@ -58,5 +58,9 @@
     "test_failed": "Speed test failed",
     "connection_error": "Connection error",
     "ping": "Ping",
-    "error": "Error"
+    "error": "Error",
+    "qr_color_button": "qr code color",
+    "bg_color_button": "qr code background color",
+    "choose_qr_color": "choose the color of the QR code",
+    "choose_bg_color": "select the background color of the QR code"
 }
