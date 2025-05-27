@@ -1,5 +1,7 @@
 import darkdetect
-from PyQt6.QtCore import QObject, pyqtSignal, QTimer
+from PyQt6.QtWidgets import QPushButton
+from PyQt6.QtGui import QPixmap, QIcon
+from PyQt6.QtCore import QObject, pyqtSignal, QTimer, QSize
 import platform
 
 class ThemeManager(QObject):
@@ -55,3 +57,25 @@ class ThemeManager(QObject):
 
     def get_current_platform(self):
         return str(platform.system()).lower()
+
+    def create_title_button(self, icon_name, slot):
+        btn = QPushButton()
+        btn.setIcon(QIcon(QPixmap(icon_name)))
+        btn.setIconSize(QSize(35, 35))
+        btn.setFixedSize(40, 40)
+        btn.setStyleSheet("""
+            QPushButton {
+                background: transparent;
+                border: none;
+                border-radius: 10px;
+            }
+            QPushButton:hover {
+                background: rgba(0, 0, 0, 30);
+            }
+            QPushButton:pressed {
+                background: rgba(0, 0, 0, 50);
+            }
+        """)
+        btn.clicked.connect(slot)
+        return btn
+

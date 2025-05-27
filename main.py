@@ -85,37 +85,15 @@ class MainWindow(QWidget):
         title_bar.addItem(QSpacerItem(10, 10, QSizePolicy.Policy.Expanding))
         if (self.theme_manager.get_current_platform() == "windows"):
             for icon, handler in [("change_theme", self.toggle_theme), ("pic/minus.png", self.showMinimized), ("button_close", self.close)]:
-                btn = self.create_title_button(IconManager.get_images(icon) if 'pic' not in icon else icon, handler)
+                btn = self.theme_manager.create_title_button(IconManager.get_images(icon) if 'pic' not in icon else icon, handler)
                 self._title_bar_buttons.append(btn)
                 title_bar.addWidget(btn)
         else:
-            btn = self.create_title_button(IconManager.get_images("change_theme") if 'pic' not in "change_theme" else "change_theme", self.toggle_theme)
+            btn = self.theme_manager.create_title_button(IconManager.get_images("change_theme") if 'pic' not in "change_theme" else "change_theme", self.toggle_theme)
             self._title_bar_buttons.append(btn)
             title_bar.addWidget(btn)
 
         return title_bar
-
-    def create_title_button(self, icon_path, handler):
-        btn = QPushButton()
-        btn.setIcon(QIcon(icon_path))
-        btn.setIconSize(QSize(35, 35))
-        btn.setFixedSize(40, 40)
-        btn.clicked.connect(handler)
-        btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                padding: 4px;
-                border-radius: 6px;
-            }
-            QPushButton:hover {
-                background: rgba(0, 0, 0, 30);
-            }
-            QPushButton:pressed {
-                background: rgba(0, 0, 0, 50);
-            }
-        """)
-        return btn
 
     def create_button_grid(self):
         grid = QGridLayout()
