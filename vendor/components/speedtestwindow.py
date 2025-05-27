@@ -54,20 +54,15 @@ class SpeedTestWindow(QWidget):
             return json.load(f)
 
     def setup_ui(self):
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_StyledBackground)
         self.setWindowTitle(self.translations["speed_test_window_title"])
         self.setWindowIcon(IconManager.get_icon("speed_test"))
+        self.setMinimumWidth(500)
 
         layout = QVBoxLayout()
 
         # Верхняя панель
-        title = QHBoxLayout()
-        title.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
-        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized), (IconManager.get_images("button_close"), self.close)]:
-            btn = self.create_title_button(icon, slot)
-            title.addWidget(btn)
-        layout.addLayout(title)
+        if self.theme_manager.get_current_platform() == "windows":
+            layout.addLayout(self.create_title_bar())
 
         # Центральные элементы
         self.speedometer = QLabel(alignment=Qt.AlignmentFlag.AlignCenter)
@@ -99,9 +94,21 @@ class SpeedTestWindow(QWidget):
 
         self.center_window()
 
+    def create_title_bar(self):
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        title_bar = QHBoxLayout()
+        title_bar.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+
+        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized), (IconManager.get_images("button_close"), self.close)]:
+            btn = self.create_title_button(icon, slot)
+            title_bar.addWidget(btn)
+
+        return title_bar
+
     def create_title_button(self, icon_name, slot):
         btn = QPushButton()
-        btn.setIcon(QIcon(QPixmap(f"{icon_name}")))
+        btn.setIcon(QIcon(QPixmap(icon_name)))
         btn.setIconSize(QSize(35, 35))
         btn.setFixedSize(40, 40)
         btn.setStyleSheet("""
