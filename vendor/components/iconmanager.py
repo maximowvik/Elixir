@@ -13,6 +13,7 @@ class IconManager:
             "translator": "vendor/icon/journal.ico",
             "screen_recorder": "vendor/icon/video.ico",
             "screen_share": "vendor/icon/computer.ico",
+            "audio_recording": "vendor/icon/mic.ico"
         }
         return QIcon(icons.get(window_name, "vendor/icon/icon.ico"))
     @staticmethod

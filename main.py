@@ -15,6 +15,7 @@ from vendor.components.pcinfowindow import PCInfoWindow
 from vendor.components.paintwindow import PaintWindow
 from vendor.components.ai_chat import AIChatWindow
 from vendor.components.manager_download import Download_Manager
+from vendor.components.mic import AudioRecorder
 from thememanager import ThemeManager
 from llama_cpp import Llama
 import sys
@@ -84,8 +85,8 @@ class MainWindow(QWidget):
 
         title_bar.addItem(QSpacerItem(10, 10, QSizePolicy.Policy.Expanding))
         if (self.theme_manager.get_current_platform() == "windows"):
-            for icon, handler in [("change_theme", self.toggle_theme), ("pic/minus.png", self.showMinimized), ("button_close", self.close)]:
-                btn = self.theme_manager.create_title_button(IconManager.get_images(icon) if 'pic' not in icon else icon, handler)
+            for icon, handler in [("change_theme", self.toggle_theme), ("roll_up_button", self.showMinimized), ("button_close", self.close)]:
+                btn = self.theme_manager.create_title_button(IconManager.get_images(icon), handler)
                 self._title_bar_buttons.append(btn)
                 title_bar.addWidget(btn)
         else:
@@ -186,13 +187,15 @@ class MainWindow(QWidget):
         if event.button() == Qt.MouseButton.LeftButton:
             # Проверяем, находится ли курсор в области заголовка
             if self._is_in_title_bar(event.position().toPoint()):
-                self._old_pos = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+                self._old_pos = event.globalPosition().toPoint()
+            else:
+                self._old_pos = None
 
     def mouseMoveEvent(self, event):
-        if self._old_pos is not None and event.buttons() == Qt.MouseButton.LeftButton:
-            delta = event.globalPosition() - self._old_pos
-            self.move(int(self.x() + delta.x()), int(self.y() + delta.y()))
-            self._old_pos = event.globalPosition()
+        if self._old_pos:
+            delta = event.globalPosition().toPoint() - self._old_pos
+            self.move(self.pos() + delta)
+            self._old_pos = event.globalPosition().toPoint()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
@@ -293,7 +296,8 @@ class MainWindow(QWidget):
             llama_cpp_lib=Llama
         )
 
-    def open_mic_window(self): self.create_simple_window("window_3_title", "window_3_label")
+    def open_mic_window(self): 
+        self._create_window("audio_record", AudioRecorder, self.language, self.theme_manager)
     def open_audio_window(self): self.create_simple_window("window_4_title", "window_4_label")
 
     def create_simple_window(self, title_key, label_key):

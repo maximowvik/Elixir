@@ -95,37 +95,18 @@ class SpeedTestWindow(QWidget):
         self.center_window()
 
     def create_title_bar(self):
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        if (self.theme_manager.get_current_platform() == "windows"):
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+            self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         title_bar = QHBoxLayout()
         title_bar.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
-
-        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized), (IconManager.get_images("button_close"), self.close)]:
-            btn = self.create_title_button(icon, slot)
-            title_bar.addWidget(btn)
+        
+        if (self.theme_manager.get_current_platform() == "windows"):
+            for icon, handler in [("roll_up_button", self.showMinimized), ("button_close", self.close)]:
+                btn = self.theme_manager.create_title_button(IconManager.get_images(icon), handler)
+                title_bar.addWidget(btn)
 
         return title_bar
-
-    def create_title_button(self, icon_name, slot):
-        btn = QPushButton()
-        btn.setIcon(QIcon(QPixmap(icon_name)))
-        btn.setIconSize(QSize(35, 35))
-        btn.setFixedSize(40, 40)
-        btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                border-radius: 10px;
-            }
-            QPushButton:hover {
-                background: rgba(0, 0, 0, 30);
-            }
-            QPushButton:pressed {
-                background: rgba(0, 0, 0, 50);
-            }
-        """)
-        btn.clicked.connect(slot)
-        return btn
 
     def update_progress(self, value, text):
         self.progress_bar.setValue(value)
