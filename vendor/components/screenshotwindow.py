@@ -9,7 +9,8 @@ from PyQt6.QtWidgets import (
     QSpacerItem,
     QSizePolicy,
     QFileDialog,
-    QComboBox
+    QComboBox,
+    QLabel
 )
 import mss
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
@@ -37,179 +38,125 @@ class ScreenshotWindow(QWidget):
         
         # Обновляем тему после создания всех элементов
         self.update_theme(self.theme_manager.current_theme())
-        
-    def create_title_button(self, icon_path, slot):
-        btn = QPushButton()
-        btn.setIcon(QIcon(QPixmap(icon_path)))
-        btn.setIconSize(QSize(30, 30))
-        btn.setFixedSize(40, 40)
-        btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                border-radius: 8px;
-            }
-            QPushButton:hover {
-                background: rgba(0, 0, 0, 30);
-            }
-            QPushButton:pressed {
-                background: rgba(0, 0, 0, 50);
-            }
-        """)
-        btn.clicked.connect(slot)
-        return btn
 
     def load_translations(self, language):
         with open(f"{language}.json", "r", encoding="utf-8") as file:
             return json.load(file)
 
     def update_theme(self, theme):
-        theme_vals = self.theme_manager.theme_palette[theme]
-        self.setStyleSheet(f"""
+        palette = self.theme_manager.theme_palette[theme]
+        main_style = f"""
             QWidget {{
-                background-color: {theme_vals['bg']};
-                color: {theme_vals['fg']};
+                background-color: {palette['bg']};
+                color: {palette['fg']};
+                border-radius: 8px;
                 font-family: 'Segoe UI';
                 font-size: 12pt;
             }}
+
+            QWidget#canvas{{
+                background-color: {palette['bg']};
+                color: {palette['fg']};
+                border: 1px solid {palette['border']};
+            }}
+
             QPushButton {{
-                background: {theme_vals['bg']};
-                color: {theme_vals['fg']};
-                border: 1px solid {theme_vals['border']};
-                border-radius: 10px;
-                padding: 10px;
+                height: 30px;
+                background-color: {palette['bg']};
+                color: {palette['fg']};
+                border: 1px solid {palette['border']};
+                border-radius: 8px;
+                padding: 8px 15px;
+                font-size: 11pt;
             }}
             QPushButton:hover {{
-                background: {theme_vals['hover']};
+                background-color: {palette['hover']};
             }}
             QPushButton:pressed {{
-                background: {theme_vals['pressed']};
-            }}
-            QPushButton:disabled {{
-                background: {theme_vals['bg']};
-                color: {theme_vals['fg']};
-                border: 1px solid {theme_vals['border']};
-                opacity: 0.5;
+                background-color: {palette['pressed']};
             }}
             QLabel {{
-                background: {theme_vals['bg']};
-                color: {theme_vals['fg']};
-                border: 1px solid {theme_vals['border']};
-                border-radius: 10px;
-                padding: 10px;
+                font-size: 10pt;
+                margin-bottom: 5px;
             }}
-            QComboBox {{
-                background: {theme_vals['bg']};
-                color: {theme_vals['fg']};
-                border: 1px solid {theme_vals['border']};
-                border-radius: 10px;
-                padding: 10px;
-                min-width: 6em;
+            QSlider {{
+                min-height: 25px;
             }}
-            QComboBox:hover {{
-                background: {theme_vals['hover']};
+            QSlider::groove:horizontal {{
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:0,
+                    stop:0 {palette['bg_info']}, stop:1 {palette['border']}
+                );
+                height: 10px;
+                border-radius: 3px;
             }}
-            QComboBox::drop-down {{
-                border: none;
+            QSlider::handle:horizontal {{
+                background: {palette['fg']};
                 width: 20px;
-            }}
-            QComboBox::down-arrow {{
-                image: url(pic/down-arrow.png);
-                width: 12px;
-                height: 12px;
-            }}
-            QComboBox QAbstractItemView {{
-                background: {theme_vals['bg']};
-                color: {theme_vals['fg']};
-                border: 1px solid {theme_vals['border']};
+                height: 20px;
+                margin: -6px 0;
                 border-radius: 10px;
-                selection-background-color: {theme_vals['hover']};
-                selection-color: {theme_vals['fg']};
             }}
-        """)
-        
-        # Обновляем стили отдельных элементов
-        self.fullscreen_button.setStyleSheet(f"""
-            background: {theme_vals['bg']};
-            color: {theme_vals['fg']};
-            border: 1px solid {theme_vals['border']};
-            border-radius: 10px;
-            padding: 10px;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-        """)
-        
-        self.area_button.setStyleSheet(f"""
-            background: {theme_vals['bg']};
-            color: {theme_vals['fg']};
-            border: 1px solid {theme_vals['border']};
-            border-radius: 10px;
-            padding: 10px;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-        """)
-        
-        self.format_combo.setStyleSheet(f"""
-            background: {theme_vals['bg']};
-            color: {theme_vals['fg']};
-            border: 1px solid {theme_vals['border']};
-            border-radius: 10px;
-            padding: 10px;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-        """)
-        
-        self.screen_combo.setStyleSheet(f"""
-            background: {theme_vals['bg']};
-            color: {theme_vals['fg']};
-            border: 1px solid {theme_vals['border']};
-            border-radius: 10px;
-            padding: 10px;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-        """)
+            QSlider::sub-page:horizontal {{
+                background: qlineargradient(
+                    x1:0, y1:0, x2:1, y2:0,
+                    stop:0 {palette['bg_info']}, stop:1 {palette['bg_info']}
+                );
+                border-radius: 3px;
+            }}
+            QComboBox {{height:25px; background: {palette['hover']}; border: 1px solid {palette['border']}; color: {palette['fg']}; padding: 10px; border-radius: 8px;}}
+            QComboBox:hover {{ background: {palette['bg']}; }}
+            QComboBox::drop-down {{ border: none; width: 20px; }}
+            QComboBox QAbstractItemView {{ background: {palette['bg']}; color: {palette['fg']}; selection-background-color: #ff4891; }}
+        """
+        self.setStyleSheet(main_style)
 
     def initUI(self):
         self.setWindowTitle(self.translations["screenshot_window_title"])
         self.setWindowIcon(IconManager.get_icon("screenshot"))
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-        main_layout = QVBoxLayout()
-
-        title_layout = QHBoxLayout()
-
-        title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
-
-        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized),
-                           (IconManager.get_images("button_close"), self.close)]:
-            btn = self.create_title_button(icon, slot)
-            title_layout.addWidget(btn)
-
-        main_layout.addLayout(title_layout)
+        self.main_layout = QVBoxLayout()
+        self.setup_title_bar()
 
         #Кнопка для скриншота всего экрана
         self.fullscreen_button = QPushButton(self.translations["fullscreen_button"], self)
         self.fullscreen_button.clicked.connect(self.take_fullscreen_screenshot)
-        main_layout.addWidget(self.fullscreen_button)
+        self.main_layout.addWidget(self.fullscreen_button)
 
         #Кнопка для скриншота области
         self.area_button = QPushButton(self.translations["area_button"], self)
         self.area_button.clicked.connect(self.take_area_screenshot)
-        main_layout.addWidget(self.area_button)
+        self.main_layout.addWidget(self.area_button)
 
         #Выбор формата сохранения
         self.format_combo = QComboBox(self)
         self.format_combo.addItems(["PNG", "JPG", "PDF", "BMP", "GIF", "TIFF"])
-        main_layout.addWidget(self.format_combo)
+        self.main_layout.addWidget(self.format_combo)
 
         #Выбор экрана
         self.screen_combo = QComboBox(self)
         self.screen_combo.addItems([f"Screen {i}" for i in range(1, len(self.get_screens()) + 1)])
-        main_layout.addWidget(self.screen_combo)
+        self.main_layout.addWidget(self.screen_combo)
 
-        self.setLayout(main_layout)
+        self.setLayout(self.main_layout)
         self.center_window(self)
+        
+    def setup_title_bar(self):
+        if self.theme_manager.get_current_platform() == "windows":
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+            self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        
+        title_layout = QHBoxLayout()
+        self.title_label = QLabel(self.translations["screenshot_window_title"])
+        title_layout.addWidget(self.title_label)
+        title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
+        
+        if self.theme_manager.get_current_platform() == "windows":
+            for icon, handler in [("roll_up_button", self.showMinimized), ("button_close", self.close)]:
+                btn = self.theme_manager.create_title_button(IconManager.get_images(icon), handler)
+                title_layout.addWidget(btn)
+            
+        self.main_layout.addLayout(title_layout)
 
     def get_screens(self):
         with mss.mss() as sct:

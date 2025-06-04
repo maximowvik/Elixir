@@ -81,7 +81,7 @@ class SpeedTestWindow(QWidget):
 
         # Получение IP
         self.ip_address = self.get_ip_address()
-        self.ip_label.setText(f"{self.translations['ip_address']}: {self.ip_address}")
+        self.ip_label.setText(f"{self.translations['local_ip']}: {self.ip_address}")
 
         # Запуск теста
         self.worker = SpeedTestWorker()
@@ -99,6 +99,8 @@ class SpeedTestWindow(QWidget):
             self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         title_bar = QHBoxLayout()
+        self.title_label = QLabel(self.translations["speed_test_window_title"])
+        title_bar.addWidget(self.title_label)
         title_bar.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         
         if (self.theme_manager.get_current_platform() == "windows"):

@@ -10,7 +10,7 @@ class WorkModel(QObject):
         super().__init__()
         self.current_directory = current_directory
         self.model_name = model_name
-        self.full_path_model = f"{self.current_directory}\\vendor\\models\\{self.model_name}.gguf"
+        self.full_path_model = f"{self.current_directory}\\vendor\\models\\{self.model_name}.gguf" if self.model_name != "" else ""
         self.n_ctx = n_ctx
         self.n_threads = n_threads
         self.n_gpu_layers = n_gpu_layers
@@ -39,9 +39,8 @@ class WorkModel(QObject):
 
     @pyqtSlot()
     def load_model(self):
-        if not os.path.exists(self.full_path_model):
-            self.response_ready.emit(f"Model file not found: {self.full_path_model}", "error")
-            return
+        if self.full_path_model == "": self.response_ready.emit(f"Model file not found: {self.full_path_model}", "error");  return 
+        elif not os.path.exists(self.full_path_model): self.response_ready.emit(f"Model file not found: {self.full_path_model}", "error"); return
         start_time = time.time()
         try:
             self.llm = self.llama(

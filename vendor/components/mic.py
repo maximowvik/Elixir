@@ -81,6 +81,8 @@ class AudioRecorder(QWidget):
             self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         title_layout = QHBoxLayout()
+        self.title_label = QLabel(self.translations["audio_record"])
+        title_layout.addWidget(self.title_label)
         title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         
         if (self.theme_manager.get_current_platform() == "windows"):
@@ -106,6 +108,7 @@ class AudioRecorder(QWidget):
             }}
             QPushButton:hover {{ background: {theme_vals['hover']}; }}
             QPushButton:pressed {{ background: {theme_vals['pressed']}; }}
+            QPushButton:disabled {{ background: {theme_vals['pressed']}; }}
         """)
 
     def start_recording(self):
@@ -126,7 +129,7 @@ class AudioRecorder(QWidget):
         self.timer.start(1000)
 
         self.status_label.setText("🔴 " + self.translations["recording_started"])
-        QTimer.singleShot(2000, lambda: self.status_label.setText(""))
+        # QTimer.singleShot(2000, lambda: self.status_label.setText(""))
 
         self.record_btn.setEnabled(False)
         self.stop_btn.setEnabled(True)
@@ -145,6 +148,7 @@ class AudioRecorder(QWidget):
     def stop_recording(self):
         self.is_recording = False
         self.timer.stop()
+        self.status_label.setText("")
 
         if self.stream:
             self.stream.stop_stream()

@@ -13,7 +13,8 @@ class IconManager:
             "translator": "vendor/icon/journal.ico",
             "screen_recorder": "vendor/icon/video.ico",
             "screen_share": "vendor/icon/computer.ico",
-            "audio_recording": "vendor/icon/mic.ico"
+            "audio_recording": "vendor/icon/mic.ico",
+            "audio": "vendor/icon/audio.ico"
         }
         return QIcon(icons.get(window_name, "vendor/icon/icon.ico"))
     @staticmethod
@@ -51,5 +52,7 @@ class IconManager:
             "computer":"vendor/images/SVG/computer.svg",
             "bot":"vendor/images/SVG/bot.svg",
             "model":"vendor/images/SVG/model.svg",
+            "mute":"vendor/images/SVG/mute.svg",
+            "unmute":"vendor/images/SVG/unmute.svg",
         }
         return images.get(window_name, "vendor/images/images.png")

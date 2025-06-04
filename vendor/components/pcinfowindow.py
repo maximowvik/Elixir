@@ -3,6 +3,7 @@ import psutil
 import GPUtil
 import cpuinfo
 import json
+import requests
 import platform
 from PyQt6.QtWidgets import (
     QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QHBoxLayout,
@@ -56,6 +57,8 @@ class PCInfoWindow(QWidget):
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         
         title_layout = QHBoxLayout()
+        self.title_label = QLabel(self.translations["pc_info_window_title"])
+        title_layout.addWidget(self.title_label)
         title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
         
         if self.theme_manager.get_current_platform() == "windows":
@@ -192,9 +195,23 @@ class PCInfoWindow(QWidget):
             f"<b>{self.translations['os_version']}:</b> {self.get_os_data()}",
             f"<b>{self.translations['cpu_info']}:</b> {self.get_cpu_info()}",
             f"<b>{self.translations['gpu_info']}:</b> {self.get_gpu_info()}",
-            f"<b>{self.translations['total_memory']}:</b> {self.get_ram_info()}"
+            f"<b>{self.translations['total_memory']}:</b> {self.get_ram_info()}",
+            f"<b>{self.translations['local_ip']}:</b> {self.get_local_ip()}",
+            f"<b>{self.translations['public_ip']}:</b> {self.get_public_ip()}"
         ]
         return "<br>".join(info_lines)
+    
+    def get_local_ip(self):
+        try: 
+            return socket.gethostbyname(socket.gethostname())
+        except Exception:
+            return self.translations['ip_error']
+        
+    def get_public_ip(self):
+        try: 
+            return requests.get('https://api.ipify.org').text
+        except Exception:
+            return self.translations['ip_error']
 
     def get_disk_info(self):
         disk_info = []

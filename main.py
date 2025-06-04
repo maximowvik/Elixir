@@ -1,3 +1,5 @@
+from llama_cpp import Llama
+
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QGridLayout,
                              QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy, QComboBox)
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath, QScreen
@@ -16,8 +18,9 @@ from vendor.components.paintwindow import PaintWindow
 from vendor.components.ai_chat import AIChatWindow
 from vendor.components.manager_download import Download_Manager
 from vendor.components.mic import AudioRecorder
+from vendor.components.mixerwindow import VolumeMixer
 from thememanager import ThemeManager
-from llama_cpp import Llama
+
 import sys
 import os
 import json
@@ -298,7 +301,8 @@ class MainWindow(QWidget):
 
     def open_mic_window(self): 
         self._create_window("audio_record", AudioRecorder, self.language, self.theme_manager)
-    def open_audio_window(self): self.create_simple_window("window_4_title", "window_4_label")
+    def open_audio_window(self): 
+        self._create_window("mixer_value_audio", VolumeMixer, self.language, self.theme_manager)
 
     def create_simple_window(self, title_key, label_key):
         window_id = f"simple_{title_key}"

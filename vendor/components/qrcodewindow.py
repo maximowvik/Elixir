@@ -28,6 +28,7 @@ from PyQt6.QtWidgets import (
     QWidget,
     QComboBox,
     QColorDialog,
+    QLabel
 )
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -84,6 +85,8 @@ class QRCodeWindow(QWidget):
             self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         title_bar = QHBoxLayout()
+        self.title_label = QLabel(self.translations["qr_code_window_title"])
+        title_bar.addWidget(self.title_label)
         title_bar.addItem(QSpacerItem(10, 10, QSizePolicy.Policy.Expanding))
         if (self.theme_manager.get_current_platform() == "windows"):
             for icon, handler in [("roll_up_button", self.showMinimized), ("button_close", self.close)]:

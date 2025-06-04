@@ -64,7 +64,7 @@ class ChatHistory:
             "id": str(uuid.uuid4()),
             "text": text,
             "sender": sender,
-            "type": type_message,
+            "type": type_message if type_message != "" else "info",
             "timestamp": datetime.now().isoformat()
         }
         history["messages"].append(message)
