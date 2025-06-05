@@ -11,3 +11,5 @@ __pycache__
 *.pyz
 test.py
 models
+chat_history.json
+chat_settings.json

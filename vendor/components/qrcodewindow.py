@@ -73,8 +73,9 @@ class QRCodeWindow(QWidget):
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(20, 20, 20, 20)
         self.main_layout.setSpacing(15)
-
-        self.main_layout.addLayout(self.create_title_bar())
+        
+        self.title_bar = self.create_title_bar()
+        self.main_layout.addLayout(self.title_bar)
         self._init_content()
 
         self._update_styles()
@@ -160,13 +161,12 @@ class QRCodeWindow(QWidget):
                 f"border-radius: 6px; padding: 10px; font: 13pt '{font}';"
             )
         )
-        self.format_combo.setStyleSheet(
-            (
-                "QComboBox {background-color: %s; color: %s; border: 1px solid %s;"
-                "border-radius: 6px; padding: 10px; font: 13pt '%s';}"
-                "QComboBox::drop-down {border: none;}" % (bg, fg, border, font)
-            )
-        )
+        self.format_combo.setStyleSheet(f"""
+            QComboBox {{height:25px; background: {palette['hover']}; border: 1px solid {palette['border']}; color: {palette['fg']}; padding: 10px; border-radius: 8px;}}
+            QComboBox:hover {{ background: {palette['bg']}; }}
+            QComboBox::drop-down {{ border: none; width: 20px; }}
+            QComboBox QAbstractItemView {{ background: {palette['bg']}; color: {palette['fg']}; selection-background-color: #ff4891; }}
+        """)
         self.qr_color_button.setStyleSheet(
             (
                 "QPushButton {background-color: %s; color: %s; border: 1px solid %s;"
