@@ -24,7 +24,7 @@ class ScrollableTabBar(QTabBar):
         delta = e.angleDelta().y()
         step = 1
         direction = -step if delta > 0 else step
-        self.scrollTabs(direction)
+        self.scrollTabs(direction)          
 
     def scrollTabs(self, direction: int):
         count = self.count()

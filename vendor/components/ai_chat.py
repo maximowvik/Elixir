@@ -134,8 +134,6 @@ class AIChatWindow(QWidget):
     def initUI(self):
         self.setWindowTitle(self.translations.get("ai_chat_window_title", "AI Chat"))
         self.setWindowIcon(IconManager.get_icon("chat"))
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setMinimumSize(800, 600)
 
         self.main_layout = QVBoxLayout(self)
@@ -171,6 +169,9 @@ class AIChatWindow(QWidget):
         self.center_window()
 
     def _create_title_bar(self):
+        if self.theme_manager.get_current_platform() == "windows":
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+            self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.title_layout = QHBoxLayout()
 
         # Добавляем иконку модели
@@ -226,10 +227,11 @@ class AIChatWindow(QWidget):
         self.title_layout.addWidget(self.model_combo)
         self.title_layout.addItem(QSpacerItem(10, 10, QSizePolicy.Policy.Expanding))
 
-        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized),
-                           (IconManager.get_images("button_close"), self.close)]:
-            btn = self.create_title_button(icon, slot)
-            self.title_layout.addWidget(btn)
+        # Кнопки управления окном (справа)
+        if self.theme_manager.get_current_platform() == "windows":
+            for icon, handler in [("roll_up_button", self.showMinimized), ("button_close", self.close)]:
+                btn = self.theme_manager.create_title_button(IconManager.get_images(icon), handler)
+                self.title_layout.addWidget(btn)
 
         return self.title_layout
 
