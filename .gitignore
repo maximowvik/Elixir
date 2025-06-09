@@ -11,5 +11,8 @@ __pycache__
 *.pyz
 test.py
 models
+main.build
+main.dist
+nuitka-crash-report.xml
 chat_history.json
 chat_settings.json
