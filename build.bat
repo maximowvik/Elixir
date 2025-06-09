@@ -17,7 +17,7 @@ echo "Installation library and plugins"
 py -m pip install -r requirements.txt
 
 echo "Start build project"
-python -m nuitka --standalone --lto=yes --windows-icon-from-ico=d:\projects\Elixir\vendor\icon\logonew.ico --enable-plugin=pyqt6 --include-data-dir=vendor=vendor --include-data-dir=pic=pic --include-data-dir=images=images --include-data-dir=icon=icon main.py
+python -m nuitka --standalone --lto=yes --windows-icon-from-ico=d:\projects\Elixir\vendor\icon\logonew.ico --enable-plugin=pyqt6 --include-data-dir=vendor=vendor --include-data-dir=pic=pic --include-data-dir=images=images --include-data-dir=icon=icon --module-parameter=torch-disable-jit=yes main.py
 
 echo "Copy necessary folders to main.dist"
 xcopy /E /I vendor main.dist\vendor
