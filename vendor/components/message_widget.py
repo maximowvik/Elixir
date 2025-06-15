@@ -4,6 +4,8 @@ from PyQt6.QtCore import Qt, QTimer, QSize
 from PyQt6.QtSvgWidgets import QSvgWidget
 import base64
 from io import BytesIO
+
+import markdown
 from .iconmanager import IconManager
 
 class HoverLabel(QLabel):
@@ -15,6 +17,7 @@ class HoverLabel(QLabel):
         self._leave_callback = None
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self.show_context_menu)
+        self.setWordWrap(True)
 
     def show_context_menu(self, pos):
         menu = QMenu(self)
@@ -100,7 +103,7 @@ class MessageWidget(QWidget):
         self._hover_timer.timeout.connect(self._hide_copy_button)
 
         self.icon_label = QSvgWidget()
-        self.text_label = HoverLabel(self.text)
+        self.text_label = HoverLabel(markdown.markdown(self.text))
         self.copy_button = HoverButton("Copy")
         self.copy_button.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.copy_button.setFixedSize(90, 40)

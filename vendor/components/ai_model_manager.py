@@ -1,111 +1,144 @@
-from llama_cpp import Llama
-import time
 import os
 import traceback
-from PyQt6.QtCore import QObject, pyqtSignal, pyqtSlot
+from PyQt6.QtCore import QObject, pyqtSignal
+import requests
+import json
 
-class WorkModel(QObject):
-    response_ready = pyqtSignal(str, str)  # text, type
+class ModelWorker(QObject):
+    responseReady = pyqtSignal(list)  # [message, message_type]
+    errorOccurred = pyqtSignal(str)   # error_message
+    statusChanged = pyqtSignal(str)   # status_message
 
-    def __init__(self, current_directory: str, model_name: str, llamma: Llama = None, n_ctx: int = 512, n_threads: int = 8, n_gpu_layers: int = 0) -> None:
+    def __init__(self, api_key: str = None, work_model: str = None, language: str = "en") -> None:
         super().__init__()
-        self.current_directory = current_directory
-        self.model_name = model_name
-        self.full_path_model = os.path.join(self.current_directory, "vendor", "models", f"{self.model_name}.gguf") if self.model_name else ""
-        self.n_ctx = n_ctx
-        self.n_threads = n_threads
-        self.n_gpu_layers = n_gpu_layers
-        self.llama = llamma
-        self.llm = None
-        self.chat_context = []
-        self.commands_info = ""
-        self.max_context_messages = 5  # Limit the number of messages in the context
+        self.api_key = api_key
+        self.work_model = work_model or "deepseek/deepseek-r1"
+        self.language = language
+        
+        # Инициализация контекста диалога
+        self.reset_context()
+        
+        # Настройки запросов
+        self.headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "HTTP-Referer": "https://openrouter.ai/api/v1/",
+            "X-Title": "Elixir Launcher | Chat bot"
+        }
+        
+        self.url = "https://openrouter.ai/api/v1/chat/completions"
+        self.current_prompt = ""
+        self.commands_info = "No commands available"
+        
+    def reset_context(self):
+        """Сброс контекста диалога"""
+        self.dialogs = [{
+            "role": "system", 
+            "content": "You are a helpful AI assistant. Respond in the user's preferred language. Use Markdown to make your request and don't forget about emojis."
+        }]
+        self.statusChanged.emit("Context reset")
+
+    def update_api_key(self, new_api_key: str):
+        """Обновление API ключа"""
+        self.api_key = new_api_key
+        self.headers["Authorization"] = f"Bearer {self.api_key}"
+        self.statusChanged.emit("API key updated")
+
+    def update_model(self, new_model: str):
+        """Обновление используемой модели"""
+        self.work_model = new_model
+        self.statusChanged.emit(f"Model changed to {new_model}")
 
     def set_commands_info(self, commands_info: str):
-        """Set information about available commands"""
+        """Установка информации о командах"""
         self.commands_info = commands_info
+        self.add_to_context("system", f"Available commands:\n{commands_info}")
+
+    def set_prompt(self, message: str):
+        """Установка текущего промпта"""
+        if message and message.strip():
+            self.current_prompt = message.strip()
+            self.statusChanged.emit("Prompt set")
+        else:
+            self.errorOccurred.emit("Empty prompt provided")
 
     def add_to_context(self, role: str, content: str):
-        """Add a message to the chat context"""
-        self.chat_context.append({"role": role, "content": content})
-
-        # If the context exceeds the maximum size, remove the oldest messages
-        while len(self.chat_context) > self.max_context_messages:
-            self.chat_context.pop(0)
+        """Добавление сообщения в контекст"""
+        try:
+            if role not in ["system", "user", "assistant"]:
+                raise ValueError("Invalid role specified")
+                
+            self.dialogs.append({
+                "role": role,
+                "content": content
+            })
+            
+            # Ограничение размера контекста (последние 10 сообщений)
+            if len(self.dialogs) > 10:
+                self.dialogs.pop(1)  # Удаляем самое старое сообщение (но сохраняем системное)
+                
+        except Exception as e:
+            self.errorOccurred.emit(f"Error adding to context: {str(e)}")
 
     def clear_context(self):
-        """Clear the chat context"""
-        self.chat_context = []
+        """Очистка контекста диалога"""
+        self.reset_context()
+        self.statusChanged.emit("Dialog context cleared")
 
-    @pyqtSlot()
-    def load_model(self):
-        if not self.full_path_model:
-            self.response_ready.emit(f"Model file not found: {self.full_path_model}", "error")
-            return
-        elif not os.path.exists(self.full_path_model):
-            self.response_ready.emit(f"Model file not found: {self.full_path_model}", "error")
-            return
-
-        start_time = time.time()
+    def response(self):
+        """Отправка запроса к API и обработка ответа"""
         try:
-            self.llm = self.llama(
-                model_path=self.full_path_model,
-                n_ctx=self.n_ctx,
-                n_threads=self.n_threads,
-                n_gpu_layers=self.n_gpu_layers
-            )
-            self.response_ready.emit(
-                f"Model: {self.model_name}\nSuccessfully loaded in {time.time() - start_time:.2f} seconds\n\n"
-                f"I can help you with various tasks. Here's what I can do:\n{self.commands_info}",
-                "info"
-            )
-        except Exception:
-            self.response_ready.emit(f"Error loading model: {traceback.format_exc()}", "error")
-
-    @pyqtSlot(str)
-    def change_model(self, model_name: str):
-        if not model_name:
-            self.response_ready.emit("Model name not specified", "warning")
-            return
-
-        self.model_name = model_name
-        self.full_path_model = os.path.join(self.current_directory, "vendor", "models", f"{self.model_name}.gguf")
-        self.load_model()
-
-    @pyqtSlot(str)
-    def generate_response(self, user_input: str):
-        if self.llm is None:
-            self.response_ready.emit(f"Модель не была успешно загружена\nВаш запрос был экранирован: {user_input}", "error")
-            return
-
-        try:
-            self.add_to_context("user", user_input)
-
-            if "кто ты" in user_input.lower():
-                response_text = "Привет! Я ваш виртуальный помощник. Чем могу помочь?"
-                self.add_to_context("assistant", response_text)
-                self.response_ready.emit(response_text, "")
+            if not self.current_prompt:
+                self.errorOccurred.emit("No prompt set for the request")
                 return
 
-            messages = self.chat_context.copy()
+            if not self.api_key:
+                self.errorOccurred.emit("API key is not set")
+                return
 
-            response = self.llm.create_chat_completion(
-                messages=messages,
-                temperature=0.7,
-                max_tokens=2048,
-                top_p=0.95,
-                top_k=40,
-                repeat_penalty=1.1,
-                stop=["User:", "Assistant:", "\n\n"]
+            # Добавляем промпт пользователя в контекст
+            self.add_to_context("user", self.current_prompt)
+            
+            # Формируем запрос
+            payload = {
+                "model": self.work_model,
+                "messages": self.dialogs,
+                "temperature": 0.7,
+                "max_tokens": 1000
+            }
+            
+            self.statusChanged.emit("Sending request to API...")
+            
+            # Отправляем запрос
+            response = requests.post(
+                self.url,
+                headers=self.headers,
+                json=payload,
+                timeout=30  # Таймаут 30 секунд
             )
-
-            response_text = response['choices'][0]['message']['content'].strip()
-            self.add_to_context("assistant", response_text)
-
-            self.response_ready.emit(response_text, "")
+            
+            # Обрабатываем ответ
+            if response.status_code == 200:
+                response_json = response.json()
+                reply = response_json["choices"][0]["message"]["content"]
+                
+                # Добавляем ответ ассистента в контекст
+                self.add_to_context("assistant", reply)
+                
+                # Отправляем ответ
+                self.responseReady.emit([reply, "success"])
+                self.statusChanged.emit("Response received successfully")
+            else:
+                error_msg = f"API Error: {response.status_code} - {response.text}"
+                self.errorOccurred.emit(error_msg)
+                
+        except requests.exceptions.Timeout:
+            self.errorOccurred.emit("Request timeout: Server did not respond in time")
+        except requests.exceptions.RequestException as e:
+            self.errorOccurred.emit(f"Request failed: {str(e)}")
+        except json.JSONDecodeError:
+            self.errorOccurred.emit("Invalid JSON response from server")
         except Exception as e:
-            error_message = f"Ошибка генерации ответа: {str(e)}"
-            if "exceed context window" in str(e):
-                error_message = "Превышен размер контекста. Попробуйте очистить историю чата командой /clear"
-            self.response_ready.emit(error_message, "error")
-
+            self.errorOccurred.emit(f"Unexpected error: {str(e)}")
+            traceback.print_exc()
+        finally:
+            self.current_prompt = ""  # Сбрасываем текущий промпт после обработки

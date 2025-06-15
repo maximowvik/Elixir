@@ -2,7 +2,7 @@ from PyQt6.QtGui import QIcon
 
 class IconManager:
     @staticmethod
-    def get_icon(window_name):
+    def get_icon(icon_name:str) -> QIcon:
         icons = {
             "main": "vendor/icon/logonew.ico",
             "qr_code": "vendor/icon/scan.ico",
@@ -16,9 +16,9 @@ class IconManager:
             "audio_recording": "vendor/icon/mic.ico",
             "audio": "vendor/icon/audio.ico"
         }
-        return QIcon(icons.get(window_name, "vendor/icon/icon.ico"))
+        return QIcon(icons.get(icon_name, "vendor/icon/icon.ico"))
     @staticmethod
-    def get_images(window_name) -> str:
+    def get_images(image_name:str) -> str:
         images = {
             "main": "vendor/images/logonew.png",
             "main_logo": "vendor/images/logo.png",
@@ -55,4 +55,4 @@ class IconManager:
             "mute":"vendor/images/SVG/mute.svg",
             "unmute":"vendor/images/SVG/unmute.svg",
         }
-        return images.get(window_name, "vendor/images/images.png")
+        return images.get(image_name, "vendor/images/images.png")

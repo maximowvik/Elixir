@@ -8,7 +8,7 @@ from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile, QWebEngineDownloadRequest
 from PyQt6.QtGui import QIcon, QPixmap, QKeySequence, QPainter, QPainterPath, QColor, QAction, QShortcut, QTransform
 from PyQt6.QtCore import QUrl, Qt, QSize, QPoint, QRectF, QSettings
-import traceback, sys, logging, os
+import os
 from .iconmanager import IconManager  # Ваш менеджер ресурсов
 
 
@@ -59,7 +59,7 @@ class Browser(QMainWindow):
         self.center_window()
 
         # стартовая вкладка
-        self.add_new_tab(QUrl("https://ya.ru"), "Home")
+        self.add_new_tab(QUrl("https://google.com"), "Home")
 
     # 1) WebEngine профиль
     def init_browser_profile(self):
@@ -227,7 +227,7 @@ class Browser(QMainWindow):
     def add_new_tab(self, qurl: QUrl=None, label="New Tab"):
         if qurl is None:
             text = self.app.clipboard().text().strip()
-            qurl = QUrl.fromUserInput(text) if "." in text else QUrl("https://ya.ru")
+            qurl = QUrl.fromUserInput(text) if "." in text else QUrl("https://google.com")
         browser = QWebEngineView()
         # security & perf
         s = browser.settings()
@@ -282,7 +282,7 @@ class Browser(QMainWindow):
         text = self.url_line.text().strip()
         if not text: return
         if " " in text or "." not in text:
-            url = QUrl(f"https://yandex.ru/search/?text={urllib.parse.quote(text)}")
+            url = QUrl(f"https://www.google.com/search?q={urllib.parse.quote(text)}")
         elif os.path.exists(text):
             url = QUrl.fromLocalFile(text)
         else:
@@ -296,7 +296,7 @@ class Browser(QMainWindow):
         getattr(w, action)()
 
     def nav_home(self):
-        self.tab_widget.currentWidget().setUrl(QUrl("https://dzen.ru"))
+        self.tab_widget.currentWidget().setUrl(QUrl("https://google.com"))
 
     # 7) Tabs context & restore
     def close_current_tab(self, idx):

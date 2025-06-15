@@ -10,23 +10,28 @@ class ChatHistory:
         self.commands = {
             "/clear": {
                 "id": "cmd_clear",
-                "description": "Очистить чат",
-                "usage": "/clear"
+                "description": "*Очистить чат*",
+                "usage": "**/clear**"
             },
             "/help": {
                 "id": "cmd_help",
-                "description": "Показать список команд",
-                "usage": "/help"
+                "description": "*Показать список команд*",
+                "usage": "**/help**"
             },
             "/download": {
                 "id": "cmd_download",
-                "description": "Загрузить файл",
-                "usage": "/download --url=\"<download link>\" --type=\"<download folder>\""
+                "description": "*Загрузить файл*",
+                "usage": "**/download --url=\"<download link>\" --type=\"<download folder>\"**"
             },
             "/send_message": {
                 "id": "cmd_send",
-                "description": "Отправить сообщение",
-                "usage": "/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\""
+                "description": "*Отправить сообщение*",
+                "usage": "**/send_message --text=\"<message text>\" --sender=\"<sender name>\" --type=\"<message type>\"**"
+            },
+            "/set_api_key": {
+                "id": "cmd_set_api_key",
+                "description": "*Сохранить API ключ для OpenRouter\nПример: <code>/set_api_key sk-1234567890abcdef</code>*",
+                "usage": "**/set_api_key --api=\"<your api key>\"**"
             }
         }
         self._ensure_history_file()

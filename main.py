@@ -1,5 +1,3 @@
-from llama_cpp import Llama
-
 from PyQt6.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QGridLayout,
                              QVBoxLayout, QHBoxLayout, QSpacerItem, QSizePolicy, QComboBox)
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath, QScreen
@@ -295,8 +293,7 @@ class MainWindow(QWidget):
             language=self.language,
             theme_manager=self.theme_manager,
             download_manager=self.download_manager,
-            current_directory=self.current_directory,
-            llama_cpp_lib=Llama
+            current_directory=self.current_directory
         )
 
     def open_mic_window(self): 
