@@ -21,14 +21,13 @@ class AIChatWindow(QWidget):
     add_message_signal = pyqtSignal(str, str, str)
     ui_block_signal = pyqtSignal(bool)
 
-    def __init__(self, language, theme_manager, download_manager, current_directory):
+    def __init__(self, translations: dict[str, str], theme_manager, download_manager, current_directory):
         super().__init__()
         self.setObjectName("ChatWindow")
-        self.language = language
         self.theme_manager = theme_manager
         self.current_directory = current_directory
         self.theme = self.theme_manager.current_theme()
-        self.translations = self.load_translations()
+        self.translations = translations
         self.chat_model = ""
         self.api_key = ""
 
@@ -49,15 +48,6 @@ class AIChatWindow(QWidget):
         self.command_manager = CommandManager()
         self.register_commands()
         self.download_manager = download_manager
-
-    def load_translations(self):
-        """Загружает переводы для текущего языка"""
-        lang_file = os.path.join(self.current_directory, "vendor", "core", "language", f"{self.language}.json")
-        try:
-            with open(lang_file, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except:
-            return {"ai_chat_window_title": "AI Chat", "input_placeholder": "Type a message...", "send_button": "Send"}
 
     def load_settings(self):
         """Загружает все настройки чата"""

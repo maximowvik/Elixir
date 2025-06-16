@@ -290,16 +290,16 @@ class MainWindow(QWidget):
 
     def open_chat_window(self):
         self._create_window('chat', AIChatWindow,
-            language=self.language,
+            translations=self.translations,
             theme_manager=self.theme_manager,
             download_manager=self.download_manager,
             current_directory=self.current_directory
         )
 
     def open_mic_window(self): 
-        self._create_window("audio_record", AudioRecorder, self.language, self.theme_manager)
+        self._create_window("audio_record", AudioRecorder, self.theme_manager, self.translations)
     def open_audio_window(self): 
-        self._create_window("mixer_value_audio", VolumeMixer, self.language, self.theme_manager)
+        self._create_window("mixer_value_audio", VolumeMixer, self.theme_manager, self.translations)
 
     def create_simple_window(self, title_key, label_key):
         window_id = f"simple_{title_key}"
@@ -314,6 +314,7 @@ class MainWindow(QWidget):
             window.show()
 
 if __name__ == "__main__":
+    os.environ["QTWEBENGINE_DISABLE_GPU"] = "1"
     root_path = os.path.abspath(os.curdir)
     app = QApplication(sys.argv)
     window = MainWindow("ru", theme_manager, root_path)

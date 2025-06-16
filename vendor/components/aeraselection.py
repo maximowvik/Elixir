@@ -12,20 +12,15 @@ from vendor.components.iconmanager import IconManager
 class AreaSelection(QWidget):
     screenshot_taken = pyqtSignal(Image.Image)
 
-    def __init__(self, language, parent=None):
+    def __init__(self, translations: dict[str, str], parent=None):
         super().__init__(parent)
-        self.language = language
-        self.translations = self.load_translations(language)
+        self.translations = translations
         self.initUI()
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setWindowState(Qt.WindowState.WindowFullScreen)
         self.setCursor(Qt.CursorShape.CrossCursor)
         self.show()
-
-    def load_translations(self, language):
-        with open(f"{language}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
 
     def initUI(self):
         self.setWindowTitle(self.translations["area_selection_title"])

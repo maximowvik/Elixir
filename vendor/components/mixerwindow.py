@@ -13,11 +13,10 @@ import psutil
 from .iconmanager import IconManager
 
 class VolumeMixer(QWidget):
-    def __init__(self, language, theme_manager):
+    def __init__(self, theme_manager, translations: dict[str, str]):
         super().__init__()
         self.theme_manager = theme_manager
-        self.language = language
-        self.translations = self._load_translations()
+        self.translations = translations
         self._current_theme = self.theme_manager.current_theme()
         self._title_bar_buttons = []
         self._old_pos = None
@@ -47,10 +46,6 @@ class VolumeMixer(QWidget):
 
         self._update_audio_sessions()
         self._apply_theme()
-
-    def _load_translations(self):
-        with open(f"./vendor/core/language/{self.language}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
 
     def create_title_bar(self):
         if self.theme_manager.get_current_platform() == "windows":
@@ -165,6 +160,8 @@ class VolumeMixer(QWidget):
             'mute_btn': mute_btn,
             'volume': session_data['volume']
         }
+        
+        self._apply_theme()
 
     def _update_control(self, session_id, session_data):
         control = self.active_controls[session_id]

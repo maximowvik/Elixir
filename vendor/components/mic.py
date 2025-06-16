@@ -12,11 +12,10 @@ from .iconmanager import IconManager
 
 
 class AudioRecorder(QWidget):
-    def __init__(self, language, theme_manager):
+    def __init__(self, theme_manager, translations: dict[str, str]):
         super().__init__()
         self.theme_manager = theme_manager
-        self.language = language
-        self.translations = self.load_translations(language)
+        self.translations = translations
         self._last_results = (0, 0)
         self._old_pos = None
 
@@ -25,10 +24,6 @@ class AudioRecorder(QWidget):
         self.init_audio()
         self.init_ui()
         self.update_theme(self.theme_manager.current_theme())
-        
-    def load_translations(self, lang):
-        with open(f"vendor/core/language/{lang}.json", encoding="utf-8") as f:
-            return json.load(f)
 
     def init_audio(self):
         self.FORMAT = pyaudio.paInt16
@@ -112,27 +107,30 @@ class AudioRecorder(QWidget):
         """)
 
     def start_recording(self):
-        self.frames = []
-        self.stream = self.audio.open(
-            format=self.FORMAT,
-            channels=self.CHANNELS,
-            rate=self.RATE,
-            input=True,
-            frames_per_buffer=self.CHUNK,
-            stream_callback=self.callback
-        )
-        self.stream.start_stream()
+        try:
+            self.frames = []
+            self.stream = self.audio.open(
+                format=self.FORMAT,
+                channels=self.CHANNELS,
+                rate=self.RATE,
+                input=True,
+                frames_per_buffer=self.CHUNK,
+                stream_callback=self.callback
+            )
+            self.stream.start_stream()
 
-        self.is_recording = True
-        self.seconds = 0
-        self.timer_label.setText("00:00")
-        self.timer.start(1000)
+            self.is_recording = True
+            self.seconds = 0
+            self.timer_label.setText("00:00")
+            self.timer.start(1000)
 
-        self.status_label.setText("🔴 " + self.translations["recording_started"])
-        # QTimer.singleShot(2000, lambda: self.status_label.setText(""))
+            self.status_label.setText("🔴 " + self.translations["recording_started"])
+            # QTimer.singleShot(2000, lambda: self.status_label.setText(""))
 
-        self.record_btn.setEnabled(False)
-        self.stop_btn.setEnabled(True)
+            self.record_btn.setEnabled(False)
+            self.stop_btn.setEnabled(True)
+        except Exception as e:
+            self.status_label.setText("❌ Not found microphone ❌")
 
     def callback(self, in_data, frame_count, time_info, status):
         if self.is_recording:

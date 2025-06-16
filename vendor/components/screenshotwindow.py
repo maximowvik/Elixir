@@ -160,7 +160,7 @@ class ScreenshotWindow(QWidget):
 
     def take_area_screenshot(self):
         self.hide()
-        self.area_selection = AreaSelection(self.language)
+        self.area_selection = AreaSelection(self.translations)
         self.area_selection.screenshot_taken.connect(self.handle_screenshot_taken)
         self.area_selection.show()
 

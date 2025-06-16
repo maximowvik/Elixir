@@ -599,7 +599,7 @@ class Browser(QWidget):
             self._old_pos = event.globalPosition().toPoint()
 
     def mouseMoveEvent(self, event):
-        if self._old_pos is not None:
+        if self._old_pos is not None and not self.is_maximized:
             delta = QPoint(event.globalPosition().toPoint() - self._old_pos)
             self.move(self.x() + delta.x(), self.y() + delta.y())
             self._old_pos = event.globalPosition().toPoint()

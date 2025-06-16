@@ -224,16 +224,33 @@ class QRCodeWindow(QWidget):
 
         qr = segno.make(data, error="L")
 
-        if file_format in ("png", "svg", "pdf"):
-            qr.save(file_path, kind=file_format, scale=10, border=4, dark=self.qr_color.name(), light=self.bg_color.name())
-            if file_format == "pdf":
-                self._embed_png_into_pdf(file_path)
-            return
+        if file_format == "png":
+            qr.save(file_path, scale=10, border=4, dark=self.qr_color.name(), light=self.bg_color.name())
+        elif file_format == "svg":
+            qr.save(file_path, scale=10, border=4, dark=self.qr_color.name(), light=self.bg_color.name())
+        elif file_format == "pdf":
+            self._save_qr_code_as_pdf(qr, file_path)
+        elif file_format == "jpg":
+            self._save_qr_code_as_jpg(qr, file_path)
 
-        # JPG or other: via Pillow
-        with tempfile.NamedTemporaryFile(suffix=self.TEMP_SUFFIX, delete=False) as tmp:
+    def _save_qr_code_as_pdf(self, qr, file_path: str) -> None:
+        """Save QR code as PDF."""
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
             tmp_name = tmp.name
-        qr.save(tmp_name, kind="png", scale=10, border=4, dark=self.qr_color.name(), light=self.bg_color.name())
+        qr.save(tmp_name, kind="png", scale=10, dark=self.qr_color.name(), light=self.bg_color.name())
+
+        width, height = letter
+        c = canvas.Canvas(file_path, pagesize=letter)
+        img = Image.open(tmp_name)
+        c.drawImage(tmp_name, (width - img.width) / 2, (height - img.height) / 2)
+        c.save()
+        os.remove(tmp_name)
+
+    def _save_qr_code_as_jpg(self, qr, file_path: str) -> None:
+        """Save QR code as JPG."""
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+            tmp_name = tmp.name
+        qr.save(tmp_name, kind="png", scale=10, dark=self.qr_color.name(), light=self.bg_color.name())
         Image.open(tmp_name).convert("RGB").save(file_path, "JPEG")
         os.remove(tmp_name)
 
