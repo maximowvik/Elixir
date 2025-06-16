@@ -36,11 +36,10 @@ class SpeedTestWorker(QObject):
             self.error.emit(str(e))
 
 class SpeedTestWindow(QWidget):
-    def __init__(self, language, theme_manager):
+    def __init__(self, theme_manager, translations: dict[str, str]):
         super().__init__()
-        self.language = language
         self.theme_manager = theme_manager
-        self.translations = self.load_translations(language)
+        self.translations = translations
         self._last_results = (0, 0)
         self._old_pos = None
 
@@ -48,10 +47,6 @@ class SpeedTestWindow(QWidget):
 
         self.setup_ui()
         self.update_theme(self.theme_manager.current_theme())
-
-    def load_translations(self, lang):
-        with open(f"vendor/core/language/{lang}.json", encoding="utf-8") as f:
-            return json.load(f)
 
     def setup_ui(self):
         self.setWindowTitle(self.translations["speed_test_window_title"])

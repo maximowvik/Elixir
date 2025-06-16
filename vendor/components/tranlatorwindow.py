@@ -19,12 +19,11 @@ import asyncio
 from .iconmanager import IconManager
 
 class TranslatorWindow(QWidget):
-    def __init__(self, language, theme_manager):
+    def __init__(self, theme_manager, translations: dict[str, str]):
         super().__init__()
         self._old_pos = None
-        self.language = language
         self.theme_manager = theme_manager
-        self.translations = self.load_translations(self.language)
+        self.translations = translations
         
         # Подписка на сигнал изменения темы
         self.theme_manager.theme_changed.connect(self.update_theme)
@@ -34,26 +33,25 @@ class TranslatorWindow(QWidget):
         # Обновляем тему после создания всех элементов
         self.update_theme(self.theme_manager.current_theme())
 
-    def load_translations(self, language):
-        with open(f"{language}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
-
     def initUI(self):
         self.setWindowTitle(self.translations["translator_window_title"])
         self.setWindowIcon(IconManager.get_icon("translator"))
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        if self.theme_manager.get_current_platform() == "windows":
+            self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+            self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         main_layout = QVBoxLayout()
 
         title_layout = QHBoxLayout()
-
+        
+        self.title_label = QLabel(self.translations["translator_window_title"])
+        title_layout.addWidget(self.title_label)
         title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
 
-        for icon, slot in [(IconManager.get_images("roll_up_button"), self.showMinimized),
-                           (IconManager.get_images("button_close"), self.close)]:
-            btn = self.create_title_button(icon, slot)
-            title_layout.addWidget(btn)
+        if self.theme_manager.get_current_platform() == "windows":
+            for icon, handler in [("roll_up_button", self.showMinimized), ("button_close", self.close)]:
+                btn = self.theme_manager.create_title_button(IconManager.get_images(icon), handler)
+                title_layout.addWidget(btn)
 
         main_layout.addLayout(title_layout)
 
@@ -75,36 +73,18 @@ class TranslatorWindow(QWidget):
         #Поле для отображения переведенного текста
         self.output_text = QTextEdit(self)
         self.output_text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
+        self.output_text.setPlaceholderText("Start writing that the translation is displayed here...")
         main_layout.addWidget(self.output_text)
 
         #Поле для отображения языка введенного текста
         self.detected_language_label = QLabel(self)
         self.detected_language_label.setWordWrap(True)
+        self.detected_language_label.setText("Launguage: not detect")
         main_layout.addWidget(self.detected_language_label)
 
         self.setLayout(main_layout)
         self.center_window(self)
         
-    def create_title_button(self, icon_path, slot):
-        btn = QPushButton()
-        btn.setIcon(QIcon(QPixmap(icon_path)))
-        btn.setIconSize(QSize(30, 30))
-        btn.setFixedSize(40, 40)
-        btn.setStyleSheet("""
-            QPushButton {
-                background: transparent;
-                border: none;
-                border-radius: 8px;
-            }
-            QPushButton:hover {
-                background: rgba(0, 0, 0, 30);
-            }
-            QPushButton:pressed {
-                background: rgba(0, 0, 0, 50);
-            }
-        """)
-        btn.clicked.connect(slot)
-        return btn
 
     def translate_text(self):
         input_text = self.input_text.toPlainText()
@@ -118,7 +98,7 @@ class TranslatorWindow(QWidget):
 
         detected, translation = asyncio.run(translate())
 
-        self.detected_language_label.setText(f"{LANGUAGES[detected.lang]}")
+        self.detected_language_label.setText(f"Language: {LANGUAGES[detected.lang]}")
         self.output_text.setText(f"{translation.text}")
 
     def center_window(self, window):
@@ -178,10 +158,10 @@ class TranslatorWindow(QWidget):
                 padding: 10px;
             }}
             QPushButton:hover {{
-                background: {theme_vals['hover']};
+                background-color: {theme_vals['hover']};
             }}
             QPushButton:pressed {{
-                background: {theme_vals['pressed']};
+                background-color: {theme_vals['pressed']};
             }}
             QPushButton:disabled {{
                 background: {theme_vals['bg']};
@@ -223,20 +203,14 @@ class TranslatorWindow(QWidget):
                 border-radius: 10px;
                 padding: 10px;
             }}
+            QComboBox {{height:25px; background: {theme_vals['hover']}; border: 1px solid {theme_vals['border']}; color: {theme_vals['fg']}; padding: 10px; border-radius: 8px;}}
+            QComboBox:hover {{ background: {theme_vals['bg']}; }}
+            QComboBox::drop-down {{ border: none; width: 20px; }}
+            QComboBox QAbstractItemView {{ background: {theme_vals['bg']}; color: {theme_vals['fg']}; selection-background-color: #ff4891; }}
         """)
         
         # Обновляем стили отдельных элементов
         self.input_text.setStyleSheet(f"""
-            background: {theme_vals['bg']};
-            color: {theme_vals['fg']};
-            border: 1px solid {theme_vals['border']};
-            border-radius: 10px;
-            padding: 10px;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
-        """)
-        
-        self.target_language_combo.setStyleSheet(f"""
             background: {theme_vals['bg']};
             color: {theme_vals['fg']};
             border: 1px solid {theme_vals['border']};
@@ -266,12 +240,6 @@ class TranslatorWindow(QWidget):
             font-size: 12pt;
         """)
         
-        self.translate_button.setStyleSheet(f"""
-            background: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['bg']};
-            color: {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['fg']};
-            border: 1px solid {self.theme_manager.theme_palette[self.theme_manager.current_theme()]['border']};
-            border-radius: 10px;
-            padding: 10px;
-            font-family: 'Segoe UI';
-            font-size: 12pt;
+        self.title_label.setStyleSheet(f"""
+            border: none;
         """)

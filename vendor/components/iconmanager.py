@@ -14,7 +14,8 @@ class IconManager:
             "screen_recorder": "vendor/icon/video.ico",
             "screen_share": "vendor/icon/computer.ico",
             "audio_recording": "vendor/icon/mic.ico",
-            "audio": "vendor/icon/audio.ico"
+            "audio": "vendor/icon/audio.ico",
+            "screenshot":"vendor/icon/folder.ico"
         }
         return QIcon(icons.get(icon_name, "vendor/icon/icon.ico"))
     @staticmethod

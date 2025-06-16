@@ -41,14 +41,13 @@ class QRCodeWindow(QWidget):
 
     TEMP_SUFFIX = ".png"
 
-    def __init__(self, language: str, theme_manager) -> None:
+    def __init__(self, theme_manager, translations: dict[str, str]) -> None:
         super().__init__()
         self._old_pos: QPoint | None = None
-        self.language = language
         self.theme_manager = theme_manager
         self._title_bar_buttons = []
         self.theme: str = self.theme_manager.current_theme()
-        self.translations: dict[str, str] = self._load_translations(language)
+        self.translations = translations
 
         self.theme_manager.theme_changed.connect(self._on_theme_changed)
 
@@ -57,14 +56,6 @@ class QRCodeWindow(QWidget):
         self.bg_color = QColor(255, 255, 255)  # White
 
         self._init_ui()
-
-    # ------------------------------------------------------------------
-    # Setup helpers
-    # ------------------------------------------------------------------
-    def _load_translations(self, language: str) -> dict[str, str]:
-        file = Path("./vendor/core/language") / f"{language}.json"
-        with file.open(encoding="utf-8") as f:
-            return json.load(f)
 
     def _init_ui(self) -> None:
         self.setWindowTitle(self.translations["qr_code_window_title"])
@@ -149,53 +140,55 @@ class QRCodeWindow(QWidget):
         )
 
     def _update_styles(self) -> None:
-        palette = self.theme_manager.theme_palette[self.theme]
-        fg, bg, border = palette["fg"], palette["bg"], palette["border"]
-        hover, pressed = palette["hover"], palette["pressed"]
-        font = "Segoe UI"
-
-        self.setStyleSheet(f"background-color: {bg};")
-        self.url_input.setStyleSheet(
-            (
-                f"background-color: {bg}; color: {fg}; border: 1px solid {border};"
-                f"border-radius: 6px; padding: 10px; font: 13pt '{font}';"
-            )
-        )
-        self.format_combo.setStyleSheet(f"""
-            QComboBox {{height:25px; background: {palette['hover']}; border: 1px solid {palette['border']}; color: {palette['fg']}; padding: 10px; border-radius: 8px;}}
-            QComboBox:hover {{ background: {palette['bg']}; }}
+        theme_vals = self.theme_manager.theme_palette[self.theme]
+        self.setStyleSheet(f"""
+            QWidget {{
+                background-color: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                font-family: 'Segoe UI';
+                font-size: 12pt;
+            }}
+            QPushButton {{
+                background: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                border-radius: 10px;
+                padding: 10px;
+            }}
+            QPushButton:hover {{
+                background-color: {theme_vals['hover']};
+            }}
+            QPushButton:pressed {{
+                background-color: {theme_vals['pressed']};
+            }}
+            QPushButton:disabled {{
+                background: {theme_vals['hover']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                opacity: 0.5;
+            }}
+            QLineEdit {{
+                background: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                border-radius: 10px;
+                padding: 10px;
+            }}
+            QLabel {{
+                background: {theme_vals['bg']};
+                color: {theme_vals['fg']};
+                border: 1px solid {theme_vals['border']};
+                border-radius: 10px;
+                padding: 10px;
+                text-align:left
+            }}
+            QComboBox {{height:25px; background: {theme_vals['hover']}; border: 1px solid {theme_vals['border']}; color: {theme_vals['fg']}; padding: 10px; border-radius: 8px;}}
+            QComboBox:hover {{ background: {theme_vals['bg']}; }}
             QComboBox::drop-down {{ border: none; width: 20px; }}
-            QComboBox QAbstractItemView {{ background: {palette['bg']}; color: {palette['fg']}; selection-background-color: #ff4891; }}
+            QComboBox QAbstractItemView {{ background: {theme_vals['bg']}; color: {theme_vals['fg']}; selection-background-color: #ff4891; }}
         """)
-        self.qr_color_button.setStyleSheet(
-            (
-                "QPushButton {background-color: %s; color: %s; border: 1px solid %s;"
-                "border-radius: 6px; padding: 10px; font: 13pt '%s';}"
-                "QPushButton:hover {background-color: %s;}"
-                "QPushButton:pressed {background-color: %s;}" % (bg, fg, border, font, hover, pressed)
-            )
-        )
-        self.bg_color_button.setStyleSheet(
-            (
-                "QPushButton {background-color: %s; color: %s; border: 1px solid %s;"
-                "border-radius: 6px; padding: 10px; font: 13pt '%s';}"
-                "QPushButton:hover {background-color: %s;}"
-                "QPushButton:pressed {background-color: %s;}" % (bg, fg, border, font, hover, pressed)
-            )
-        )
-        self.save_button.setStyleSheet(
-            (
-                "QPushButton {background-color: %s; color: %s; border: 1px solid %s;"
-                "border-radius: 6px; padding: 10px; font: 13pt '%s';}"
-                "QPushButton:hover {background-color: %s;}"
-                "QPushButton:pressed {background-color: %s;}" % (bg, fg, border, font, hover, pressed)
-            )
-        )
 
-        if hasattr(self, 'minimize_btn') and self.minimize_btn:
-            self.minimize_btn.setStyleSheet(self._title_btn_stylesheet())
-        if hasattr(self, 'close_btn') and self.close_btn:
-            self.close_btn.setStyleSheet(self._title_btn_stylesheet())
+        self.title_label.setStyleSheet(f"border:none")
 
     # ------------------------------------------------------------------
     # Theme & geometry helpers

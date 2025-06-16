@@ -1,47 +1,33 @@
 import os
 import json
 from PyQt6.QtWidgets import (
-    QApplication,
-    QWidget,
-    QPushButton,
-    QVBoxLayout,
-    QHBoxLayout,
-    QSpacerItem,
-    QSizePolicy,
-    QFileDialog,
-    QComboBox,
-    QLabel
+    QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout,
+    QSpacerItem, QSizePolicy, QFileDialog, QComboBox, QLabel
 )
-import mss
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
 from PyQt6.QtCore import Qt, QSize, QRectF, QPoint
 from PyQt6.QtGui import QScreen
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from PIL import Image
+from mss import mss
 from .aeraselection import AreaSelection
 from .iconmanager import IconManager
 
-
 class ScreenshotWindow(QWidget):
-    def __init__(self, language, theme_manager):
+    def __init__(self, theme_manager, translations: dict[str, str]):
         super().__init__()
         self._old_pos = None
-        self.language = language
         self.theme_manager = theme_manager
-        self.translations = self.load_translations(self.language)
-        
+        self.translations = translations
+
         # Подписка на сигнал изменения темы
         self.theme_manager.theme_changed.connect(self.update_theme)
-        
+
         self.initUI()
-        
+
         # Обновляем тему после создания всех элементов
         self.update_theme(self.theme_manager.current_theme())
-
-    def load_translations(self, language):
-        with open(f"{language}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
 
     def update_theme(self, theme):
         palette = self.theme_manager.theme_palette[theme]
@@ -118,48 +104,48 @@ class ScreenshotWindow(QWidget):
         self.main_layout = QVBoxLayout()
         self.setup_title_bar()
 
-        #Кнопка для скриншота всего экрана
+        # Кнопка для скриншота всего экрана
         self.fullscreen_button = QPushButton(self.translations["fullscreen_button"], self)
         self.fullscreen_button.clicked.connect(self.take_fullscreen_screenshot)
         self.main_layout.addWidget(self.fullscreen_button)
 
-        #Кнопка для скриншота области
+        # Кнопка для скриншота области
         self.area_button = QPushButton(self.translations["area_button"], self)
         self.area_button.clicked.connect(self.take_area_screenshot)
         self.main_layout.addWidget(self.area_button)
 
-        #Выбор формата сохранения
+        # Выбор формата сохранения
         self.format_combo = QComboBox(self)
         self.format_combo.addItems(["PNG", "JPG", "PDF", "BMP", "GIF", "TIFF"])
         self.main_layout.addWidget(self.format_combo)
 
-        #Выбор экрана
+        # Выбор экрана
         self.screen_combo = QComboBox(self)
         self.screen_combo.addItems([f"Screen {i}" for i in range(1, len(self.get_screens()) + 1)])
         self.main_layout.addWidget(self.screen_combo)
 
         self.setLayout(self.main_layout)
         self.center_window(self)
-        
+
     def setup_title_bar(self):
         if self.theme_manager.get_current_platform() == "windows":
             self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        
+
         title_layout = QHBoxLayout()
         self.title_label = QLabel(self.translations["screenshot_window_title"])
         title_layout.addWidget(self.title_label)
         title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
-        
+
         if self.theme_manager.get_current_platform() == "windows":
             for icon, handler in [("roll_up_button", self.showMinimized), ("button_close", self.close)]:
                 btn = self.theme_manager.create_title_button(IconManager.get_images(icon), handler)
                 title_layout.addWidget(btn)
-            
+
         self.main_layout.addLayout(title_layout)
 
     def get_screens(self):
-        with mss.mss() as sct:
+        with mss() as sct:
             return sct.monitors[1:]
 
     def take_fullscreen_screenshot(self):
@@ -167,7 +153,7 @@ class ScreenshotWindow(QWidget):
         screens = self.get_screens()
         if screen_index < len(screens):
             screen = screens[screen_index]
-            with mss.mss() as sct:
+            with mss() as sct:
                 screenshot = sct.grab(screen)
                 img = Image.frombytes("RGB", screenshot.size, screenshot.rgb)
                 self.save_screenshot(img)
@@ -175,16 +161,28 @@ class ScreenshotWindow(QWidget):
     def take_area_screenshot(self):
         self.hide()
         self.area_selection = AreaSelection(self.language)
-        self.area_selection.screenshot_taken.connect(self.save_screenshot)
+        self.area_selection.screenshot_taken.connect(self.handle_screenshot_taken)
         self.area_selection.show()
+
+    def handle_screenshot_taken(self, img):
+        """Обработчик сигнала после создания скриншота области"""
+        self.area_selection.close()  # Закрываем окно выбора области
+        self.show()
+        self.raise_()
+        self.activateWindow()
+        self.save_screenshot(img)
 
     def save_screenshot(self, img):
         file_format = self.format_combo.currentText().lower()
-        file_path, _ = QFileDialog.getSaveFileName(self, self.translations["save_screenshot_dialog_title"], "", f"{file_format.upper()} Files (*.{file_format})")
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            self.translations["save_screenshot_dialog_title"],
+            "",
+            f"{file_format.upper()} Files (*.{file_format})"
+        )
 
         if file_path:
             if file_format == "pdf":
-                #PDF-документ
                 temp_image_path = "temp_image.png"
                 img.save(temp_image_path)
                 c = canvas.Canvas(file_path, pagesize=letter)
@@ -213,13 +211,11 @@ class ScreenshotWindow(QWidget):
         super().paintEvent(event)
 
     def _is_in_title_bar(self, pos):
-        # Получаем геометрию заголовка
-        title_height = 40  # Высота заголовка
+        title_height = 40
         return pos.y() <= title_height
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            # Проверяем, находится ли курсор в области заголовка
             if self._is_in_title_bar(event.position().toPoint()):
                 self._old_pos = event.globalPosition().toPoint()
             else:

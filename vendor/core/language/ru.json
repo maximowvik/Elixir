@@ -74,5 +74,7 @@
     "fs_type": "Тип ФС",
     "storage_info": "Накопители",
     "unknown": "Неизвестно",
-    "no_disk_info": "Не удалось получить данные о дисках"
+    "no_disk_info": "Не удалось получить данные о дисках",
+    "select_directory_dialog_title":"Выберите директорию для записи",
+    "microphone_button":"Микрофон"
 }

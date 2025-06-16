@@ -158,11 +158,10 @@ class PaintWidget(QWidget):
 
 
 class PaintWindow(QMainWindow):
-    def __init__(self, language, theme_manager):
+    def __init__(self, theme_manager, translations: dict[str, str]):
         super().__init__()
-        self.language = language
         self.theme_manager = theme_manager
-        self.translations = self._load_translations()
+        self.translations = translations
         self._old_pos = None
 
         self._init_window_properties()
@@ -171,10 +170,6 @@ class PaintWindow(QMainWindow):
         # Подписка на сигнал изменения темы
         self.theme_manager.theme_changed.connect(self.apply_theme)
         self.apply_theme()
-
-    def _load_translations(self):
-        with open(f"./vendor/core/language/{self.language}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
 
     def _init_window_properties(self):
         self.setMinimumSize(800,800)

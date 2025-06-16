@@ -74,5 +74,7 @@
     "fs_type": "Type FS",
     "storage_info": "Storages",
     "unknown": "unknown",
-    "no_disk_info": "Couldn't get disk data"
+    "no_disk_info": "Couldn't get disk data",
+    "select_directory_dialog_title":"Select the directory to write to",
+    "microphone_button":"Microphone"
 }

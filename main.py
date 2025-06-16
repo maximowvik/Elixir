@@ -262,31 +262,31 @@ class MainWindow(QWidget):
 
     # Модифицируем методы открытия окон
     def open_qr_window(self):
-        self._create_window('qr', QRCodeWindow, self.language, self.theme_manager)
+        self._create_window('qr', QRCodeWindow, self.theme_manager, self.translations)
 
     def open_speedtest(self):
-        self._create_window('speedtest', SpeedTestWindow, self.language, self.theme_manager)
+        self._create_window('speedtest', SpeedTestWindow, self.theme_manager, self.translations)
 
     def open_paint(self):
-        self._create_window('paint', PaintWindow, self.language, self.theme_manager)
+        self._create_window('paint', PaintWindow, self.theme_manager, self.translations)
 
     def open_pc_info(self):
-        self._create_window('pcinfo', PCInfoWindow, self.language, self.theme_manager)
+        self._create_window('pcinfo', PCInfoWindow, self.theme_manager, self.translations)
 
     def open_browser(self):
-        self._create_window('browser', Browser, app, self.theme_manager)
+        self._create_window('browser', Browser, self.theme_manager, self.translations)
 
     def open_screenshot(self):
-        self._create_window('screenshot', ScreenshotWindow, self.language, self.theme_manager)
+        self._create_window('screenshot', ScreenshotWindow, self.theme_manager, self.translations)
 
     def open_recorder(self):
-        self._create_window('recorder', ScreenRecorderWindow, self.language, self.theme_manager)
+        self._create_window('recorder', ScreenRecorderWindow, self.theme_manager, self.translations)
 
     def open_screenshare(self):
-        self._create_window('screenshare', ScreenShareWindow, self.language, self.theme_manager)
+        self._create_window('screenshare', ScreenShareWindow, self.theme_manager, self.translations)
 
     def open_translator(self):
-        self._create_window('translator', TranslatorWindow, self.language, self.theme_manager)
+        self._create_window('translator', TranslatorWindow, self.theme_manager, self.translations)
 
     def open_chat_window(self):
         self._create_window('chat', AIChatWindow,

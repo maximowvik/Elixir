@@ -16,12 +16,11 @@ from PyQt6.QtGui import QScreen
 from .iconmanager import IconManager
 
 class PCInfoWindow(QWidget):
-    def __init__(self, language, theme_manager):
+    def __init__(self, theme_manager, translations: dict[str, str]):
         super().__init__()
         self._old_pos = None
-        self.language = language
         self.theme_manager = theme_manager
-        self.translations = self.load_translations(self.language)
+        self.translations = translations
 
         self.init_ui()
         self.center_window()
@@ -29,10 +28,6 @@ class PCInfoWindow(QWidget):
         # Подписка на сигнал изменения темы
         self.theme_manager.theme_changed.connect(self.apply_theme)
         self.apply_theme()
-
-    def load_translations(self, language):
-        with open(f"./vendor/core/language/{language}.json", "r", encoding="utf-8") as file:
-            return json.load(file)
 
     def init_ui(self):
         self.setWindowTitle(self.translations["pc_info_window_title"])
