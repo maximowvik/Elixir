@@ -30,7 +30,7 @@ class ChatHistory:
             },
             "/set_api_key": {
                 "id": "cmd_set_api_key",
-                "description": "*Сохранить API ключ для OpenRouter\nПример: <code>/set_api_key sk-1234567890abcdef</code>*",
+                "description": "*Сохранить API ключ для OpenRouter\nПример: <code>/set_api_key --api=\"sk-1234567890abcdef</code>\"*",
                 "usage": "**/set_api_key --api=\"<your api key>\"**"
             }
         }

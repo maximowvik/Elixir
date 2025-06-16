@@ -293,7 +293,8 @@ class MainWindow(QWidget):
             translations=self.translations,
             theme_manager=self.theme_manager,
             download_manager=self.download_manager,
-            current_directory=self.current_directory
+            current_directory=self.current_directory,
+            language = self.language
         )
 
     def open_mic_window(self): 

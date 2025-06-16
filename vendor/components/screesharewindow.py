@@ -1,5 +1,4 @@
 import socket
-import json
 from PyQt6.QtWidgets import (
     QApplication,
     QWidget,
@@ -8,11 +7,10 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QHBoxLayout,
     QSpacerItem,
-    QSizePolicy,
-    QComboBox
+    QSizePolicy
 )
-from PyQt6.QtGui import QPixmap, QIcon, QPainter, QColor, QPainterPath
-from PyQt6.QtCore import Qt, QSize, QRectF, QPoint, pyqtSignal, QTimer, pyqtSlot
+from PyQt6.QtGui import QPainter, QColor, QPainterPath
+from PyQt6.QtCore import Qt, QRectF, QPoint, pyqtSignal, QTimer, pyqtSlot
 from PyQt6.QtGui import QScreen
 import cv2
 import numpy as np
@@ -20,7 +18,6 @@ from flask import Flask, Response
 import threading
 import mss
 import time
-import requests
 from werkzeug.serving import make_server
 from .iconmanager import IconManager
 
@@ -36,9 +33,15 @@ class ScreenShareWindow(QWidget):
         # Подписка на сигнал изменения темы
         self.theme_manager.theme_changed.connect(self.update_theme)
         
+        # Инициализация переменных для трансляции
+        self.streaming = False
+        self.server = None
+        self.server_thread = None
+        self.active_clients = []
+        self.server_lock = threading.Lock()
+        self.stop_event = threading.Event()
+
         self.initUI()
-        
-        # Обновляем тему после создания всех элементов
         self.update_theme(self.theme_manager.current_theme())
 
     def initUI(self):
@@ -50,9 +53,11 @@ class ScreenShareWindow(QWidget):
             self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
         main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(15, 15, 15, 15)
+        main_layout.setSpacing(10)
 
+        # Title bar
         title_layout = QHBoxLayout()
-        
         self.title_label = QLabel(self.translations["screen_share_window_title"])
         title_layout.addWidget(self.title_label)
         title_layout.addItem(QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))
@@ -64,110 +69,151 @@ class ScreenShareWindow(QWidget):
 
         main_layout.addLayout(title_layout)
 
-        #Кнопка начала трансляции
+        # Start button
         self.start_button = QPushButton(self.translations["start_button"], self)
         self.start_button.clicked.connect(self.start_streaming)
         main_layout.addWidget(self.start_button)
 
-        #Кнопка остановки трансляции
+        # Stop button
         self.stop_button = QPushButton(self.translations["stop_button"], self)
         self.stop_button.setEnabled(False)
         self.stop_button.clicked.connect(self.stop_streaming)
         main_layout.addWidget(self.stop_button)
 
-        #Метка для отображения ссылки
+        # URL label
         self.url_label = QLabel("", self)
         self.url_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         main_layout.addWidget(self.url_label)
 
-        #Кнопка для копирования ссылки
+        # Copy button
         self.copy_button = QPushButton(self.translations["copy_button"], self)
         self.copy_button.setEnabled(False)
         self.copy_button.clicked.connect(self.copy_url)
         main_layout.addWidget(self.copy_button)
 
-        #Уведомление о копировании
+        # Notification label
         self.notification_label = QLabel(self.translations["notification_label"], self)
         self.notification_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.notification_label.hide()
         main_layout.addWidget(self.notification_label)
 
         self.setLayout(main_layout)
-        self.center_window(self)
+        self.center_window()
 
-        #Инициализация переменных для трансляции
-        self.streaming = False
-        self.server_running = False
-        self.app = Flask(__name__)
-        self.app.add_url_rule('/video_feed', 'video_feed', self.video_feed)
-        self.server = None
-        self.stop_event = threading.Event()
-
-        #Подключение сигнала для остановки сервера
+        # Подключение сигнала для остановки сервера
         self.stop_signal.connect(self.stop_server)
 
     def start_streaming(self):
         self.streaming = True
+        self.stop_event.clear()
         self.start_button.setEnabled(False)
         self.stop_button.setEnabled(True)
-
-        #Запуск веб-сервера в отдельном потоке
-        self.server = make_server('0.0.0.0', 5000, self.app)
-        self.thread = threading.Thread(target=self.run_server)
-        self.thread.start()
-
-        #Генерация ссылки
-        self.stream_url = f"\nhttp://{socket.gethostbyname(socket.gethostname())}:5000/video_feed\nhttp://{self.get_public_ip()}:5000/video_feed"
+        
+        # Очищаем список клиентов
+        with self.server_lock:
+            self.active_clients = []
+        
+        # Инициализация Flask приложения
+        self.app = Flask(__name__)
+        self.app.add_url_rule('/video_feed', 'video_feed', self.video_feed)
+        
+        # Создание сервера с настройками
+        self.server = make_server('0.0.0.0', 5000, self.app, threaded=True)
+        self.server.daemon_threads = True
+        
+        # Запуск сервера в отдельном потоке
+        self.server_thread = threading.Thread(target=self.run_server, daemon=True)
+        self.server_thread.start()
+        
+        # Генерация URL для трансляции
+        self.stream_url = f"http://{socket.gethostbyname(socket.gethostname())}:5000/video_feed"
         self.url_label.setText(f"{self.translations['stream_url']}: {self.stream_url}")
         self.copy_button.setEnabled(True)
 
+    def video_feed(self):
+        def generate():
+            # Регистрируем нового клиента
+            with self.server_lock:
+                self.active_clients.append(1)
+            
+            sct = mss.mss()
+            try:
+                while self.streaming and not self.stop_event.is_set():
+                    monitor = sct.monitors[1]
+                    screenshot = sct.grab(monitor)
+                    frame = np.array(screenshot)
+                    frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
+                    ret, jpeg = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
+                    if not ret:
+                        continue
+                    frame = jpeg.tobytes()
+                    yield (b'--frame\r\n'
+                          b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+                    time.sleep(1/30)
+            except (GeneratorExit, ConnectionError):
+                # Клиент отключился
+                pass
+            finally:
+                # Удаляем клиента из списка
+                with self.server_lock:
+                    if self.active_clients:
+                        self.active_clients.pop()
+                sct.close()
+
+        response = Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
+        response.timeout = 5
+        return response
+
+    def run_server(self):
+        try:
+            self.server.serve_forever()
+        except Exception as e:
+            print(f"Server error: {e}")
+        finally:
+            self.server = None
+
     @pyqtSlot()
     def stop_server(self):
-        if self.server_running:
+        if self.server:
+            # Устанавливаем флаги остановки
+            self.streaming = False
             self.stop_event.set()
-            self.server.shutdown()
-            self.thread.join()
             
-    def get_public_ip(self):
-        try: 
-            return requests.get('https://api.ipify.org').text
-        except Exception:
-            return self.translations['ip_error']
+            # Принудительно разрываем соединения
+            with self.server_lock:
+                self.active_clients = []
+            
+            # Останавливаем сервер
+            try:
+                if hasattr(self.server, 'shutdown'):
+                    self.server.shutdown()
+                else:
+                    # Альтернативный способ для Werkzeug
+                    self.server._BaseServer__shutdown_request = True
+                
+                # Закрываем сокет
+                if hasattr(self.server, 'socket'):
+                    self.server.socket.close()
+            except Exception as e:
+                print(f"Error stopping server: {e}")
+            finally:
+                self.server = None
+                
+            # Ждем завершения потока сервера
+            if self.server_thread and self.server_thread.is_alive():
+                self.server_thread.join(timeout=1)
 
     def stop_streaming(self):
         self.streaming = False
         self.start_button.setEnabled(True)
         self.stop_button.setEnabled(False)
-
-        #Остановка веб-сервера
+        
+        # Остановка сервера через сигнал
         self.stop_signal.emit()
-
-        #Очистка ссылки
+        
+        # Очистка URL
         self.url_label.setText("")
         self.copy_button.setEnabled(False)
-
-    def run_server(self):
-        self.server_running = True
-        self.server.serve_forever()
-        self.server_running = False
-
-    def video_feed(self):
-        def generate():
-            while not self.stop_event.is_set():
-                with mss.mss() as sct:
-                    monitor = sct.monitors[1]
-                    screenshot = sct.grab(monitor)
-                    frame = np.array(screenshot)
-                    frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
-                    ret, jpeg = cv2.imencode('.jpg', frame)
-                    if not ret:
-                        continue
-                    frame = jpeg.tobytes()
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
-                    time.sleep(1 / 30)  # Ensure 30 FPS
-
-        return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
     def copy_url(self):
         clipboard = QApplication.clipboard()
@@ -175,12 +221,12 @@ class ScreenShareWindow(QWidget):
         self.notification_label.show()
         QTimer.singleShot(2000, self.notification_label.hide)
 
-    def center_window(self, window):
+    def center_window(self):
         screen = QScreen.availableGeometry(QApplication.primaryScreen())
-        qr = window.frameGeometry()
+        qr = self.frameGeometry()
         cp = screen.center()
         qr.moveCenter(cp)
-        window.move(qr.topLeft())
+        self.move(qr.topLeft())
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -188,18 +234,16 @@ class ScreenShareWindow(QWidget):
         rect = QRectF(self.rect())
         path = QPainterPath()
         path.addRoundedRect(rect, 10, 10)
-        painter.fillPath(path, QColor(self.palette().color(self.backgroundRole())))
+        painter.fillPath(path, QColor(self.theme_manager.theme_palette[self.theme_manager.current_theme()]['bg']))
         painter.setClipPath(path)
         super().paintEvent(event)
 
     def _is_in_title_bar(self, pos):
-        # Получаем геометрию заголовка
-        title_height = 40  # Высота заголовка
+        title_height = 40
         return pos.y() <= title_height
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
-            # Проверяем, находится ли курсор в области заголовка
             if self._is_in_title_bar(event.position().toPoint()):
                 self._old_pos = event.globalPosition().toPoint()
             else:
@@ -243,37 +287,48 @@ class ScreenShareWindow(QWidget):
                 border: 1px solid {theme_vals['border']};
                 opacity: 0.5;
             }}
-            QTextEdit {{
-                background: {theme_vals['bg']};
-                color: {theme_vals['fg']};
-                border: 1px solid {theme_vals['border']};
-                border-radius: 10px;
-                padding: 10px;
-            }}
             QLabel {{
                 background: {theme_vals['bg']};
                 color: {theme_vals['fg']};
                 border: 1px solid {theme_vals['border']};
                 border-radius: 10px;
                 padding: 10px;
-                text-align:left
+                text-align: left;
             }}
-            QComboBox {{height:25px; background: {theme_vals['hover']}; border: 1px solid {theme_vals['border']}; color: {theme_vals['fg']}; padding: 10px; border-radius: 8px;}}
+            QComboBox {{
+                height: 25px; 
+                background: {theme_vals['hover']}; 
+                border: 1px solid {theme_vals['border']}; 
+                color: {theme_vals['fg']}; 
+                padding: 10px; 
+                border-radius: 8px;
+            }}
             QComboBox:hover {{ background: {theme_vals['bg']}; }}
             QComboBox::drop-down {{ border: none; width: 20px; }}
-            QComboBox QAbstractItemView {{ background: {theme_vals['bg']}; color: {theme_vals['fg']}; selection-background-color: #ff4891; }}
+            QComboBox QAbstractItemView {{ 
+                background: {theme_vals['bg']}; 
+                color: {theme_vals['fg']}; 
+                selection-background-color: #ff4891; 
+            }}
         """)
         
         self.url_label.setStyleSheet(f"""
             font-size: 12px;
             font-family: 'Segoe UI';
             color: {theme_vals['fg']};
+            border: none;
         """)
         
         self.notification_label.setStyleSheet(f"""
             font-family: 'Segoe UI';
             font-size: 12pt;
             color: {theme_vals['fg']};
-            border:none;
+            border: none;
         """)
-        self.title_label.setStyleSheet(f"border:none")
+        
+        self.title_label.setStyleSheet("border: none;")
+
+    def closeEvent(self, event):
+        if self.streaming:
+            self.stop_streaming()
+        event.accept()

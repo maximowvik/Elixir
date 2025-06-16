@@ -21,9 +21,10 @@ class AIChatWindow(QWidget):
     add_message_signal = pyqtSignal(str, str, str)
     ui_block_signal = pyqtSignal(bool)
 
-    def __init__(self, translations: dict[str, str], theme_manager, download_manager, current_directory):
+    def __init__(self, translations: dict[str, str], theme_manager, download_manager, current_directory, language):
         super().__init__()
         self.setObjectName("ChatWindow")
+        self.language = language
         self.theme_manager = theme_manager
         self.current_directory = current_directory
         self.theme = self.theme_manager.current_theme()
