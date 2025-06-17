@@ -1,15 +1,45 @@
 import urllib.parse
 import os
 from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QTabWidget, QTabBar, QWidget, QVBoxLayout, QHBoxLayout,
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QTabWidget, QTabBar,
     QToolBar, QLineEdit, QLabel, QMessageBox, QMenu, QFileDialog, QPushButton,
     QSpacerItem, QSizePolicy, QStyle, QStyleOptionTab, QStylePainter, QToolButton
 )
 from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineSettings, QWebEngineProfile, QWebEngineDownloadRequest
+from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineSettings, QWebEngineProfile, QWebEngineDownloadRequest
+from PyQt6.QtWebChannel import QWebChannel
 from PyQt6.QtGui import QIcon, QPixmap, QKeySequence, QPainter, QPainterPath, QColor, QShortcut, QTransform, QScreen
-from PyQt6.QtCore import QUrl, Qt, QSize, QPoint, QRectF, QSettings, QRect
+from PyQt6.QtCore import QUrl, Qt, QSize, QPoint, QRectF, QSettings, QRect, pyqtSlot, pyqtSignal, QObject
 from .iconmanager import IconManager
+
+
+class BridgeObject(QObject):
+    def __init__(self):
+        super().__init__()
+
+    @pyqtSlot(str, result=str)
+    def callFromJS(self, message):
+        print("Received from JS:", message)
+        return "Hello from Python!"
+
+    messageToJS = pyqtSignal(str)
+
+class CustomWebEnginePage(QWebEnginePage):
+    def __init__(self, browser, parent=None):
+        super().__init__(parent)
+        self.browser = browser
+
+    def acceptNavigationRequest(self, url, type_, isMainFrame):
+        if type_ == QWebEnginePage.NavigationType.NavigationTypeLinkClicked:
+            self.browser.add_new_tab(url)
+            return False
+        return super().acceptNavigationRequest(url, type_, isMainFrame)
+
+class CustomWebEngineView(QWebEngineView):
+    def __init__(self, browser, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.browser = browser
+        self.setPage(CustomWebEnginePage(browser, self))
 
 class CustomTabBar(QTabBar):
     def __init__(self, browser, parent=None):
@@ -20,7 +50,7 @@ class CustomTabBar(QTabBar):
         self.setElideMode(Qt.TextElideMode.ElideRight)
         self.setIconSize(QSize(20, 20))
         self.close_icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
-        self.hovered_close_button = -1  # Индекс вкладки с наведённой кнопкой закрытия
+        self.hovered_close_button = -1
 
     def tabSizeHint(self, index):
         size = super().tabSizeHint(index)
@@ -29,18 +59,15 @@ class CustomTabBar(QTabBar):
 
     def paintEvent(self, event):
         painter = QStylePainter(self)
-        
+
         for index in range(self.count()):
             option = QStyleOptionTab()
             self.initStyleOption(option, index)
-            
-            # Рисуем фон вкладки
+
             painter.drawControl(QStyle.ControlElement.CE_TabBarTabShape, option)
-            
-            # Получаем прямоугольник вкладки
+
             tab_rect = self.tabRect(index)
-            
-            # Рисуем иконку сайта
+
             icon = self.tabIcon(index)
             if not icon.isNull():
                 icon_rect = QRect(
@@ -49,8 +76,7 @@ class CustomTabBar(QTabBar):
                     20, 20
                 )
                 icon.paint(painter, icon_rect)
-            
-            # Рисуем текст
+
             text_rect = QRect(
                 tab_rect.left() + (35 if not icon.isNull() else 8),
                 tab_rect.top(),
@@ -62,22 +88,20 @@ class CustomTabBar(QTabBar):
                 Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter,
                 self.tabText(index)
             )
-            
-            # Рисуем кнопку закрытия с hover-эффектом
+
             close_button_rect = QRect(
                 tab_rect.right() - 30,
                 tab_rect.center().y() - 10,
                 20, 20
             )
-            
-            # Если кнопка hovered - рисуем красный фон
+
             if index == self.hovered_close_button:
                 painter.save()
                 painter.setPen(Qt.PenStyle.NoPen)
-                painter.setBrush(QColor(255, 0, 0, 50))  # Полупрозрачный красный
+                painter.setBrush(QColor(255, 0, 0, 50))
                 painter.drawRoundedRect(close_button_rect, 4, 4)
                 painter.restore()
-            
+
             self.close_icon.paint(painter, close_button_rect)
 
     def mousePressEvent(self, event):
@@ -97,11 +121,10 @@ class CustomTabBar(QTabBar):
                 if close_button_rect.contains(event.position().toPoint()):
                     self.browser.close_current_tab(tab_index)
                     return
-            
+
             super().mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
-        # Определяем, над какой кнопкой закрытия находится курсор
         new_hovered = -1
         for index in range(self.count()):
             tab_rect = self.tabRect(index)
@@ -113,21 +136,19 @@ class CustomTabBar(QTabBar):
             if close_button_rect.contains(event.position().toPoint()):
                 new_hovered = index
                 break
-        
-        # Обновляем только если состояние изменилось
+
         if new_hovered != self.hovered_close_button:
             self.hovered_close_button = new_hovered
-            self.update()  # Перерисовываем
-        
+            self.update()
+
         super().mouseMoveEvent(event)
 
     def leaveEvent(self, event):
-        # При выходе курсора с tabbar сбрасываем hover
         if self.hovered_close_button != -1:
             self.hovered_close_button = -1
             self.update()
         super().leaveEvent(event)
-                
+
 class Browser(QWidget):
     def __init__(self, theme_manager, translations: dict[str, str]):
         super().__init__()
@@ -139,7 +160,9 @@ class Browser(QWidget):
         self.downloads = []
         self.closed_urls = []
         self.translations = translations
-
+        self.web_channel = QWebChannel()
+        self.bridge_object = BridgeObject()
+        self.web_channel.registerObject('pyBridge', self.bridge_object)
         self.init_browser_profile()
         self.init_ui()
         self.init_connections()
@@ -150,22 +173,25 @@ class Browser(QWidget):
 
     def init_browser_profile(self):
         profile = QWebEngineProfile.defaultProfile()
+        profile.setHttpUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
         settings = profile.settings()
         settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
-        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, False)
-        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowWindowActivationFromJavaScript, False)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowWindowActivationFromJavaScript, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.WebGLEnabled, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.Accelerated2dCanvasEnabled, True)
         profile.setHttpCacheType(QWebEngineProfile.HttpCacheType.DiskHttpCache)
-        profile.setHttpCacheMaximumSize(100 * 1024 * 1024)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.PluginsEnabled, True)
+        profile.setHttpCacheMaximumSize(500 * 1024 * 1024)
         profile.setPersistentCookiesPolicy(QWebEngineProfile.PersistentCookiesPolicy.NoPersistentCookies)
 
     def init_ui(self):
-        # Create a central widget and set a layout
         central_widget = QWidget(objectName="CentralWidget")
         self.setWindowTitle("Elixir Browser")
         self.setWindowIcon(QIcon(IconManager.get_images("browser")))
         self.setMinimumSize(800, 600)
 
-        # Use a layout to manage the central widget's contents
         main_layout = QVBoxLayout(central_widget)
         main_layout.setContentsMargins(15, 15, 15, 15)
         main_layout.setSpacing(10)
@@ -175,7 +201,6 @@ class Browser(QWidget):
         self.setup_toolbar(main_layout)
         self.setup_shortcuts()
 
-        # Set the central widget with the layout
         self.setLayout(main_layout)
 
     def setup_title_bar(self, layout):
@@ -224,13 +249,11 @@ class Browser(QWidget):
         toolbar = QToolBar(movable=False)
         toolbar.setIconSize(QSize(24, 24))
 
-        # Создаем контейнер для кнопок навигации
         buttons_widget = QWidget()
         buttons_layout = QHBoxLayout(buttons_widget)
         buttons_layout.setContentsMargins(0, 0, 0, 0)
         buttons_layout.setSpacing(5)
 
-        # Кнопки навигации
         button_data = [
             ("back", "Back", lambda: self.navigate("back"), "Ctrl+["),
             ("forward", "Forward", lambda: self.navigate("forward"), "Ctrl+]"),
@@ -249,28 +272,24 @@ class Browser(QWidget):
 
         toolbar.addWidget(buttons_widget)
 
-        # Кастомный QLineEdit с иконкой статуса и стилизованной кнопкой очистки
         self.url_line = QLineEdit()
         self.url_line.setPlaceholderText("Search or enter URL")
         self.url_line.setFixedHeight(40)
         self.url_line.returnPressed.connect(self.nav_to_url)
-        
-        # Создаем виджет-контейнер для QLineEdit
+
         url_container = QWidget()
         url_layout = QHBoxLayout(url_container)
         url_layout.setContentsMargins(5, 0, 5, 0)
-        
-        # Иконка статуса безопасности (внутри QLineEdit слева)
+
         self.sec_icon = QLabel()
-        self.sec_icon.setPixmap(QPixmap(IconManager.get_images("unlock")).scaled(15, 15, 
+        self.sec_icon.setPixmap(QPixmap(IconManager.get_images("unlock")).scaled(15, 15,
             Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
         self.sec_icon.setToolTip("Not secure")
         self.sec_icon.setObjectName("icon_secure")
         self.sec_icon.setFixedSize(QSize(50, 40))
         url_layout.addWidget(self.sec_icon)
         url_layout.addWidget(self.url_line)
-        
-        # Кастомная кнопка очистки (внутри QLineEdit справа)
+
         clear_button = QToolButton(self.url_line)
         clear_button.setIcon(QIcon(IconManager.get_images("button_close")))
         clear_button.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -280,14 +299,12 @@ class Browser(QWidget):
         clear_button.setIconSize(QSize(28, 28))
         clear_button.clicked.connect(self.url_line.clear)
         clear_button.move(self.url_line.width() - 25, (self.url_line.height() - 20) // 2)
-        
-        # Обновляем позицию кнопки при изменении размера
+
         self.url_line.resizeEvent = lambda e: clear_button.move(
             self.url_line.width() - 45, (self.url_line.height() - 30) // 2)
-        
+
         toolbar.addWidget(url_container)
 
-        # Кнопки новых вкладок и загрузок
         new_tab_button = QPushButton(QIcon(IconManager.get_images("plus")), "")
         new_tab_button.setToolTip("New Tab")
         new_tab_button.clicked.connect(lambda: self.add_new_tab(QUrl("https://google.com"), "Home"))
@@ -344,18 +361,26 @@ class Browser(QWidget):
         if isinstance(widget, QWebEngineView):
             self.update_urlbar(widget.url(), widget)
 
-    def add_new_tab(self, qurl: QUrl = None, label="New Tab"):
+    def add_new_tab(self, qurl=None, label="New Tab"):
         if qurl is None:
-            text = self.app.clipboard().text().strip()
+            text = QApplication.clipboard().text().strip()
             qurl = QUrl.fromUserInput(text) if "." in text else QUrl("https://google.com")
 
-        browser = QWebEngineView()
+        if isinstance(qurl, str):
+            qurl = QUrl(qurl)
+
+        browser = CustomWebEngineView(self)
+        browser.page().setWebChannel(self.web_channel)
+        browser.page().javaScriptConsoleMessage = lambda level, message, line, source: self.handle_js_console_message(level, message, line, source)
+
         settings = browser.settings()
         settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptEnabled, True)
         settings.setAttribute(QWebEngineSettings.WebAttribute.LocalStorageEnabled, True)
         settings.setAttribute(QWebEngineSettings.WebAttribute.PluginsEnabled, False)
         settings.setAttribute(QWebEngineSettings.WebAttribute.WebGLEnabled, True)
         settings.setAttribute(QWebEngineSettings.WebAttribute.Accelerated2dCanvasEnabled, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.LocalContentCanAccessRemoteUrls, True)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.AllowRunningInsecureContent, True)
         browser.setZoomFactor(1.0)
         browser.urlChanged.connect(lambda u, b=browser: self.update_urlbar(u, b))
         browser.loadFinished.connect(self.on_load_finished)
@@ -368,6 +393,9 @@ class Browser(QWidget):
         idx = self.tab_widget.addTab(browser, label)
         self.tab_widget.setCurrentIndex(idx)
         return browser
+
+    def handle_js_console_message(self, level, message, line, source):
+        print(f"JS {level}: {message} at {line} ({source})")
 
     def update_tab_title(self, browser, title):
         idx = self.tab_widget.indexOf(browser)
@@ -508,7 +536,6 @@ class Browser(QWidget):
         self._moving = False
         event.accept()
 
-
     def update_theme(self, theme: str):
         palette = self.theme_manager.theme_palette[theme]
         stylesheet = f"""
@@ -592,7 +619,7 @@ class Browser(QWidget):
         super().paintEvent(event)
 
     def _is_in_title_bar(self, pos):
-        return pos.y() <= 40  # Высота title bar
+        return pos.y() <= 40
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton and self._is_in_title_bar(event.position().toPoint()):
